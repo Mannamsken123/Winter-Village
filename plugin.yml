@@ -1,7 +1,7 @@
-  name: PluginBuddies aka. mullemann25 - Mannam01
+  name: PluginBuddies
   main: de.pluginbuddies.wintervillage.Main.Main
   version: 1.0
 
   commands:
-    heal:
+    gm:
       description: Aendert deinen Spielmodus!
