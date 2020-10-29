@@ -35,7 +35,6 @@ public class GamemodesCommand implements CommandExecutor {
                         player.setGameMode(GameMode.SPECTATOR);
                         player.sendMessage(Main.getPlugin().PREFIX + "§cDu bist nun im Zuschauer-Modus!");
                     }
-
                 } else
                     player.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §6/gm <0-3>§c!");
             } else
