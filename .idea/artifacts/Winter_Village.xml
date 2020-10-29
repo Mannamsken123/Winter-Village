@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Winter-Village">
+    <output-path>$PROJECT_DIR$/../../../Winter Wonderland/plugins</output-path>
+    <root id="archive" name="Winter-Village.jar">
+      <element id="module-output" name="Winter-Village" />
+      <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
+    </root>
+  </artifact>
+</component>
