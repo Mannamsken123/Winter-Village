@@ -5,3 +5,7 @@
   commands:
     gm:
       description: Aendert deinen Spielmodus!
+    adventskalender:
+      description: Oeffne dein taegliches Adventstuerchen.
+      aliases:
+        - advent
