@@ -11,3 +11,7 @@
       description: Teleportiert dich zum Spawn
     prison:
       description: Sperrt einen Mitbuerger ins Gefaengnis!
+    adventskalender:
+      description: Oeffne dein taegliches Adventstuerchen.
+      aliases:
+        - advent
