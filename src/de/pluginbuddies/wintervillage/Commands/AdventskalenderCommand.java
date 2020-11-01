@@ -23,12 +23,15 @@ import java.time.format.DateTimeFormatter;
 
 
 public class AdventskalenderCommand implements CommandExecutor, Listener {
+
+    DateTimeFormatter monat = DateTimeFormatter.ofPattern("MM");
+    DateTimeFormatter tag = DateTimeFormatter.ofPattern("dd");
+    LocalDateTime now = LocalDateTime.now();
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         Player p = (Player) sender;
-        DateTimeFormatter monat = DateTimeFormatter.ofPattern("MM");
-        DateTimeFormatter tag = DateTimeFormatter.ofPattern("dd");
-        LocalDateTime now = LocalDateTime.now();
+
         if (monat.format(now).equals("11")) {
             //Ist Dezember
             Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
@@ -39,7 +42,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                 }
 
                 if (tag.format(now).equals(j)) {
-                    ItemStack AdventOpen = new ItemStack(Material.IRON_DOOR);
+                    ItemStack AdventOpen = new ItemStack(Material.SPRUCE_DOOR);
                     ItemMeta imOpen = AdventOpen.getItemMeta();
                     imOpen.setDisplayName("§a§lTag " + i);
                     AdventOpen.setItemMeta(imOpen);
@@ -63,33 +66,41 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player)) return;
         Player p = (Player) e.getWhoClicked();
-        if (e.getClickedInventory() != null) {
-            if (e.getView().getTitle().equals("§6Adventskalender")) {
-                e.setCancelled(true);
-                if (e.getCurrentItem().getType() == Material.IRON_DOOR) {
-                    for (int i = 1; i <= 24; i++) {
-                        if (e.getCurrentItem().getItemMeta().getDisplayName().contains(toString(i))) {
-                            if (!Main.hasUsed(p.getUniqueId().toString(), 1)) {
-                                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " " + Main.ymlConfigAdvent.getString("Reward." + i));
-                                p.closeInventory();
-                                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "Du erhälst deine Belohnung aus dem " + i + ". Türchen");
-                                p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-                                Main.setUsed(p.getUniqueId().toString(), 1);
-                            } else {
-                                p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast dieses Türchen bereits geöffnet.");
-                            }
+
+
+        if (e.getView().getTitle().equals("§6Adventskalender")) {
+            e.setCancelled(true);
+            if (e.getCurrentItem().getType() == Material.SPRUCE_DOOR) {
+                for (int i = 1; i <= 24; i++) {
+
+                    String j = null;
+                    if (i <= 9) {
+                        j = "0" + i;
+                    }
+                    if (tag.format(now).equals(j)) {
+                        if (!Main.hasUsed(p.getUniqueId().toString(), 1)) {
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " " + Main.ymlConfigAdvent.getString("Reward." + i));
+                            p.closeInventory();
+                            p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung aus dem " + i + ". Türchen");
+                            p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
+                            Main.setUsed(p.getUniqueId().toString(), 1);
+                            return;
+                        } else {
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast dieses Türchen bereits geöffnet.");
+                            p.closeInventory();
+                            return;
                         }
                     }
-                } else {
-                    p.closeInventory();
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Tag ist heute nicht");
                 }
+            } else {
+                p.closeInventory();
+                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Tag ist heute nicht!");
             }
         }
+
     }
 
-    private CharSequence toString(int i) {
-        return null;
-    }
+
 }
