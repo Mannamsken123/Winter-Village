@@ -29,8 +29,7 @@ public class GamemodesTabComplete implements TabCompleter {
                     return gamemodes;
 
                 }
-            } else
-                player.sendMessage("§aServer " + "§8>> " + "§cDazu hast du keine Rechte");
+            }
 
         }
         return null;

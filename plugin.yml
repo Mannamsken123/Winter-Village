@@ -5,3 +5,9 @@
   commands:
     gm:
       description: Aendert deinen Spielmodus!
+    village:
+      description: Teleportiert dich zu deinem Village!
+    spawn:
+      description: Teleportiert dich zum Spawn
+    prison:
+      description: Sperrt einen Mitbuerger ins Gefaengnis!
