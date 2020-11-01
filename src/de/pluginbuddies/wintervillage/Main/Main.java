@@ -70,18 +70,15 @@ public class Main extends JavaPlugin {
         getCommand("village").setExecutor(new VillageCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("prison").setExecutor(prisonCommand);
+        getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
         pluginManager.registerEvents(prisonCommand, this);
+        pluginManager.registerEvents(new AdventskalenderCommand(), this);
 
 
-    }
-
-
-        //adventskalender
-        getCommand("adventskalender").setExecutor(new adventskalender());
-        Bukkit.getPluginManager().registerEvents(new adventskalender(), this);
+        //adventkalender
 
         File folderAdvent = new File("plugins//Adventskalender");
         if (!folderAdvent.exists()) {
