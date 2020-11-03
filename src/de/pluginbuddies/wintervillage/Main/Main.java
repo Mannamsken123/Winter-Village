@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
+import de.pluginbuddies.wintervillage.Listener.BlockPortalListener;
 import de.pluginbuddies.wintervillage.Listener.JoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -36,6 +37,11 @@ public class Main extends JavaPlugin {
     public static Main getPlugin() {
         return plugin;
     }
+
+    //blockportals
+    static File configBlockPortal = new File("plugins//BlockPortal//config.yml");
+    public static YamlConfiguration ymlConfigBlockPortal = YamlConfiguration.loadConfiguration(configBlockPortal);
+    //end blockportals
 
     //adventskalender
     static File fileAdvent = new File("plugins//Adventskalender//data.yml");
@@ -97,10 +103,33 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new JoinListener(), this);
         pluginManager.registerEvents(prisonCommand, this);
         pluginManager.registerEvents(new AdventskalenderCommand(), this);
+        pluginManager.registerEvents(new BlockPortalListener(), this);
 
+        //blockportals
+        File folderBlockPortal = new File("plugins//BlockPortal");
+
+        if (!folderBlockPortal.exists()) {
+            folderBlockPortal.mkdir();
+        }
+        if (!configBlockPortal.exists()) {
+            try {
+                configBlockPortal.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        ymlConfigBlockPortal.options().copyDefaults(true);
+        ymlConfigBlockPortal.addDefault("EndSpawn", "false");
+
+        try {
+            ymlConfigBlockPortal.save(configBlockPortal);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //end blockportals
 
         //adventkalender
-
         File folderAdvent = new File("plugins//Adventskalender");
         if (!folderAdvent.exists()) {
             folderAdvent.mkdir();
