@@ -8,10 +8,12 @@
     village:
       description: Teleportiert dich zu deinem Village!
     spawn:
-      description: Teleportiert dich zum Spawn
+      description: Teleportiert dich zum Spawn!
     prison:
       description: Sperrt einen Mitbuerger ins Gefaengnis!
     adventskalender:
-      description: Oeffne dein taegliches Adventstuerchen.
+      description: Oeffne dein taegliches Adventstuerchen!
       aliases:
         - advent
+    vote:
+      description: Waehle einen Buergermeister fuer dein Village!

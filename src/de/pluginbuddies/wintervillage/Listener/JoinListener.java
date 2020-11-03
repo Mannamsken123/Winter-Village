@@ -46,6 +46,14 @@ public class JoinListener implements Listener {
         //Join-Message
         event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
         st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
+
+        /*
+        PermissionAttachment att = player.addAttachment(Main.getPlugin());
+        att.setPermission("wintervillage.prison", true);
+        Main.Bürgermeister.put(player,att);
+        */
+
+
     }
 
     @EventHandler
