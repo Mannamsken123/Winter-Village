@@ -5,6 +5,8 @@
   commands:
     gm:
       description: Aendert deinen Spielmodus!
+      aliases:
+        - gamemode
     village:
       description: Teleportiert dich zu deinem Village!
     spawn:

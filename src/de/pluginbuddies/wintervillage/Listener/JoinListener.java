@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Listener;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import de.pluginbuddies.wintervillage.Util.Team;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -26,6 +27,11 @@ public class JoinListener implements Listener {
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
+        Main.Bürgermeisterblue.clear();
+        Main.Bürgermeisterred.clear();
+        Team.maketeams();
+
+
         if (!player.hasPlayedBefore()) {
             player.setGameMode(GameMode.SURVIVAL);
             //Spawn-TP
@@ -43,15 +49,27 @@ public class JoinListener implements Listener {
             st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
         }
 
-        //Join-Message
-        event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
+        //event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
         st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
-        /*
-        PermissionAttachment att = player.addAttachment(Main.getPlugin());
-        att.setPermission("wintervillage.prison", true);
-        Main.Bürgermeister.put(player,att);
-        */
+
+        if (player.hasPermission("wintervillage.prisonblue")) {
+            Team.prefix(player, "&1BlauMeister: ");
+            event.setJoinMessage("§a§l>> §1" + player.getName() + " §7ist beigetreten!");
+        }
+        if (player.hasPermission("wintervillage.prisonred")) {
+            Team.prefix(player, "&4RotMeister: ");
+            event.setJoinMessage("§a§l>> §4" + player.getName() + " §7ist beigetreten!");
+        }
+
+        if (player.hasPermission("wintervillage.blueteam")) {
+            Team.prefix(player, "&9Blau: ");
+            event.setJoinMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
+        }
+        if (player.hasPermission("wintervillage.redteam")) {
+            Team.prefix(player, "&cRot: ");
+            event.setJoinMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
+        }
 
 
     }
@@ -60,8 +78,19 @@ public class JoinListener implements Listener {
     public void handlePlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        //Quit-Message
-        event.setQuitMessage("§4§l<< §7" + player.getName() + " hat verlassen!");
+        if (player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§a§l>> §1" + player.getName() + " §7ist beigetreten!");
+        }
+        if (player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§a§l>> §4" + player.getName() + " §7ist beigetreten!");
+        }
+
+        if (player.hasPermission("wintervillage.blueteam")) {
+            event.setQuitMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
+        }
+        if (player.hasPermission("wintervillage.redteam")) {
+            event.setQuitMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
+        }
     }
 
     public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {

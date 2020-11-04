@@ -5,7 +5,9 @@ package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
 import de.pluginbuddies.wintervillage.Listener.BlockPortalListener;
+import de.pluginbuddies.wintervillage.Listener.ChatColorListener;
 import de.pluginbuddies.wintervillage.Listener.JoinListener;
+import de.pluginbuddies.wintervillage.Util.Team;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,7 +40,8 @@ public class Main extends JavaPlugin {
     private boolean voteOpen = false;
 
     //Bürgermeister - Permisson - Vote
-    public static HashMap<Player, PermissionAttachment> Bürgermeister = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> Bürgermeisterblue = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> Bürgermeisterred = new HashMap<Player, PermissionAttachment>();
     public List<String> voted = new ArrayList<>();
     public HashMap<String, Integer> votes = new HashMap<>();
     public List<String> names = new ArrayList<>();
@@ -48,6 +51,30 @@ public class Main extends JavaPlugin {
     public static Main getPlugin() {
         return plugin;
     }
+
+    public static HashMap<Player, PermissionAttachment> RotBürger1 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger2 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger3 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger4 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger5 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger6 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger7 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger8 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger9 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBürger10 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger1 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger2 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger3 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger4 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger5 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger6 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger7 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger8 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger9 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBürger10 = new HashMap<Player, PermissionAttachment>();
+    //teams
+    static File configteams = new File("plugins//Teams//config.yml");
+    public static YamlConfiguration ymlConfigteams = YamlConfiguration.loadConfiguration(configteams);
 
     //blockportals
     static File configBlockPortal = new File("plugins//BlockPortal//config.yml");
@@ -153,7 +180,6 @@ public class Main extends JavaPlugin {
             votes.put(all, 0);
         }
 
-        Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
         PrisonCommand prisonCommand = new PrisonCommand();
 
         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -333,6 +359,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(prisonCommand, this);
         pluginManager.registerEvents(new AdventskalenderCommand(), this);
         pluginManager.registerEvents(new BlockPortalListener(), this);
+        pluginManager.registerEvents(new ChatColorListener(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");
@@ -410,5 +437,60 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //end adventskalender
+
+        //teams
+        File folderTeams = new File("plugins//Teams");
+        if (!folderTeams.exists()) {
+            folderTeams.mkdir();
+        }
+        if (!configteams.exists()) {
+            try {
+                configteams.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ymlConfigteams.options().copyDefaults(true);
+        ymlConfigteams.addDefault("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
+        ymlConfigteams.addDefault("Rot.2", "");
+        ymlConfigteams.addDefault("Rot.3", "");
+        ymlConfigteams.addDefault("Rot.4", "");
+        ymlConfigteams.addDefault("Rot.5", "");
+        ymlConfigteams.addDefault("Rot.6", "");
+        ymlConfigteams.addDefault("Rot.7", "");
+        ymlConfigteams.addDefault("Rot.8", "");
+        ymlConfigteams.addDefault("Rot.9", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");
+        ymlConfigteams.addDefault("Rot.10", "");
+        ymlConfigteams.addDefault("RotMeister.1", "");
+        ymlConfigteams.addDefault("Blau.1", "");
+        ymlConfigteams.addDefault("Blau.2", "");
+        ymlConfigteams.addDefault("Blau.3", "");
+        ymlConfigteams.addDefault("Blau.4", "");
+        ymlConfigteams.addDefault("Blau.5", "");
+        ymlConfigteams.addDefault("Blau.6", "");
+        ymlConfigteams.addDefault("Blau.7", "");
+        ymlConfigteams.addDefault("Blau.8", "");
+        ymlConfigteams.addDefault("Blau.9", "");
+        ymlConfigteams.addDefault("Blau.10", "");
+        ymlConfigteams.addDefault("BlauMeister.1", "");
+
+
+        try {
+            ymlConfigteams.save(configteams);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //end teams
+
+        load();
     }
+
+    private void load() {
+
+        Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
+
+    }
+
+
 }
