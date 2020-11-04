@@ -43,7 +43,7 @@ public class Team {
         String bt7 = Main.ymlConfigteams.getString("Blau.7");
         String bt8 = Main.ymlConfigteams.getString("Blau.8");
         String bt9 = Main.ymlConfigteams.getString("Blau.9");
-        String bt10 = Main.ymlConfigteams.getString("Blau.0");
+        String bt10 = Main.ymlConfigteams.getString("Blau.10");
 
         if (!bluemeister.isEmpty()) {
             //BlauerMeister
@@ -250,7 +250,6 @@ public class Team {
             }
         }
         //______________________________BLUE-TEAM-END_________________________________________
-
     }
 
     public static String getName(String uuid) {

@@ -452,15 +452,15 @@ public class Main extends JavaPlugin {
         }
 
         ymlConfigteams.options().copyDefaults(true);
-        ymlConfigteams.addDefault("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
-        ymlConfigteams.addDefault("Rot.2", "");
+        ymlConfigteams.addDefault("Rot.1", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");
+        ymlConfigteams.addDefault("Rot.2", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
         ymlConfigteams.addDefault("Rot.3", "");
         ymlConfigteams.addDefault("Rot.4", "");
         ymlConfigteams.addDefault("Rot.5", "");
         ymlConfigteams.addDefault("Rot.6", "");
         ymlConfigteams.addDefault("Rot.7", "");
         ymlConfigteams.addDefault("Rot.8", "");
-        ymlConfigteams.addDefault("Rot.9", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");
+        ymlConfigteams.addDefault("Rot.9", "");
         ymlConfigteams.addDefault("Rot.10", "");
         ymlConfigteams.addDefault("RotMeister.1", "");
         ymlConfigteams.addDefault("Blau.1", "");
@@ -475,7 +475,6 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Blau.10", "");
         ymlConfigteams.addDefault("BlauMeister.1", "");
 
-
         try {
             ymlConfigteams.save(configteams);
         } catch (IOException e) {
@@ -487,6 +486,10 @@ public class Main extends JavaPlugin {
     }
 
     private void load() {
+
+        Bürgermeisterred.clear();
+        Bürgermeisterblue.clear();
+        Team.maketeams();
 
         Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
 

@@ -27,10 +27,9 @@ public class JoinListener implements Listener {
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        Main.Bürgermeisterblue.clear();
         Main.Bürgermeisterred.clear();
+        Main.Bürgermeisterblue.clear();
         Team.maketeams();
-
 
         if (!player.hasPlayedBefore()) {
             player.setGameMode(GameMode.SURVIVAL);
@@ -79,17 +78,17 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
 
         if (player.hasPermission("wintervillage.prisonblue")) {
-            event.setQuitMessage("§a§l>> §1" + player.getName() + " §7ist beigetreten!");
+            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
         }
         if (player.hasPermission("wintervillage.prisonred")) {
-            event.setQuitMessage("§a§l>> §4" + player.getName() + " §7ist beigetreten!");
+            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
         }
 
         if (player.hasPermission("wintervillage.blueteam")) {
-            event.setQuitMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
+            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
         }
         if (player.hasPermission("wintervillage.redteam")) {
-            event.setQuitMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
+            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
         }
     }
 
