@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R2.util.CraftChatMessage;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class JoinListener implements Listener {
@@ -29,8 +33,7 @@ public class JoinListener implements Listener {
 
         Main.Bürgermeisterblue.clear();
         Main.Bürgermeisterred.clear();
-        Team.maketeams();
-
+        //Team.maketeams(); //PLS FIX
 
         if (!player.hasPlayedBefore()) {
             player.setGameMode(GameMode.SURVIVAL);
@@ -47,7 +50,110 @@ public class JoinListener implements Listener {
             player.getInventory().clear();
             player.sendMessage(Main.getPlugin().PREFIX + "§bHerzlich Willkommen bei Winter Village!");
             st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
+
+            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            if (!configMessages.exists()) {
+                try {
+                    configMessages.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            ymlConfigMessages.options().copyDefaults(true);
+            ymlConfigMessages.addDefault("Nether", "false");
+            ymlConfigMessages.addDefault("Adventskalender", "false");
+            ymlConfigMessages.addDefault("End", "false");
+            ymlConfigMessages.addDefault("Nikolaus", "false");
+            ymlConfigMessages.addDefault("VoteOpen", "false");
+            ymlConfigMessages.addDefault("VoteClose", "false");
+
+            try {
+                ymlConfigMessages.save(configMessages);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        if (Main.getPlugin().getNetherOpen() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String nether = ymlConfigMessages.getString("Nether");
+
+            if (nether.equals("false")) {
+                ymlConfigMessages.set("Nether", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
+            }
+        }
+        if (Main.getPlugin().getAdventskalenderOpen() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String nether = ymlConfigMessages.getString("Adventskalender");
+
+            if (nether.equals("false")) {
+                ymlConfigMessages.set("Adventskalender", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+            }
+        }
+        if (Main.getPlugin().getEndOpen() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String nether = ymlConfigMessages.getString("End");
+            String getFalse = Main.getPlugin().getYmlConfigBlockPortal().getString("EndSpawn");
+
+            if (getFalse.equals("true")) {
+                ymlConfigMessages.set("End", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (nether.equals("false")) {
+                ymlConfigMessages.set("End", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
+            }
+        }
+        if (Main.getPlugin().getNikolausOpen() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String nether = ymlConfigMessages.getString("Nikolaus");
+
+            if (nether.equals("false")) {
+                ymlConfigMessages.set("Nikolaus", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // NIKOLAUS MESSAGE
+                //Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+            }
+        }
+        //ADD VOTE MESSAGES HERE
+
 
         //event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
         st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
@@ -70,7 +176,6 @@ public class JoinListener implements Listener {
             Team.prefix(player, "&cRot: ");
             event.setJoinMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
         }
-
 
     }
 

@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
+import de.pluginbuddies.wintervillage.Listener.AdventskalenderListener;
 import de.pluginbuddies.wintervillage.Listener.BlockPortalListener;
 import de.pluginbuddies.wintervillage.Listener.ChatColorListener;
 import de.pluginbuddies.wintervillage.Listener.JoinListener;
@@ -33,11 +34,14 @@ public class Main extends JavaPlugin {
     //putsch
     private boolean putschRot = false;
     private boolean putschBlau = false;
+
     //booleans for TIME CHECKER
-    private boolean netherOpen = false;
-    private boolean endOpen = false;
-    private boolean nikolausOpen = false;
-    private boolean voteOpen = false;
+    private String netherOpen;
+    private String endOpen;
+    private String adventskalenderOpen;
+    private String nikolausOpen;
+    private String voteOpen;
+    private String voteClose;
 
     //Bürgermeister - Permisson - Vote
     public static HashMap<Player, PermissionAttachment> Bürgermeisterblue = new HashMap<Player, PermissionAttachment>();
@@ -78,7 +82,24 @@ public class Main extends JavaPlugin {
 
     //blockportals
     static File configBlockPortal = new File("plugins//BlockPortal//config.yml");
+
+    public static File getConfigBlockPortal() {
+        return configBlockPortal;
+    }
+
+    public static void setConfigBlockPortal(File configBlockPortal) {
+        Main.configBlockPortal = configBlockPortal;
+    }
+
     public static YamlConfiguration ymlConfigBlockPortal = YamlConfiguration.loadConfiguration(configBlockPortal);
+
+    public static YamlConfiguration getYmlConfigBlockPortal() {
+        return ymlConfigBlockPortal;
+    }
+
+    public static void setYmlConfigBlockPortal(YamlConfiguration ymlConfigBlockPortal) {
+        Main.ymlConfigBlockPortal = ymlConfigBlockPortal;
+    }
     //end blockportals
 
     //adventskalender
@@ -107,63 +128,66 @@ public class Main extends JavaPlugin {
             return false;
         }
     }
-
     //end adventskalender
-    private boolean voteClose = false;
 
     public boolean getPutschRot() {
         return putschRot;
     }
-
     public void setPutschRot(boolean putschRot) {
         this.putschRot = putschRot;
     }
-
     public boolean getPutschBlau() {
         return putschBlau;
     }
-
     public void setPutschBlau(boolean putschBlau) {
         this.putschBlau = putschBlau;
     }
 
-    public boolean getNetherOpen() {
+    public String getNetherOpen() {
         return netherOpen;
     }
 
-    public void setNetherOpen(boolean netherOpen) {
+    public void setNetherOpen(String netherOpen) {
         this.netherOpen = netherOpen;
     }
 
-    public boolean getEndOpen() {
+    public String getAdventskalenderOpen() {
+        return adventskalenderOpen;
+    }
+
+    public void setAdventskalenderOpen(String adventskalenderOpen) {
+        this.adventskalenderOpen = adventskalenderOpen;
+    }
+
+    public String getEndOpen() {
         return endOpen;
     }
 
-    public void setEndOpen(boolean endOpen) {
+    public void setEndOpen(String endOpen) {
         this.endOpen = endOpen;
     }
 
-    public boolean getNikolausOpen() {
+    public String getNikolausOpen() {
         return nikolausOpen;
     }
 
-    public void setNikolausOpen(boolean nikolausOpen) {
+    public void setNikolausOpen(String nikolausOpen) {
         this.nikolausOpen = nikolausOpen;
     }
 
-    public boolean getVoteOpen() {
+    public String getVoteOpen() {
         return voteOpen;
     }
 
-    public void setVoteOpen(boolean voteOpen) {
+    public void setVoteOpen(String voteOpen) {
         this.voteOpen = voteOpen;
     }
 
-    public boolean getVoteClose() {
+    public String getVoteClose() {
         return voteClose;
     }
 
-    public void setVoteClose(boolean voteClose) {
+    public void setVoteClose(String voteClose) {
         this.voteClose = voteClose;
     }
     //end booleans for TIME CHECKER
@@ -187,8 +211,8 @@ public class Main extends JavaPlugin {
             all.sendMessage("§aServer " + "§8>> " + "§aPlugin geladen.");
         }
 
-        //TIME CHECKER
 
+        //TIME CHECKER
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -213,6 +237,15 @@ public class Main extends JavaPlugin {
                         e.printStackTrace();
                     }
 
+                    //ADVENTSKALENDER ÖFFNEN
+                    Date adventskalenderDate = null;
+                    String adventskalender = "2020/12/01";
+                    try {
+                        adventskalenderDate = sdf.parse(adventskalender);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     //Nikolaus
                     Date nikolausDate = null;
                     String nikolaus = "2020/12/06";
@@ -227,6 +260,15 @@ public class Main extends JavaPlugin {
                     String vote1 = "2020/11/26";
                     try {
                         vote1Date = sdf.parse(vote1);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    //VOTE 1 CLOSE
+                    Date vote1closeDate = null;
+                    String vote1close = "2020/11/27";
+                    try {
+                        vote1closeDate = sdf.parse(vote1close);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -295,52 +337,145 @@ public class Main extends JavaPlugin {
                     Date currentDate = new Date();
 
                     if (!netherDate.after(currentDate)) {
-                        setNetherOpen(true);
-                        Bukkit.broadcastMessage(PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
-                        World world = Bukkit.getWorld("world");
-                        Location loc1 = new Location(world, 129, 40, -77);
-                        Location loc2 = new Location(world, 129, 44, -83);
-                        int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
-                        int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());
-                        int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
-                        int maxX = Math.max(loc1.getBlockX(), loc2.getBlockX());
-                        int maxY = Math.max(loc1.getBlockY(), loc2.getBlockY());
-                        int maxZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+                        if (getNetherOpen() == null) {
+                            setNetherOpen("true");
+                            Bukkit.broadcastMessage(PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
+                            World world = Bukkit.getWorld("world");
+                            Location loc1 = new Location(world, 129, 40, -77);
+                            Location loc2 = new Location(world, 129, 44, -83);
+                            int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
+                            int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());
+                            int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+                            int maxX = Math.max(loc1.getBlockX(), loc2.getBlockX());
+                            int maxY = Math.max(loc1.getBlockY(), loc2.getBlockY());
+                            int maxZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 
-                        for (int x = minX; x <= maxX; x++) {
-                            for (int y = minY; y <= maxY; y++) {
-                                for (int z = minZ; z <= maxZ; z++) {
-                                    Block block = world.getBlockAt(x, y, z);
-                                    block.setType(Material.STONE);
+                            for (int x = minX; x <= maxX; x++) {
+                                for (int y = minY; y <= maxY; y++) {
+                                    for (int z = minZ; z <= maxZ; z++) {
+                                        Block block = world.getBlockAt(x, y, z);
+                                        block.setType(Material.AIR);
+                                    }
+                                }
+                            }
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("Nether");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("Nether", "true");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (!adventskalenderDate.after(currentDate)) {
+                        if (getAdventskalenderOpen() == null) {
+                            setAdventskalenderOpen("true");
+                            Bukkit.broadcastMessage(PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("Adventskalender");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("Adventskalender", "true");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                         }
                     }
 
                     if (!endDate.after(currentDate)) {
-                        setEndOpen(true);
-                        Bukkit.broadcastMessage(PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
-                        //open worldguard file and edit that you can go into area endportal
+                        if (getEndOpen() == null) {
+                            setEndOpen("true");
+                            Bukkit.broadcastMessage(PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("End");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("End", "true");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     if (!nikolausDate.after(currentDate)) {
-                        //nikolaus
-                        //set boolean to true for  double ore listener or other stuff
+                        if (getNikolausOpen() == null) {
+                            setNikolausOpen("true");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("Nikolaus");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("Nikolaus", "true");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            //set boolean to true for  double ore listener or other stuff
+                        }
                     }
 
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
-                        //vote open
-                        setVoteOpen(true);
-                        Bukkit.broadcastMessage(PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote§b.");
+                        if (getVoteOpen() == null) {
+                            //vote open
+                            if (getVoteClose() != null) {
+                                setVoteClose(null);
+                            }
+                            setVoteOpen("true");
+                            Bukkit.broadcastMessage(PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote§b.");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("VoteOpen");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("VoteOpen", "true");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
                     }
 
 
-                    if (!endDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate)) {
-                        //vote close
-                        setVoteOpen(false);
-                        setVoteClose(true);
+                    if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate)) {
+                        if (getVoteClose() == null) {
+                            //vote close
+                            setVoteOpen(null);
+                            setVoteClose("true");
+                        }
                     }
-
                 }
             }
         }, 100, 600 * 20);
@@ -358,6 +493,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new JoinListener(), this);
         pluginManager.registerEvents(prisonCommand, this);
         pluginManager.registerEvents(new AdventskalenderCommand(), this);
+        pluginManager.registerEvents(new AdventskalenderListener(), this);
         pluginManager.registerEvents(new BlockPortalListener(), this);
         pluginManager.registerEvents(new ChatColorListener(), this);
 
@@ -382,8 +518,13 @@ public class Main extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //end blockportals
+
+        //messages
+        File folderMessages = new File("plugins//Messages");
+        if (!folderMessages.exists()) {
+            folderMessages.mkdir();
+        }
 
         //adventkalender
         File folderAdvent = new File("plugins//Adventskalender");
@@ -413,7 +554,7 @@ public class Main extends JavaPlugin {
         ymlConfigAdvent.addDefault("Reward.5", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:power',lvl:2}]} 1");
         ymlConfigAdvent.addDefault("Reward.6", "minecraft::netherite_scrap 2");
         ymlConfigAdvent.addDefault("Reward.7", "minecraft:minecraft:turtle_helmet 1");
-        ymlConfigAdvent.addDefault("Reward.8", "minecraft::enchanted_book{StoredEnchantments:[{id:'minecraft:frost_walker',lvl:1}]} 2");
+        ymlConfigAdvent.addDefault("Reward.8", "minecraft::enchanted_book{StoredEnchantments:[{id:'minecraft:frost_walker',lvl:2}]} 1");
         ymlConfigAdvent.addDefault("Reward.9", "minecraft::experience_bottle 41");
         ymlConfigAdvent.addDefault("Reward.10", "minecraft:horse_spawn_egg 1");
         ymlConfigAdvent.addDefault("Reward.11", "minecraft:minecraft:name_tag 1");
@@ -425,7 +566,7 @@ public class Main extends JavaPlugin {
         ymlConfigAdvent.addDefault("Reward.17", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:sharpness',lvl:3}]} 1");
         ymlConfigAdvent.addDefault("Reward.18", "minecraft:firework_rocket 64");
         ymlConfigAdvent.addDefault("Reward.19", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:mending',lvl:3}]} 1");
-        ymlConfigAdvent.addDefault("Reward.20", "minecraft:elytra 1");
+        ymlConfigAdvent.addDefault("Reward.20", "minecraft:gold_ingot 42");
         ymlConfigAdvent.addDefault("Reward.21", "minecraft:diamond 12");
         ymlConfigAdvent.addDefault("Reward.22", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:efficiency',lvl:5}]} 1");
         ymlConfigAdvent.addDefault("Reward.23", "minecraft:enchanted_golden_apple 1");

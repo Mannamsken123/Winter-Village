@@ -32,7 +32,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         Player p = (Player) sender;
 
-        if (monat.format(now).equals("11")) {
+        if (monat.format(now).equals("12")) {
             //Ist Dezember
             Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
             for (int i = 1; i <= 24; i++) {
@@ -80,7 +80,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                         j = "0" + i;
                     }
                     if (tag.format(now).equals(j)) {
-                        if (!Main.hasUsed(p.getUniqueId().toString(), 1)) {
+                        if (!Main.hasUsed(p.getUniqueId().toString(), i)) {
                             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " " + Main.ymlConfigAdvent.getString("Reward." + i));
                             p.closeInventory();
                             p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung aus dem " + i + ". Türchen");
