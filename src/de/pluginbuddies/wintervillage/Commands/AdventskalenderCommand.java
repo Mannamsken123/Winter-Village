@@ -32,7 +32,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         Player p = (Player) sender;
 
-        if (monat.format(now).equals("11")) {
+        if (monat.format(now).equals("12")) {
             //Ist Dezember
             Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
             for (int i = 1; i <= 24; i++) {
