@@ -51,7 +51,7 @@ public class JoinListener implements Listener {
             player.sendMessage(Main.getPlugin().PREFIX + "§bHerzlich Willkommen bei Winter Village!");
             st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
-            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
             if (!configMessages.exists()) {
@@ -77,7 +77,7 @@ public class JoinListener implements Listener {
         }
 
         if (Main.getPlugin().getNetherOpen() == "true") {
-            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
             String nether = ymlConfigMessages.getString("Nether");
@@ -90,11 +90,11 @@ public class JoinListener implements Listener {
                     e.printStackTrace();
                 }
 
-                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
             }
         }
         if (Main.getPlugin().getAdventskalenderOpen() == "true") {
-            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
             String nether = ymlConfigMessages.getString("Adventskalender");
@@ -107,16 +107,17 @@ public class JoinListener implements Listener {
                     e.printStackTrace();
                 }
 
-                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
             }
         }
         if (Main.getPlugin().getEndOpen() == "true") {
-            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-            String nether = ymlConfigMessages.getString("End");
+            String end = ymlConfigMessages.getString("End");
             String getFalse = Main.getPlugin().getYmlConfigBlockPortal().getString("EndSpawn");
 
+            //end auf und enderdrache dead
             if (getFalse.equals("true")) {
                 ymlConfigMessages.set("End", "true");
                 try {
@@ -124,19 +125,21 @@ public class JoinListener implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (nether.equals("false")) {
+                player.sendMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über das Portal am Spawn betreten werden!");
+
+                //end frei noch enderdrache alive
+            } else if (end.equals("false")) {
                 ymlConfigMessages.set("End", "true");
                 try {
                     ymlConfigMessages.save(configMessages);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
             }
         }
         if (Main.getPlugin().getNikolausOpen() == "true") {
-            File configMessages = new File("plugins//Messages//" + player.getName() + ".yml");
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
             String nether = ymlConfigMessages.getString("Nikolaus");
@@ -149,10 +152,43 @@ public class JoinListener implements Listener {
                     e.printStackTrace();
                 }
                 // NIKOLAUS MESSAGE
-                //Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+                //player.sendMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
             }
         }
-        //ADD VOTE MESSAGES HERE
+        if (Main.getPlugin().getVoteOpen() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String voteOpen = ymlConfigMessages.getString("VoteOpen");
+
+            if (voteOpen.equals("false")) {
+                ymlConfigMessages.set("VoteOpen", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                player.sendMessage(Main.getPlugin().PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§b.");
+            }
+        }
+        if (Main.getPlugin().getVoteClose() == "true") {
+            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+            String voteClose = ymlConfigMessages.getString("VoteClose");
+
+            if (voteClose.equals("false")) {
+                ymlConfigMessages.set("VoteClose", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+                player.sendMessage(Main.getPlugin().PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + Bukkit.getPlayer(redmeister).getName() + "\n§1BlauMeister: §7" + Bukkit.getPlayer(bluemeister).getName());
+            }
+        }
 
 
         //event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");

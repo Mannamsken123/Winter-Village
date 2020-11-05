@@ -15,36 +15,47 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R2.util.CraftChatMessage;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class VillageCommand implements CommandExecutor {
+public class VillageCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
-                    World world2 = Bukkit.getWorld("world");
-                    Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
-                    player.teleport(location);
-                    player.setGameMode(GameMode.SURVIVAL);
-                    st(player.getPlayer(), "", "§cDu befindest dich in deinem Village!", 5, 80, 20);
-                } else if (player.hasPermission("wintervillage.blueteam") || player.hasPermission("wintervillage.prisonblue")) {
-                    World world2 = Bukkit.getWorld("world");
-                    Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
-                    player.teleport(location);
-                    player.setGameMode(GameMode.SURVIVAL);
-                    st(player.getPlayer(), "", "§9Du befindest dich in deinem Village!", 5, 80, 20);
-                } else
-                    player.sendMessage(Main.getPlugin().PREFIX + "§cDazu hast du keine Rechte!");
+                new BukkitRunnable() {
+                    int time = 4;
+
+                    @Override
+                    public void run() {
+                        time--;
+                        if (time == 0) {
+                            if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
+                                World world2 = Bukkit.getWorld("world");
+                                Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
+                                player.teleport(location);
+                                player.setGameMode(GameMode.SURVIVAL);
+                                st(player.getPlayer(), "", "§cDu befindest dich in deinem Village!", 5, 80, 20);
+                            } else if (player.hasPermission("wintervillage.blueteam") || player.hasPermission("wintervillage.prisonblue")) {
+                                World world2 = Bukkit.getWorld("world");
+                                Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
+                                player.teleport(location);
+                                player.setGameMode(GameMode.SURVIVAL);
+                                st(player.getPlayer(), "", "§9Du befindest dich in deinem Village!", 5, 80, 20);
+                            } else
+                                player.sendMessage(Main.getPlugin().PREFIX + "§cDazu hast du keine Rechte!");
+                            cancel();
+                        } else
+                            player.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                    }
+                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
             } else
-                player.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §6/village§c!");
+                player.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/village§c!");
         }
-
-
         return false;
     }
-
     public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         PacketPlayOutTitle times;
         if (title != null) {
@@ -58,5 +69,4 @@ public class VillageCommand implements CommandExecutor {
         times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
-
 }

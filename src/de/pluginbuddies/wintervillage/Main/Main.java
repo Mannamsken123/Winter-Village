@@ -4,21 +4,23 @@
 package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
-import de.pluginbuddies.wintervillage.Listener.AdventskalenderListener;
-import de.pluginbuddies.wintervillage.Listener.BlockPortalListener;
-import de.pluginbuddies.wintervillage.Listener.ChatColorListener;
-import de.pluginbuddies.wintervillage.Listener.JoinListener;
+import de.pluginbuddies.wintervillage.Listener.*;
 import de.pluginbuddies.wintervillage.Util.Team;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class Main extends JavaPlugin {
     private static Main plugin;
     public final String PREFIX = "§aServer " + "§8>> §r";
 
+    public List<String> voted = new ArrayList<>();
+
     //putsch
     private boolean putschRot = false;
     private boolean putschBlau = false;
@@ -42,20 +46,11 @@ public class Main extends JavaPlugin {
     private String nikolausOpen;
     private String voteOpen;
     private String voteClose;
+    public HashMap<String, Integer> votesred = new HashMap<>();
 
     //Bürgermeister - Permisson - Vote
     public static HashMap<Player, PermissionAttachment> Bürgermeisterblue = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> Bürgermeisterred = new HashMap<Player, PermissionAttachment>();
-    public List<String> voted = new ArrayList<>();
-    public HashMap<String, Integer> votes = new HashMap<>();
-    public List<String> names = new ArrayList<>();
-
-    //Bürgermeister - Permisson - Vote end
-
-    public static Main getPlugin() {
-        return plugin;
-    }
-
     public static HashMap<Player, PermissionAttachment> RotBürger1 = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> RotBürger2 = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> RotBürger3 = new HashMap<Player, PermissionAttachment>();
@@ -76,6 +71,17 @@ public class Main extends JavaPlugin {
     public static HashMap<Player, PermissionAttachment> BlauBürger8 = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> BlauBürger9 = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> BlauBürger10 = new HashMap<Player, PermissionAttachment>();
+    public HashMap<String, Integer> votesblue = new HashMap<>();
+    public List<String> namesred = new ArrayList<>();
+    public List<String> namesblue = new ArrayList<>();
+    BürgermeisterVoteCommand bvc = new BürgermeisterVoteCommand();
+
+    public static Main getPlugin() {
+        return plugin;
+    }
+
+    //Bürgermeister - Permisson - Vote end
+
     //teams
     static File configteams = new File("plugins//Teams//config.yml");
     public static YamlConfiguration ymlConfigteams = YamlConfiguration.loadConfiguration(configteams);
@@ -86,17 +92,13 @@ public class Main extends JavaPlugin {
     public static File getConfigBlockPortal() {
         return configBlockPortal;
     }
-
     public static void setConfigBlockPortal(File configBlockPortal) {
         Main.configBlockPortal = configBlockPortal;
     }
-
     public static YamlConfiguration ymlConfigBlockPortal = YamlConfiguration.loadConfiguration(configBlockPortal);
-
     public static YamlConfiguration getYmlConfigBlockPortal() {
         return ymlConfigBlockPortal;
     }
-
     public static void setYmlConfigBlockPortal(YamlConfiguration ymlConfigBlockPortal) {
         Main.ymlConfigBlockPortal = ymlConfigBlockPortal;
     }
@@ -192,17 +194,60 @@ public class Main extends JavaPlugin {
     }
     //end booleans for TIME CHECKER
 
+    public static String getName(String uuid) {
+        String url = "https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names";
+        try {
+            @SuppressWarnings("deprecation")
+            String nameJson = IOUtils.toString(new URL(url));
+            JSONArray nameValue = (JSONArray) JSONValue.parseWithException(nameJson);
+            String playerSlot = nameValue.get(nameValue.size() - 1).toString();
+            JSONObject nameObject = (JSONObject) JSONValue.parseWithException(playerSlot);
+            return nameObject.get("name").toString();
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    private void load() {
+
+        Bürgermeisterred.clear();
+        Bürgermeisterblue.clear();
+        Team.maketeams();
+
+        Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
+
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
 
         //voteing
-        names.add("mullemann25");
-        names.add("mannam01");
 
-        for (String all : names) {
-            votes.put(all, 0);
+        for (int i = 1; i <= 10; i++) {
+            String name = getName(ymlConfigteams.getString("Rot." + i)).toLowerCase();
+
+            if (name != "") {
+                namesred.add(name);
+            }
+
         }
+        for (int i = 1; i <= 10; i++) {
+            String name = getName(ymlConfigteams.getString("Blau." + i)).toLowerCase();
+            if (name != "") {
+                namesblue.add(name);
+            }
+        }
+
+        for (String all : namesred) {
+            votesred.put(all, 0);
+        }
+        for (String all : namesblue) {
+            votesblue.put(all, 0);
+        }
+
+        //VOTEING ENDs
 
         PrisonCommand prisonCommand = new PrisonCommand();
 
@@ -339,7 +384,6 @@ public class Main extends JavaPlugin {
                     if (!netherDate.after(currentDate)) {
                         if (getNetherOpen() == null) {
                             setNetherOpen("true");
-                            Bukkit.broadcastMessage(PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
                             World world = Bukkit.getWorld("world");
                             Location loc1 = new Location(world, 129, 40, -77);
                             Location loc2 = new Location(world, 129, 44, -83);
@@ -359,13 +403,13 @@ public class Main extends JavaPlugin {
                                 }
                             }
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
-
                                 String xxx = ymlConfigMessages.getString("Nether");
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("Nether", "true");
+                                    all.sendMessage(PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -379,15 +423,16 @@ public class Main extends JavaPlugin {
                     if (!adventskalenderDate.after(currentDate)) {
                         if (getAdventskalenderOpen() == null) {
                             setAdventskalenderOpen("true");
-                            Bukkit.broadcastMessage(PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
                                 String xxx = ymlConfigMessages.getString("Adventskalender");
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("Adventskalender", "true");
+                                    all.sendMessage(PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -401,15 +446,16 @@ public class Main extends JavaPlugin {
                     if (!endDate.after(currentDate)) {
                         if (getEndOpen() == null) {
                             setEndOpen("true");
-                            Bukkit.broadcastMessage(PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
+
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
                                 String xxx = ymlConfigMessages.getString("End");
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("End", "true");
+                                    all.sendMessage(PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -424,13 +470,14 @@ public class Main extends JavaPlugin {
                         if (getNikolausOpen() == null) {
                             setNikolausOpen("true");
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
                                 String xxx = ymlConfigMessages.getString("Nikolaus");
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("Nikolaus", "true");
+                                    //all.sendMessage(PREFIX + "§bNikolaus");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -445,19 +492,23 @@ public class Main extends JavaPlugin {
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
                             //vote open
+
+                            //FIX DATUM UNENDLICHER LOOP  GETTER SETTER für Hardcode Datum ->Zukunft
+
+
                             if (getVoteClose() != null) {
                                 setVoteClose(null);
                             }
                             setVoteOpen("true");
-                            Bukkit.broadcastMessage(PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote§b.");
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File configMessages = new File("plugins//Messages//" + all.getName() + ".yml");
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
                                 String xxx = ymlConfigMessages.getString("VoteOpen");
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("VoteOpen", "true");
+                                    all.sendMessage(PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§b.");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -468,12 +519,44 @@ public class Main extends JavaPlugin {
                         }
                     }
 
-
                     if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate)) {
                         if (getVoteClose() == null) {
                             //vote close
                             setVoteOpen(null);
                             setVoteClose("true");
+
+                            bvc.getResult();
+                            String winnerblau = bvc.getrEb();
+                            String winnerrot = bvc.getrEr();
+                            if (!bvc.getrEr().isEmpty()) {
+                                ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
+                            }
+                            if (!bvc.getrEb().isEmpty()) {
+                                ymlConfigteams.set("BlauMeister.1", getUuid(winnerblau));
+                            }
+                            try {
+                                ymlConfigteams.save(configteams);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                String xxx = ymlConfigMessages.getString("VoteClose");
+
+                                if (xxx.equals("false")) {
+                                    ymlConfigMessages.set("VoteClose", "true");
+                                    all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + Bukkit.getPlayer(getUuid(winnerrot)).getName() + "\n§1BlauMeister: §7" + Bukkit.getPlayer(getUuid(winnerrot)).getName());
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -496,6 +579,8 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new AdventskalenderListener(), this);
         pluginManager.registerEvents(new BlockPortalListener(), this);
         pluginManager.registerEvents(new ChatColorListener(), this);
+        pluginManager.registerEvents(new VillageCommand(), this);
+        pluginManager.registerEvents(new DeathListener(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");
@@ -584,37 +669,44 @@ public class Main extends JavaPlugin {
         if (!folderTeams.exists()) {
             folderTeams.mkdir();
         }
-        if (!configteams.exists()) {
-            try {
-                configteams.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            configteams.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        ymlConfigteams.options().copyDefaults(true);
-        ymlConfigteams.addDefault("Rot.1", "");
-        ymlConfigteams.addDefault("Rot.2", "");
-        ymlConfigteams.addDefault("Rot.3", "");
-        ymlConfigteams.addDefault("Rot.4", "");
-        ymlConfigteams.addDefault("Rot.5", "");
-        ymlConfigteams.addDefault("Rot.6", "");
-        ymlConfigteams.addDefault("Rot.7", "");
-        ymlConfigteams.addDefault("Rot.8", "");
-        ymlConfigteams.addDefault("Rot.9", "");
-        ymlConfigteams.addDefault("Rot.10", "");
-        ymlConfigteams.addDefault("RotMeister.1", "");
-        ymlConfigteams.addDefault("Blau.1", "");
-        ymlConfigteams.addDefault("Blau.2", "");
-        ymlConfigteams.addDefault("Blau.3", "");
-        ymlConfigteams.addDefault("Blau.4", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");
-        ymlConfigteams.addDefault("Blau.5", "");
-        ymlConfigteams.addDefault("Blau.6", "");
-        ymlConfigteams.addDefault("Blau.7", "");
-        ymlConfigteams.addDefault("Blau.8", "");
-        ymlConfigteams.addDefault("Blau.9", "");
-        ymlConfigteams.addDefault("Blau.10", "");
-        ymlConfigteams.addDefault("BlauMeister.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
+        ymlConfigteams.set("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
+        ymlConfigteams.set("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
+        ymlConfigteams.set("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
+        ymlConfigteams.set("Rot.4", "");
+        ymlConfigteams.set("Rot.5", "");
+        ymlConfigteams.set("Rot.6", "");
+        ymlConfigteams.set("Rot.7", "");
+        ymlConfigteams.set("Rot.8", "");
+        ymlConfigteams.set("Rot.9", "");
+        ymlConfigteams.set("Rot.10", "");
+        ymlConfigteams.set("Blau.1", "309f61d4-d7dd-4449-aa1d-13e212946920");//Fabio
+        ymlConfigteams.set("Blau.2", "914dc737-befe-46dd-8246-4a352c0ecb62");//Julian
+        ymlConfigteams.set("Blau.3", "2c13d227-9811-48e7-a15d-0450e624c1d4");//Cedric
+        ymlConfigteams.set("Blau.4", "c7205151-985f-4475-a829-55cf5545d892");//Vito
+        ymlConfigteams.set("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
+        ymlConfigteams.set("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
+        ymlConfigteams.set("Blau.7", "");
+        ymlConfigteams.set("Blau.8", "");
+        ymlConfigteams.set("Blau.9", "");
+        ymlConfigteams.set("Blau.10", "");
+
+        if (!bvc.getrEr().isEmpty()) {
+            ymlConfigteams.set("RotMeister.1", getUuid(bvc.getrEr()));
+        } else {
+            ymlConfigteams.set("RotMeister.1", "");
+        }
+        if (!bvc.getrEb().isEmpty()) {
+            ymlConfigteams.set("BlauMeister.1", getUuid(bvc.getrEb()));
+        } else {
+            ymlConfigteams.set("BlauMeister.1", "");
+        }
 
         try {
             ymlConfigteams.save(configteams);
@@ -623,17 +715,23 @@ public class Main extends JavaPlugin {
         }
         //end teams
 
+
         load();
     }
 
-    private void load() {
+    public String getUuid(String name) {
+        String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
+        try {
+            @SuppressWarnings("deprecation")
+            String UUIDJson = IOUtils.toString(new URL(url));
+            if (UUIDJson.isEmpty()) return "invalid name";
+            JSONObject UUIDObject = (JSONObject) JSONValue.parseWithException(UUIDJson);
+            return UUIDObject.get("id").toString();
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
 
-        Bürgermeisterred.clear();
-        Bürgermeisterblue.clear();
-        Team.maketeams();
-
-        Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
+        return "error";
     }
 
 

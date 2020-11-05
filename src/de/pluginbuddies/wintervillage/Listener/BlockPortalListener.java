@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -25,7 +26,7 @@ public class BlockPortalListener implements Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent e) {
-
+        Player p = e.getPlayer();
         if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
             String date = "2020/11/27"; //NETHER ÖFFNET SICH AM 27.11.2020
             Date enteredDate = null;
@@ -38,9 +39,9 @@ public class BlockPortalListener implements Listener {
             Date currentDate = new Date();
 
             if (enteredDate.after(currentDate)) {
-                e.getPlayer().sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas Nether ist noch geschlossen. \n§6Es wird sich am 27.11. öffnen und kann dann über das Portal am spawn betreten werden.");
+                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas Nether ist noch geschlossen. \n§6Es wird sich am 27.11. öffnen und kann dann über das Portal am spawn betreten werden.");
             } else {
-                e.getPlayer().sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cBitte benutze das Netherportal am Spawn.");
+                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cBitte benutze das Netherportal am Spawn.");
             }
             e.setCancelled(true);
         }
@@ -60,10 +61,10 @@ public class BlockPortalListener implements Listener {
             String getFalse = Main.getPlugin().getYmlConfigBlockPortal().getString("EndSpawn");
 
             if (enteredDate.after(currentDate) && getFalse.equals("false")) {
-                e.getPlayer().sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas End ist noch geschlossen. \n§6Es wird sich am 01.12. öffnen.");
+                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas End ist noch geschlossen. \n§6Es wird sich am 01.12. öffnen.");
                 e.setCancelled(true);
             } else if (enteredDate.after(currentDate) && getFalse.equals("true")) {
-                e.getPlayer().sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas End ist bereits freigeschaltet worden und kann über das Portal am Spawn betreten werden.");
+                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cDas End ist bereits freigeschaltet worden und kann über das Portal am Spawn betreten werden.");
                 e.setCancelled(true);
             }
         }

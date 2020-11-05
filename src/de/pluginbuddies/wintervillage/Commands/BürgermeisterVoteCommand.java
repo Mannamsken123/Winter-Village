@@ -4,81 +4,114 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class BürgermeisterVoteCommand implements CommandExecutor {
+
+    private String rEr = ""; //FINAL Winner Rot
+    private String rEb = ""; //FINAL Winner Blau
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (args[0].equalsIgnoreCase("result")) {
-                if (player.hasPermission("wintervillage.voteresult")) {
-                    getResult();
-                } else
-                    player.sendMessage(Main.getPlugin().PREFIX + "§cDu besitzt keine Rechte, um dies zu tun!");
-            }
-            if (args[0].equalsIgnoreCase("list")) {
-                getList(player);
-            }
-            if (args[0].equalsIgnoreCase("rot")) {
-
-                if (!Main.getPlugin().voted.contains(player.getName())) {
-                    if (Main.getPlugin().names.contains(args[1].toLowerCase())) {
-
-                        Main.getPlugin().votes.put(args[1].toLowerCase(), Main.getPlugin().votes.get(args[1].toLowerCase()) + 1);
-
-                        player.sendMessage(Main.getPlugin().PREFIX + "§cDu hast für §6" + args[1] + " §cgestimmt!");
-                        Main.getPlugin().voted.add(player.getName());
+            Player p = (Player) sender;
+            if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
+                if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
+                    if (args.length == 1) {
+                        if (!Main.getPlugin().voted.contains(p.getName())) {
+                            if (Main.getPlugin().namesred.contains(args[1].toLowerCase())) {
+                                Main.getPlugin().votesred.put(args[1].toLowerCase(), Main.getPlugin().votesred.get(args[1].toLowerCase()) + 1);
+                                p.sendMessage(Main.getPlugin().PREFIX + "§bDu hast für §c" + args[1] + " §bgestimmt!");
+                                Main.getPlugin().voted.add(p.getName());
+                            } else
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
+                        } else
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
                     } else
-                        player.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
-                } else
-                    player.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
-            }
+                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/vote <Name>§c!");
+                }
+            } else
+                p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
+
+            if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
+                if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
+                    if (args.length == 1) {
+                        if (!Main.getPlugin().voted.contains(p.getName())) {
+                            if (Main.getPlugin().namesblue.contains(args[1].toLowerCase())) {
+                                Main.getPlugin().votesblue.put(args[1].toLowerCase(), Main.getPlugin().votesblue.get(args[1].toLowerCase()) + 1);
+                                p.sendMessage(Main.getPlugin().PREFIX + "§bDu hast für §9" + args[1] + " §bgestimmt!");
+                                Main.getPlugin().voted.add(p.getName());
+                            } else
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
+                        } else
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
+                    } else
+                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/vote <Name>§c!");
+                }
+            } else
+                p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
         }
 
         return false;
     }
 
-    public void getList(Player p) {
-        p.sendMessage("§6----Wer soll Bürgermeister werden?----" + "\n ");
-        for (String all : Main.getPlugin().names) {
-            p.sendMessage("§b" + all.toUpperCase());
-        }
+    public String getrEr() {
+        return rEr;
+    }
+
+    public String getrEb() {
+        return rEb;
     }
 
     public void getResult() {
-
-        int max = 0;
-        for (int i : Main.getPlugin().votes.values()) {
-            if (i > max) {
-                max = i;
+        int maxred = 0;
+        for (int i : Main.getPlugin().votesred.values()) {
+            if (i > maxred) {
+                maxred = i;
             }
         }
-
-        String winner = "";
-
-        for (String all : Main.getPlugin().votes.keySet()) {
-            if (Main.getPlugin().votes.get(all) == max) {
-                winner = all;
+        int maxblue = 0;
+        for (int i : Main.getPlugin().votesblue.values()) {
+            if (i > maxblue) {
+                maxblue = i;
             }
         }
-        Bukkit.broadcastMessage(Main.getPlugin().PREFIX + "§7Bürgermeister ist §9" + winner.toUpperCase() + "§7!");
-
-
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            p.playSound(p.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
+        List<String> winnerred = new ArrayList<>();
+        int wr = 0;
+        for (String all : Main.getPlugin().votesred.keySet()) {
+            if (Main.getPlugin().votesred.get(all) == maxred) {
+                winnerred.add(all);
+                wr++;
+            }
         }
-
-
-        Main.getPlugin().votes.clear();
+        List<String> winnerblue = new ArrayList<>();
+        int wb = 0;
+        for (String all : Main.getPlugin().votesblue.keySet()) {
+            if (Main.getPlugin().votesblue.get(all) == maxblue) {
+                winnerblue.add(all);
+                wb++;
+            }
+        }
+        Random rand = new Random();
+        for (int i = 0; i < wr; i++) {
+            int ri = rand.nextInt(winnerred.size());
+            rEr = winnerred.get(ri);
+        }
+        for (int i = 0; i < wb; i++) {
+            int ri = rand.nextInt(winnerblue.size());
+            rEb = winnerblue.get(ri);
+        }
+        Main.getPlugin().votesred.clear();
+        Main.getPlugin().votesblue.clear();
+        Main.getPlugin().namesred.clear();
+        Main.getPlugin().namesblue.clear();
         Main.getPlugin().voted.clear();
-        Main.getPlugin().names.clear();
     }
-
 }
