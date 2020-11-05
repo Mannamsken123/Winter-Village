@@ -68,6 +68,7 @@ public class JoinListener implements Listener {
             ymlConfigMessages.addDefault("Nikolaus", "false");
             ymlConfigMessages.addDefault("VoteOpen", "false");
             ymlConfigMessages.addDefault("VoteClose", "false");
+            //PENIS BÜRGERMEISTER JA ODER NEIN
 
             try {
                 ymlConfigMessages.save(configMessages);
@@ -151,7 +152,7 @@ public class JoinListener implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                // NIKOLAUS MESSAGE
+                //PENIS NIKOLAUS MESSAGE
                 //player.sendMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
             }
         }

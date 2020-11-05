@@ -108,6 +108,10 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
             int ri = rand.nextInt(winnerblue.size());
             rEb = winnerblue.get(ri);
         }
+
+        //PENIS in config bürgermeister von false auf true
+
+
         Main.getPlugin().votesred.clear();
         Main.getPlugin().votesblue.clear();
         Main.getPlugin().namesred.clear();

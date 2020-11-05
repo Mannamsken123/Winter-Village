@@ -493,7 +493,7 @@ public class Main extends JavaPlugin {
                         if (getVoteOpen() == null) {
                             //vote open
 
-                            //FIX DATUM UNENDLICHER LOOP  GETTER SETTER für Hardcode Datum ->Zukunft
+                            //PENIS FIX DATUM UNENDLICHER LOOP  GETTER SETTER für Hardcode Datum ->Zukunft
 
 
                             if (getVoteClose() != null) {
