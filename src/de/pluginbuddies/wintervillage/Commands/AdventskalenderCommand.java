@@ -31,35 +31,44 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         Player p = (Player) sender;
+        if (args.length == 0) {
+            if (monat.format(now).equals("12")) {
+                //Ist Dezember
+                String w = p.getWorld().getName();
+                if (!w.equals("world-clash")) {
+                    //es ist kein clash
+                    Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
+                    for (int i = 1; i <= 24; i++) {
+                        String j = null;
+                        if (i <= 9) {
+                            j = "0" + i;
+                        }
 
-        if (monat.format(now).equals("12")) {
-            //Ist Dezember
-            Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
-            for (int i = 1; i <= 24; i++) {
-                String j = null;
-                if (i <= 9) {
-                    j = "0" + i;
-                }
-
-                if (tag.format(now).equals(j)) {
-                    ItemStack AdventOpen = new ItemStack(Material.SPRUCE_DOOR);
-                    ItemMeta imOpen = AdventOpen.getItemMeta();
-                    imOpen.setDisplayName("§a§lTag " + i);
-                    AdventOpen.setItemMeta(imOpen);
-                    AdventOpen.setAmount(1);
-                    inv.setItem(i - 1, AdventOpen);
+                        if (tag.format(now).equals(j)) {
+                            ItemStack AdventOpen = new ItemStack(Material.SPRUCE_DOOR);
+                            ItemMeta imOpen = AdventOpen.getItemMeta();
+                            imOpen.setDisplayName("§a§lTag " + i);
+                            AdventOpen.setItemMeta(imOpen);
+                            AdventOpen.setAmount(1);
+                            inv.setItem(i - 1, AdventOpen);
+                        } else {
+                            ItemStack AdventOpen = new ItemStack(Material.IRON_DOOR);
+                            ItemMeta imOpen = AdventOpen.getItemMeta();
+                            imOpen.setDisplayName("§a§lTag " + i);
+                            AdventOpen.setItemMeta(imOpen);
+                            AdventOpen.setAmount(1);
+                            inv.setItem(i - 1, AdventOpen);
+                        }
+                    }
+                    p.openInventory(inv);
                 } else {
-                    ItemStack AdventOpen = new ItemStack(Material.IRON_DOOR);
-                    ItemMeta imOpen = AdventOpen.getItemMeta();
-                    imOpen.setDisplayName("§a§lTag " + i);
-                    AdventOpen.setItemMeta(imOpen);
-                    AdventOpen.setAmount(1);
-                    inv.setItem(i - 1, AdventOpen);
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst während eines Clashes leider nicht den Adventskalender öffnen!");
                 }
+            } else {
+                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cEs ist derzeit keine Adventszeit");
             }
-            p.openInventory(inv);
         } else {
-            p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cEs ist derzeit keine Adventszeit");
+            p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/advent §coder §r/adventskalender");
         }
         return false;
     }

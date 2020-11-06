@@ -572,6 +572,7 @@ public class Main extends JavaPlugin {
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
         getCommand("meet").setExecutor(new MeetVillage());
+        getCommand("bp").setExecutor(new BackpackCommand());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -582,6 +583,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ChatColorListener(), this);
         pluginManager.registerEvents(new VillageCommand(), this);
         pluginManager.registerEvents(new DeathListener(), this);
+        pluginManager.registerEvents(new BackpackCommand(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");
@@ -635,26 +637,26 @@ public class Main extends JavaPlugin {
         ymlConfigAdvent.options().copyDefaults(true);
         ymlConfigAdvent.addDefault("Reward.1", "minecraft:diamond 3");
         ymlConfigAdvent.addDefault("Reward.2", "minecraft:cookie 53");
-        ymlConfigAdvent.addDefault("Reward.3", "minecraft:iron_ingot 21");
+        ymlConfigAdvent.addDefault("Reward.3", "minecraft:iron_ingot 19");
         ymlConfigAdvent.addDefault("Reward.4", "minecraft:anvil 1");
-        ymlConfigAdvent.addDefault("Reward.5", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:power',lvl:2}]} 1");
-        ymlConfigAdvent.addDefault("Reward.6", "minecraft::netherite_scrap 2");
-        ymlConfigAdvent.addDefault("Reward.7", "minecraft:minecraft:turtle_helmet 1");
-        ymlConfigAdvent.addDefault("Reward.8", "minecraft::enchanted_book{StoredEnchantments:[{id:'minecraft:frost_walker',lvl:2}]} 1");
-        ymlConfigAdvent.addDefault("Reward.9", "minecraft::experience_bottle 41");
+        ymlConfigAdvent.addDefault("Reward.5", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:power',lvl:2}]}");
+        ymlConfigAdvent.addDefault("Reward.6", "minecraft:netherite_scrap 1");
+        ymlConfigAdvent.addDefault("Reward.7", "minecraft:turtle_helmet 1");
+        ymlConfigAdvent.addDefault("Reward.8", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:frost_walker',lvl:1}]}");
+        ymlConfigAdvent.addDefault("Reward.9", "minecraft:experience_bottle 41");
         ymlConfigAdvent.addDefault("Reward.10", "minecraft:horse_spawn_egg 1");
-        ymlConfigAdvent.addDefault("Reward.11", "minecraft:minecraft:name_tag 1");
+        ymlConfigAdvent.addDefault("Reward.11", "minecraft:name_tag 1");
         ymlConfigAdvent.addDefault("Reward.12", "minecraft:saddle 1");
-        ymlConfigAdvent.addDefault("Reward.13", "minecraft:slime_ball 22");
+        ymlConfigAdvent.addDefault("Reward.13", "minecraft:slime_ball 12");
         ymlConfigAdvent.addDefault("Reward.14", "minecraft:wolf_spawn_egg 1");
         ymlConfigAdvent.addDefault("Reward.15", "minecraft:iron_horse_armor 1");
         ymlConfigAdvent.addDefault("Reward.16", "minecraft:enchanting_table 1");
-        ymlConfigAdvent.addDefault("Reward.17", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:sharpness',lvl:3}]} 1");
+        ymlConfigAdvent.addDefault("Reward.17", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:sharpness',lvl:3}]}");
         ymlConfigAdvent.addDefault("Reward.18", "minecraft:firework_rocket 64");
-        ymlConfigAdvent.addDefault("Reward.19", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:mending',lvl:3}]} 1");
+        ymlConfigAdvent.addDefault("Reward.19", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:mending'}]}");
         ymlConfigAdvent.addDefault("Reward.20", "minecraft:gold_ingot 42");
         ymlConfigAdvent.addDefault("Reward.21", "minecraft:diamond 12");
-        ymlConfigAdvent.addDefault("Reward.22", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:efficiency',lvl:5}]} 1");
+        ymlConfigAdvent.addDefault("Reward.22", "minecraft:enchanted_book{StoredEnchantments:[{id:'minecraft:efficiency',lvl:5}]}");
         ymlConfigAdvent.addDefault("Reward.23", "minecraft:enchanted_golden_apple 1");
         ymlConfigAdvent.addDefault("Reward.24", "minecraft:diamond 64");
 

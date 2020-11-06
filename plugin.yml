@@ -21,3 +21,7 @@
       description: Waehle einen Buergermeister fuer dein Village!
     meet:
       description: Teleportiert alle Village-Bewohner zum Mittelpunkt des Villages für eine Besprechung.
+    bp:
+      description: Oeffnet dein Team-Backpack.
+      aliases:
+        - backpack
