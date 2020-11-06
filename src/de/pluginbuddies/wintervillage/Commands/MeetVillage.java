@@ -141,7 +141,7 @@ public class MeetVillage implements CommandExecutor {
                                     }
                                 }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                             } else
-                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §c ist nicht in deinem Village!");
+                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
                         }
                     }
                 } else
@@ -216,7 +216,7 @@ public class MeetVillage implements CommandExecutor {
                                     }
                                 }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                             } else
-                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §c ist nicht in deinem Village!");
+                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
                         }
                     }
                 } else

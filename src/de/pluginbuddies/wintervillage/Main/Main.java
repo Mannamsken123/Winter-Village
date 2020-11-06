@@ -680,7 +680,7 @@ public class Main extends JavaPlugin {
         }
 
         ymlConfigteams.set("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
-        ymlConfigteams.set("Rot.2", "");//Maxi
+        ymlConfigteams.set("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
         ymlConfigteams.set("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
         ymlConfigteams.set("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
         ymlConfigteams.set("Rot.5", "");
@@ -703,7 +703,7 @@ public class Main extends JavaPlugin {
         if (!bvc.getrEr().isEmpty()) {
             ymlConfigteams.set("RotMeister.1", getUuid(bvc.getrEr()));
         } else {
-            ymlConfigteams.set("RotMeister.1", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");
+            ymlConfigteams.set("RotMeister.1", "");
         }
         if (!bvc.getrEb().isEmpty()) {
             ymlConfigteams.set("BlauMeister.1", getUuid(bvc.getrEb()));
