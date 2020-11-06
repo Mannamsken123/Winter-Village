@@ -99,6 +99,7 @@ public class Main extends JavaPlugin {
     public static YamlConfiguration getYmlConfigBlockPortal() {
         return ymlConfigBlockPortal;
     }
+
     public static void setYmlConfigBlockPortal(YamlConfiguration ymlConfigBlockPortal) {
         Main.ymlConfigBlockPortal = ymlConfigBlockPortal;
     }
@@ -109,6 +110,101 @@ public class Main extends JavaPlugin {
     static YamlConfiguration ymlFileAdvent = YamlConfiguration.loadConfiguration(fileAdvent);
     static File configAdvent = new File("plugins//Adventskalender//config.yml");
     public static YamlConfiguration ymlConfigAdvent = YamlConfiguration.loadConfiguration(configAdvent);
+
+    //vote
+    static File configVote = new File("plugins//Vote//config.yml");
+    public static YamlConfiguration ymlConfigVote = YamlConfiguration.loadConfiguration(configVote);
+    //fix dates
+    private String vote1 = getYmlConfigVote().getString("vote1");
+    private String vote1close = getYmlConfigVote().getString("vote1close");
+    private String vote2 = getYmlConfigVote().getString("vote2");
+    private String vote2close = getYmlConfigVote().getString("vote2close");
+    private String vote3 = getYmlConfigVote().getString("vote3");
+    private String vote3close = getYmlConfigVote().getString("vote3close");
+    private String vote4 = getYmlConfigVote().getString("vote4");
+    private String vote4close = getYmlConfigVote().getString("vote4close");
+
+    public static File getConfigVote() {
+        return configVote;
+    }
+
+    public static void setConfigVote(File configVote) {
+        Main.configVote = configVote;
+    }
+
+    public static YamlConfiguration getYmlConfigVote() {
+        return ymlConfigVote;
+    }
+
+    public static void setYmlConfigVote(YamlConfiguration ymlConfigVote) {
+        Main.ymlConfigVote = ymlConfigVote;
+    }
+
+    public String getVote1() {
+        return vote1;
+    }
+
+    public void setVote1(String vote1) {
+        this.vote1 = vote1;
+    }
+
+    public String getVote1close() {
+        return vote1close;
+    }
+
+    public void setVote1close(String vote1close) {
+        this.vote1close = vote1close;
+    }
+
+    public String getVote2() {
+        return vote2;
+    }
+
+    public void setVote2(String vote2) {
+        this.vote2 = vote2;
+    }
+
+    public String getVote2close() {
+        return vote2close;
+    }
+
+    public void setVote2close(String vote2close) {
+        this.vote2close = vote2close;
+    }
+
+    public String getVote3() {
+        return vote3;
+    }
+
+    public void setVote3(String vote3) {
+        this.vote3 = vote3;
+    }
+
+    public String getVote3close() {
+        return vote3close;
+    }
+
+    public void setVote3close(String vote3close) {
+        this.vote3close = vote3close;
+    }
+
+    public String getVote4() {
+        return vote4;
+    }
+
+    public void setVote4(String vote4) {
+        this.vote4 = vote4;
+    }
+
+    public String getVote4close() {
+        return vote4close;
+    }
+
+    public void setVote4close(String vote4close) {
+        this.vote4close = vote4close;
+    }
+
+    //vote end
 
     public static void setUsed(String UUID, int Day) {
         ymlFileAdvent.set(UUID + ".day" + Day, true);
@@ -302,72 +398,64 @@ public class Main extends JavaPlugin {
 
                     //VOTE 1
                     Date vote1Date = null;
-                    String vote1 = "2020/11/26";
                     try {
-                        vote1Date = sdf.parse(vote1);
+                        vote1Date = sdf.parse(getVote1());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 1 CLOSE
                     Date vote1closeDate = null;
-                    String vote1close = "2020/11/27";
                     try {
-                        vote1closeDate = sdf.parse(vote1close);
+                        vote1closeDate = sdf.parse(getVote1close());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 2
                     Date vote2Date = null;
-                    String vote2 = "2020/12/04";
                     try {
-                        vote2Date = sdf.parse(vote2);
+                        vote2Date = sdf.parse(getVote2());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 2 CLOSE
                     Date vote2closeDate = null;
-                    String vote2close = "2020/12/05";
                     try {
-                        vote2closeDate = sdf.parse(vote2close);
+                        vote2closeDate = sdf.parse(getVote2close());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 3
                     Date vote3Date = null;
-                    String vote3 = "2020/12/12";
                     try {
-                        vote3Date = sdf.parse(vote3);
+                        vote3Date = sdf.parse(getVote3());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 3 CLOSE
                     Date vote3closeDate = null;
-                    String vote3close = "2020/12/13";
                     try {
-                        vote3closeDate = sdf.parse(vote3close);
+                        vote3closeDate = sdf.parse(getVote3close());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 4
                     Date vote4Date = null;
-                    String vote4 = "2020/12/20";
                     try {
-                        vote4Date = sdf.parse(vote4);
+                        vote4Date = sdf.parse(getVote4());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     //VOTE 4 CLOSE
                     Date vote4closeDate = null;
-                    String vote4close = "2020/12/21";
                     try {
-                        vote4closeDate = sdf.parse(vote4close);
+                        vote4closeDate = sdf.parse(getVote4close());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -485,16 +573,31 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-                            //set boolean to true for  double ore listener or other stuff
+                            //set boolean to true for double ore listener or other stuff
                         }
                     }
 
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
                             //vote open
-
                             //PENIS FIX DATUM UNENDLICHER LOOP  GETTER SETTER für Hardcode Datum ->Zukunft
 
+                            if (!vote1Date.after(currentDate)) {
+                                setVote1("2025/01/01");
+                                getYmlConfigVote().set("vote1", "2025/01/01");
+                            }
+                            if (!vote2Date.after(currentDate)) {
+                                setVote2("2025/01/01");
+                                getYmlConfigVote().set("vote2", "2025/01/01");
+                            }
+                            if (!vote3Date.after(currentDate)) {
+                                setVote3("2025/01/01");
+                                getYmlConfigVote().set("vote3", "2025/01/01");
+                            }
+                            if (!vote4Date.after(currentDate)) {
+                                setVote4("2025/01/01");
+                                getYmlConfigVote().set("vote4", "2025/01/01");
+                            }
 
                             if (getVoteClose() != null) {
                                 setVoteClose(null);
@@ -524,6 +627,23 @@ public class Main extends JavaPlugin {
                             //vote close
                             setVoteOpen(null);
                             setVoteClose("true");
+
+                            if (!vote1closeDate.after(currentDate)) {
+                                setVote1close("2025/01/01");
+                                getYmlConfigVote().set("vote1close", "2025/01/01");
+                            }
+                            if (!vote2closeDate.after(currentDate)) {
+                                setVote2close("2025/01/01");
+                                getYmlConfigVote().set("vote2close", "2025/01/01");
+                            }
+                            if (!vote3closeDate.after(currentDate)) {
+                                setVote3close("2025/01/01");
+                                getYmlConfigVote().set("vote3close", "2025/01/01");
+                            }
+                            if (!vote4closeDate.after(currentDate)) {
+                                setVote4close("2025/01/01");
+                                getYmlConfigVote().set("vote4close", "2025/01/01");
+                            }
 
                             bvc.getResult();
                             String winnerblau = bvc.getrEb();
@@ -666,6 +786,37 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //end adventskalender
+
+        //vote
+        File folderVote = new File("plugins//Vote");
+        if (!folderVote.exists()) {
+            folderVote.mkdir();
+        }
+        if (!configVote.exists()) {
+            try {
+                configVote.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //fix dates
+        ymlConfigVote.options().copyDefaults(true);
+        ymlConfigVote.addDefault("vote1", "2020/11/26");
+        ymlConfigVote.addDefault("vote1close", "2020/11/27");
+        ymlConfigVote.addDefault("vote2", "2020/12/04");
+        ymlConfigVote.addDefault("vote2close", "2020/12/05");
+        ymlConfigVote.addDefault("vote3", "2020/12/12");
+        ymlConfigVote.addDefault("vote3close", "2020/12/13");
+        ymlConfigVote.addDefault("vote4", "2020/12/20");
+        ymlConfigVote.addDefault("vote4close", "2020/12/21");
+
+        try {
+            ymlConfigVote.save(configVote);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //end vote
 
         //teams
         File folderTeams = new File("plugins//Teams");
