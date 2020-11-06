@@ -22,8 +22,8 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
-                if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
+            if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
+                if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
                     if (args.length == 1) {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
                             if (Main.getPlugin().namesred.contains(args[1].toLowerCase())) {
@@ -40,8 +40,8 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
             } else
                 p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
 
-            if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
-                if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
+            if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
+                if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
                     if (args.length == 1) {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
                             if (Main.getPlugin().namesblue.contains(args[1].toLowerCase())) {

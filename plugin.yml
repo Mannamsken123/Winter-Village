@@ -19,3 +19,5 @@
         - advent
     vote:
       description: Waehle einen Buergermeister fuer dein Village!
+    meet:
+      description: Teleportiert alle Village-Bewohner zum Mittelpunkt des Villages für eine Besprechung.
