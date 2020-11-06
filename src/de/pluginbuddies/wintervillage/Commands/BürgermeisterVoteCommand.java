@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,37 +27,36 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
                     if (args.length == 1) {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
-                            if (Main.getPlugin().namesred.contains(args[1].toLowerCase())) {
-                                Main.getPlugin().votesred.put(args[1].toLowerCase(), Main.getPlugin().votesred.get(args[1].toLowerCase()) + 1);
-                                p.sendMessage(Main.getPlugin().PREFIX + "§bDu hast für §c" + args[1] + " §bgestimmt!");
+                            if (Main.getPlugin().namesred.contains(args[0].toLowerCase())) {
+                                Main.getPlugin().votesred.put(args[0].toLowerCase(), Main.getPlugin().votesred.get(args[0].toLowerCase()) + 1);
+                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0] + " §3gestimmt!");
                                 Main.getPlugin().voted.add(p.getName());
                             } else
                                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
                         } else
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
                     } else
-                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/vote <Name>§c!");
-                }
-            } else
-                p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
-
+                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/vote <Name>§c!");
+                } else
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
+            }
             if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
                     if (args.length == 1) {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
-                            if (Main.getPlugin().namesblue.contains(args[1].toLowerCase())) {
-                                Main.getPlugin().votesblue.put(args[1].toLowerCase(), Main.getPlugin().votesblue.get(args[1].toLowerCase()) + 1);
-                                p.sendMessage(Main.getPlugin().PREFIX + "§bDu hast für §9" + args[1] + " §bgestimmt!");
+                            if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
+                                Main.getPlugin().votesblue.put(args[0].toLowerCase(), Main.getPlugin().votesblue.get(args[0].toLowerCase()) + 1);
+                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0] + " §3gestimmt!");
                                 Main.getPlugin().voted.add(p.getName());
                             } else
                                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
                         } else
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
                     } else
-                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/vote <Name>§c!");
-                }
-            } else
-                p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
+                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/vote <Name>§c!");
+                } else
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cEs ist gerade keine Voting-Phase. \n§6Wenn du unzufrieden mit deinem Bürgermeister bist schreibe §r/putsch§6, um zu versuchen ihn zu stürzen!");
+            }
         }
 
         return false;
@@ -71,6 +71,7 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
     }
 
     public void getResult() {
+        Bukkit.broadcastMessage("result läuuuuuuft!");
         int maxred = 0;
         for (int i : Main.getPlugin().votesred.values()) {
             if (i > maxred) {

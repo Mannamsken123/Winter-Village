@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R2.util.CraftChatMessage;
 import org.bukkit.entity.Player;
@@ -18,14 +19,66 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 
 public class JoinListener implements Listener {
 
     World world = Bukkit.getWorld("world");
+
+    public static String getName(String uuid) {
+        String url = "https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names";
+        try {
+            @SuppressWarnings("deprecation")
+            String nameJson = IOUtils.toString(new URL(url));
+            JSONArray nameValue = (JSONArray) JSONValue.parseWithException(nameJson);
+            String playerSlot = nameValue.get(nameValue.size() - 1).toString();
+            JSONObject nameObject = (JSONObject) JSONValue.parseWithException(playerSlot);
+            return nameObject.get("name").toString();
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    @EventHandler
+    public void handlePlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        if (player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
+        }
+        if (player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
+        }
+
+        if (player.hasPermission("wintervillage.blueteam")) {
+            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
+        }
+        if (player.hasPermission("wintervillage.redteam")) {
+            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
+        }
+    }
+
+    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        PacketPlayOutTitle times;
+        if (title != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        if (subtitle != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+    }
 
     @EventHandler
     public void handlePlayerJoin(PlayerJoinEvent event) {
@@ -68,8 +121,8 @@ public class JoinListener implements Listener {
             player.setExp(0);
             player.setLevel(0);
             player.getInventory().clear();
-            player.sendMessage(Main.getPlugin().PREFIX + "§bHerzlich Willkommen bei Winter Village!");
-            st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
+            player.sendMessage(Main.getPlugin().PREFIX + "§3Herzlich Willkommen bei Winter Village!");
+            st(player.getPlayer(), "§3Winter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
             File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
@@ -111,7 +164,7 @@ public class JoinListener implements Listener {
                     e.printStackTrace();
                 }
 
-                player.sendMessage(Main.getPlugin().PREFIX + "§bDer Nether kann ab jetzt über das Portal am Spawn betreten werden!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Der Nether kann ab jetzt über das Portal am Spawn betreten werden!");
             }
         }
         if (Main.getPlugin().getAdventskalenderOpen() == "true") {
@@ -128,7 +181,7 @@ public class JoinListener implements Listener {
                     e.printStackTrace();
                 }
 
-                player.sendMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Du kannst ab jetzt mit §r/advent §3jeden Tag dein Adventskalender-Türchen öffnen!");
             }
         }
         if (Main.getPlugin().getEndOpen() == "true") {
@@ -146,7 +199,7 @@ public class JoinListener implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                player.sendMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über das Portal am Spawn betreten werden!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Das End kann ab jetzt über das Portal am Spawn betreten werden!");
 
                 //end frei noch enderdrache alive
             } else if (end.equals("false")) {
@@ -156,7 +209,7 @@ public class JoinListener implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                player.sendMessage(Main.getPlugin().PREFIX + "§bDas End kann ab jetzt über die Farmwelt betreten werden!");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Das End kann ab jetzt über die Farmwelt betreten werden!");
             }
         }
         if (Main.getPlugin().getNikolausOpen() == "true") {
@@ -189,7 +242,7 @@ public class JoinListener implements Listener {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                player.sendMessage(Main.getPlugin().PREFIX + "§bEs kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§b.");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Es kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§3.");
             }
         }
         if (Main.getPlugin().getVoteClose() == "true") {
@@ -207,13 +260,13 @@ public class JoinListener implements Listener {
                 }
                 String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
                 String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-                player.sendMessage(Main.getPlugin().PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + Bukkit.getPlayer(redmeister).getName() + "\n§1BlauMeister: §7" + Bukkit.getPlayer(bluemeister).getName());
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
             }
         }
 
 
         //event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
-        st(player.getPlayer(), "§bWinter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
+        st(player.getPlayer(), "§3Winter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
 
         if (player.hasPermission("wintervillage.prisonblue")) {
@@ -235,39 +288,6 @@ public class JoinListener implements Listener {
         }
 
 
-    }
-
-    @EventHandler
-    public void handlePlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
-        if (player.hasPermission("wintervillage.prisonblue")) {
-            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
-        }
-        if (player.hasPermission("wintervillage.prisonred")) {
-            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
-        }
-
-        if (player.hasPermission("wintervillage.blueteam")) {
-            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
-        }
-        if (player.hasPermission("wintervillage.redteam")) {
-            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
-        }
-    }
-
-    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        PacketPlayOutTitle times;
-        if (title != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-        }
-        if (subtitle != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-        }
-        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
 
 }
