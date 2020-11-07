@@ -100,15 +100,18 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                 wb++;
             }
         }
-        Random rand = new Random();
-        for (int i = 0; i < wr; i++) {
+
+        boolean workaround = true;
+        do {
+            Random rand = new Random();
             int ri = rand.nextInt(winnerred.size());
             rEr = winnerred.get(ri);
-        }
-        for (int i = 0; i < wb; i++) {
-            int ri = rand.nextInt(winnerblue.size());
             rEb = winnerblue.get(ri);
+            if (rEr != "error" && rEb != "error") {
+                break;
+            }
         }
+        while (workaround == true);
 
         //PENIS in config bürgermeister von false auf true
 

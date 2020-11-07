@@ -19,7 +19,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -594,7 +596,11 @@ public class Main extends JavaPlugin {
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
                             //vote open
-                            //PENIS FIX DATUM UNENDLICHER LOOP  GETTER SETTER für Hardcode Datum ->Zukunft
+
+                            if (getVoteClose() != null) {
+                                setVoteClose(null); //der kollege macht ärger und ist dafür zuständig das keine on later join kommt
+                            }
+                            setVoteOpen("true");
 
                             if (!vote1Date.after(currentDate)) {
                                 setVote1("2025/01/01");
@@ -633,12 +639,6 @@ public class Main extends JavaPlugin {
                                 }
                             }
 
-                            if (getVoteClose() != null) {
-                                setVoteClose(null);
-                            }
-
-                            setVoteOpen("true");
-
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
@@ -658,19 +658,39 @@ public class Main extends JavaPlugin {
                             }
                         }
                     }
+
+                    //PENIS DELETE getTest true + command und alles
                     if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate) || getTest() == "true") {
                         if (getVoteClose() == null) {
                             //vote close
                             setVoteOpen(null);
                             setVoteClose("true");
 
-                            if (!vote1closeDate.after(currentDate)) {
+                            if (!vote1closeDate.after(currentDate) || getTest() == "true") {
                                 setVote1close("2025/01/01");
                                 getYmlConfigVote().set("vote1close", "2025/01/01");
                                 try {
                                     getYmlConfigVote().save(getConfigVote());
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                }
+                                File file = new File("plugins//Messages");
+                                String contents[] = file.list();
+                                for (int i = 0; i < contents.length; i++) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                        output.printf("%s\r\n", "Vote1end: 'true'");
+                                    } catch (Exception e) {
+                                    }
+                                }
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                    ymlConfigMessages.set("Vote1end", "false");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             if (!vote2closeDate.after(currentDate)) {
@@ -681,6 +701,24 @@ public class Main extends JavaPlugin {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                File file = new File("plugins//Messages");
+                                String contents[] = file.list();
+                                for (int i = 0; i < contents.length; i++) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                        output.printf("%s\r\n", "Vote2end: 'true'");
+                                    } catch (Exception e) {
+                                    }
+                                }
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                    ymlConfigMessages.set("Vote2end", "false");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                             if (!vote3closeDate.after(currentDate)) {
                                 setVote3close("2025/01/01");
@@ -689,6 +727,24 @@ public class Main extends JavaPlugin {
                                     getYmlConfigVote().save(getConfigVote());
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                }
+                                File file = new File("plugins//Messages");
+                                String contents[] = file.list();
+                                for (int i = 0; i < contents.length; i++) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                        output.printf("%s\r\n", "Vote3end: 'true'");
+                                    } catch (Exception e) {
+                                    }
+                                }
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                    ymlConfigMessages.set("Vote3end", "false");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             if (!vote4closeDate.after(currentDate)) {
@@ -699,11 +755,32 @@ public class Main extends JavaPlugin {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                File file = new File("plugins//Messages");
+                                String contents[] = file.list();
+                                for (int i = 0; i < contents.length; i++) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                        output.printf("%s\r\n", "Vote4end: 'true'");
+                                    } catch (Exception e) {
+                                    }
+                                }
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                    ymlConfigMessages.set("Vote4end", "false");
+                                    try {
+                                        ymlConfigMessages.save(configMessages);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
 
                             bvc.getResult();
                             String winnerblau = bvc.getrEb();
                             String winnerrot = bvc.getrEr();
+                            Bukkit.broadcastMessage(winnerblau);
+                            Bukkit.broadcastMessage(winnerrot);
+
                             if (!bvc.getrEr().isEmpty()) {
                                 ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
                             }
@@ -715,15 +792,14 @@ public class Main extends JavaPlugin {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            Bukkit.broadcastMessage("before for main");
 
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-                                String VoteClosexxx = ymlConfigMessages.getString("VoteClose");
+                                String xxx = ymlConfigMessages.getString("VoteClose");
 
-                                if (VoteClosexxx.equals("false")) {
+                                if (xxx.equals("false")) {
                                     ymlConfigMessages.set("VoteClose", "true");
                                     ymlConfigMessages.set("VoteOpen", "false");
                                     all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());

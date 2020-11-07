@@ -245,23 +245,57 @@ public class JoinListener implements Listener {
                 player.sendMessage(Main.getPlugin().PREFIX + "§3Es kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§3.");
             }
         }
-        if (Main.getPlugin().getVoteClose() == "true") {
-            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-            String voteClose = ymlConfigMessages.getString("VoteClose");
+        File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+        YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-            if (voteClose.equals("false")) {
-                ymlConfigMessages.set("VoteClose", "true");
-                try {
-                    ymlConfigMessages.save(configMessages);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
+        String Vote1end = ymlConfigMessages.getString("Vote1end");
+        if (Vote1end.equals("true")) {
+            ymlConfigMessages.set("Vote1end", "false");
+            try {
+                ymlConfigMessages.save(configMessages);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
+        }
+        String Vote2end = ymlConfigMessages.getString("Vote2end");
+        if (Vote2end.equals("true")) {
+            ymlConfigMessages.set("Vote2end", "false");
+            try {
+                ymlConfigMessages.save(configMessages);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
+        }
+        String Vote3end = ymlConfigMessages.getString("Vote3end");
+        if (Vote3end.equals("true")) {
+            ymlConfigMessages.set("Vote3end", "false");
+            try {
+                ymlConfigMessages.save(configMessages);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
+        }
+        String Vote4end = ymlConfigMessages.getString("Vote4end");
+        if (Vote4end.equals("true")) {
+            ymlConfigMessages.set("Vote4end", "false");
+            try {
+                ymlConfigMessages.save(configMessages);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
         }
 
 
