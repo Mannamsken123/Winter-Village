@@ -51,28 +51,10 @@ public class JoinListener implements Listener {
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        Main.BlauBürger1.clear();
-        Main.BlauBürger2.clear();
-        Main.BlauBürger3.clear();
-        Main.BlauBürger4.clear();
-        Main.BlauBürger5.clear();
-        Main.BlauBürger6.clear();
-        Main.BlauBürger7.clear();
-        Main.BlauBürger8.clear();
-        Main.BlauBürger9.clear();
-        Main.BlauBürger10.clear();
-        Main.RotBürger1.clear();
-        Main.RotBürger2.clear();
-        Main.RotBürger3.clear();
-        Main.RotBürger4.clear();
-        Main.RotBürger5.clear();
-        Main.RotBürger6.clear();
-        Main.RotBürger7.clear();
-        Main.RotBürger8.clear();
-        Main.RotBürger9.clear();
-        Main.RotBürger10.clear();
-        Main.Bürgermeisterred.clear();
-        Main.Bürgermeisterblue.clear();
+        Main.BlauBuerger.clear();
+        Main.RotBuerger.clear();
+        Main.Buergermeisterred.clear();
+        Main.Buergermeisterblue.clear();
         Team.maketeams();
 
         if (!player.hasPlayedBefore()) {

@@ -76,28 +76,11 @@ public class Main extends JavaPlugin {
     public HashMap<String, Integer> votesred = new HashMap<>();
 
     //Bürgermeister - Permisson - Vote
-    public static HashMap<Player, PermissionAttachment> Bürgermeisterblue = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> Bürgermeisterred = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger1 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger2 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger3 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger4 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger5 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger6 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger7 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger8 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger9 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> RotBürger10 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger1 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger2 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger3 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger4 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger5 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger6 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger7 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger8 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger9 = new HashMap<Player, PermissionAttachment>();
-    public static HashMap<Player, PermissionAttachment> BlauBürger10 = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> Buergermeisterblue = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> Buergermeisterred = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> RotBuerger = new HashMap<Player, PermissionAttachment>();
+    public static HashMap<Player, PermissionAttachment> BlauBuerger = new HashMap<Player, PermissionAttachment>();
+
     public HashMap<String, Integer> votesblue = new HashMap<>();
     public List<String> namesred = new ArrayList<>();
     public List<String> namesblue = new ArrayList<>();
