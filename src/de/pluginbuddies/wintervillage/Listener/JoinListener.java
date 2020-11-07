@@ -252,6 +252,8 @@ public class JoinListener implements Listener {
         String Vote1end = ymlConfigMessages.getString("Vote1end");
         if (Vote1end.equals("true")) {
             ymlConfigMessages.set("Vote1end", "false");
+            ymlConfigMessages.set("VoteOpen", "false");
+            ymlConfigMessages.set("VoteClose", "true");
             try {
                 ymlConfigMessages.save(configMessages);
             } catch (IOException e) {
@@ -264,6 +266,8 @@ public class JoinListener implements Listener {
         String Vote2end = ymlConfigMessages.getString("Vote2end");
         if (Vote2end.equals("true")) {
             ymlConfigMessages.set("Vote2end", "false");
+            ymlConfigMessages.set("VoteOpen", "false");
+            ymlConfigMessages.set("VoteClose", "true");
             try {
                 ymlConfigMessages.save(configMessages);
             } catch (IOException e) {
@@ -276,6 +280,8 @@ public class JoinListener implements Listener {
         String Vote3end = ymlConfigMessages.getString("Vote3end");
         if (Vote3end.equals("true")) {
             ymlConfigMessages.set("Vote3end", "false");
+            ymlConfigMessages.set("VoteOpen", "false");
+            ymlConfigMessages.set("VoteClose", "true");
             try {
                 ymlConfigMessages.save(configMessages);
             } catch (IOException e) {
@@ -288,6 +294,8 @@ public class JoinListener implements Listener {
         String Vote4end = ymlConfigMessages.getString("Vote4end");
         if (Vote4end.equals("true")) {
             ymlConfigMessages.set("Vote4end", "false");
+            ymlConfigMessages.set("VoteOpen", "false");
+            ymlConfigMessages.set("VoteClose", "true");
             try {
                 ymlConfigMessages.save(configMessages);
             } catch (IOException e) {

@@ -321,8 +321,6 @@ public class Main extends JavaPlugin {
 
     private void load() {
 
-        Bürgermeisterred.clear();
-        Bürgermeisterblue.clear();
         Team.maketeams();
 
         Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -340,6 +338,48 @@ public class Main extends JavaPlugin {
         voted.clear();
 
         //voteing
+
+        //teams
+        File folderTeams = new File("plugins//Teams");
+        if (!folderTeams.exists()) {
+            folderTeams.mkdir();
+        }
+
+        try {
+            configteams.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ymlConfigteams.options().copyDefaults(true);
+        ymlConfigteams.addDefault("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
+        ymlConfigteams.addDefault("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
+        ymlConfigteams.addDefault("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
+        ymlConfigteams.addDefault("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
+        ymlConfigteams.addDefault("Rot.5", "");
+        ymlConfigteams.addDefault("Rot.6", "");
+        ymlConfigteams.addDefault("Rot.7", "");
+        ymlConfigteams.addDefault("Rot.8", "");
+        ymlConfigteams.addDefault("Rot.9", "");
+        ymlConfigteams.addDefault("Rot.10", "");
+        ymlConfigteams.addDefault("Blau.1", "309f61d4-d7dd-4449-aa1d-13e212946920");//Fabio
+        ymlConfigteams.addDefault("Blau.2", "914dc737-befe-46dd-8246-4a352c0ecb62");//Julian
+        ymlConfigteams.addDefault("Blau.3", "2c13d227-9811-48e7-a15d-0450e624c1d4");//Cedric
+        ymlConfigteams.addDefault("Blau.4", "8c500465-dcdd-4a5f-829c-3c34fe1d1904");//Vito
+        ymlConfigteams.addDefault("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
+        ymlConfigteams.addDefault("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
+        ymlConfigteams.addDefault("Blau.7", "");
+        ymlConfigteams.addDefault("Blau.8", "");
+        ymlConfigteams.addDefault("Blau.9", "");
+        ymlConfigteams.addDefault("Blau.10", "");
+        ymlConfigteams.addDefault("RotMeister.1", "");
+        ymlConfigteams.addDefault("BlauMeister.1", "");
+
+        try {
+            ymlConfigteams.save(configteams);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //end teams
 
         for (int i = 1; i <= 10; i++) {
             if (ymlConfigteams.getString("Rot." + i) != "") {
@@ -677,7 +717,7 @@ public class Main extends JavaPlugin {
                                 File file = new File("plugins//Messages");
                                 String contents[] = file.list();
                                 for (int i = 0; i < contents.length; i++) {
-                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
                                         output.printf("%s\r\n", "Vote1end: 'true'");
                                     } catch (Exception e) {
                                     }
@@ -704,7 +744,7 @@ public class Main extends JavaPlugin {
                                 File file = new File("plugins//Messages");
                                 String contents[] = file.list();
                                 for (int i = 0; i < contents.length; i++) {
-                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
                                         output.printf("%s\r\n", "Vote2end: 'true'");
                                     } catch (Exception e) {
                                     }
@@ -731,7 +771,7 @@ public class Main extends JavaPlugin {
                                 File file = new File("plugins//Messages");
                                 String contents[] = file.list();
                                 for (int i = 0; i < contents.length; i++) {
-                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
                                         output.printf("%s\r\n", "Vote3end: 'true'");
                                     } catch (Exception e) {
                                     }
@@ -758,7 +798,7 @@ public class Main extends JavaPlugin {
                                 File file = new File("plugins//Messages");
                                 String contents[] = file.list();
                                 for (int i = 0; i < contents.length; i++) {
-                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i] + ".yml", true))) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
                                         output.printf("%s\r\n", "Vote4end: 'true'");
                                     } catch (Exception e) {
                                     }
@@ -951,58 +991,6 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //end vote
-
-        //teams
-        File folderTeams = new File("plugins//Teams");
-        if (!folderTeams.exists()) {
-            folderTeams.mkdir();
-        }
-
-        try {
-            configteams.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ymlConfigteams.set("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
-        ymlConfigteams.set("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
-        ymlConfigteams.set("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
-        ymlConfigteams.set("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
-        ymlConfigteams.set("Rot.5", "");
-        ymlConfigteams.set("Rot.6", "");
-        ymlConfigteams.set("Rot.7", "");
-        ymlConfigteams.set("Rot.8", "");
-        ymlConfigteams.set("Rot.9", "");
-        ymlConfigteams.set("Rot.10", "");
-        ymlConfigteams.set("Blau.1", "309f61d4-d7dd-4449-aa1d-13e212946920");//Fabio
-        ymlConfigteams.set("Blau.2", "914dc737-befe-46dd-8246-4a352c0ecb62");//Julian
-        ymlConfigteams.set("Blau.3", "2c13d227-9811-48e7-a15d-0450e624c1d4");//Cedric
-        ymlConfigteams.set("Blau.4", "8c500465-dcdd-4a5f-829c-3c34fe1d1904");//Vito
-        ymlConfigteams.set("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
-        ymlConfigteams.set("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
-        ymlConfigteams.set("Blau.7", "");
-        ymlConfigteams.set("Blau.8", "");
-        ymlConfigteams.set("Blau.9", "");
-        ymlConfigteams.set("Blau.10", "");
-
-        if (!bvc.getrEr().isEmpty()) {
-            ymlConfigteams.set("RotMeister.1", getUuid(bvc.getrEr()));
-        } else {
-            ymlConfigteams.set("RotMeister.1", "");
-        }
-        if (!bvc.getrEb().isEmpty()) {
-            ymlConfigteams.set("BlauMeister.1", getUuid(bvc.getrEb()));
-        } else {
-            ymlConfigteams.set("BlauMeister.1", "");
-        }
-
-        try {
-            ymlConfigteams.save(configteams);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //end teams
-
 
         load();
     }

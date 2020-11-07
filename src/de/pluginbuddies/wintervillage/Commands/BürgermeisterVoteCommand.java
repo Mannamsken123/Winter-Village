@@ -4,7 +4,6 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -71,7 +70,6 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
     }
 
     public void getResult() {
-        Bukkit.broadcastMessage("result läuuuuuuft!");
         int maxred = 0;
         for (int i : Main.getPlugin().votesred.values()) {
             if (i > maxred) {
