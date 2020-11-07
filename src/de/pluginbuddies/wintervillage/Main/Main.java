@@ -5,8 +5,12 @@ package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
 import de.pluginbuddies.wintervillage.Listener.*;
+import de.pluginbuddies.wintervillage.Util.TabList;
 import de.pluginbuddies.wintervillage.Util.Team;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
@@ -40,6 +44,16 @@ public class Main extends JavaPlugin {
 
     public void setTest(String test) {
         this.test = test;
+    }
+
+    private String test2 = "false";
+
+    public String getTest2() {
+        return test2;
+    }
+
+    public void setTest2(String test) {
+        this.test2 = test;
     }
 
 
@@ -322,7 +336,6 @@ public class Main extends JavaPlugin {
     private void load() {
 
         Team.maketeams();
-
         Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
 
     }
@@ -330,6 +343,17 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            // all.kickPlayer(Main.getPlugin().PREFIX + "§cRestart!");
+        }
+
+        TabList teams = new TabList();
+        teams.create("RotMeister", 10, "§4RotMeister: §r", null, "wintervillage.prisonred");
+        teams.create("Rot", 11, "§cRot: §r", null, "wintervillage.redteam");
+        teams.create("BlauMeister", 20, "§1BlauMeister: §r", null, "wintervillage.prisonblue");
+        teams.create("Blau", 21, "§9Blau: §r", null, "wintervillage.blueteam");
+
 
         votesred.clear();
         votesblue.clear();
@@ -402,13 +426,6 @@ public class Main extends JavaPlugin {
         //VOTEING ENDs
 
         PrisonCommand prisonCommand = new PrisonCommand();
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setGameMode(GameMode.SURVIVAL);
-            all.sendMessage("§aServer " + "§8>> " + "§aPlugin geladen.");
-        }
-
-
         //TIME CHECKER
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -700,7 +717,7 @@ public class Main extends JavaPlugin {
                     }
 
                     //PENIS DELETE getTest true + command und alles
-                    if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate) || getTest() == "true") {
+                    if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate) || getTest() == "true" || getTest2() == "true") {
                         if (getVoteClose() == null) {
                             //vote close
                             setVoteOpen(null);
@@ -733,7 +750,7 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-                            if (!vote2closeDate.after(currentDate)) {
+                            if (!vote2closeDate.after(currentDate) || getTest2() == "true") {
                                 setVote2close("2025/01/01");
                                 getYmlConfigVote().set("vote2close", "2025/01/01");
                                 try {
@@ -818,9 +835,6 @@ public class Main extends JavaPlugin {
                             bvc.getResult();
                             String winnerblau = bvc.getrEb();
                             String winnerrot = bvc.getrEr();
-                            Bukkit.broadcastMessage(winnerblau);
-                            Bukkit.broadcastMessage(winnerrot);
-
                             if (!bvc.getrEr().isEmpty()) {
                                 ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
                             }
@@ -842,7 +856,23 @@ public class Main extends JavaPlugin {
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("VoteClose", "true");
                                     ymlConfigMessages.set("VoteOpen", "false");
+
+                                    Team.maketeams();
+                                    if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                        Team.prefix(all, "&9Blau: ");
+                                    }
+                                    if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                        Team.prefix(all, "&cRot: ");
+                                    }
+                                    if (all.hasPermission("wintervillage.prisonblue")) {
+                                        Team.prefix(all, "&1BlauMeister: ");
+                                    }
+                                    if (all.hasPermission("wintervillage.prisonred")) {
+                                        Team.prefix(all, "&4RotMeister: ");
+                                    }
+
                                     all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
+
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -867,6 +897,7 @@ public class Main extends JavaPlugin {
         getCommand("meet").setExecutor(new MeetVillage());
         getCommand("bp").setExecutor(new BackpackCommand());
         getCommand("test").setExecutor(new testcmd());
+        getCommand("test2").setExecutor(new testcmd2());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -901,7 +932,6 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //end blockportals
-
         //messages
         File folderMessages = new File("plugins//Messages");
         if (!folderMessages.exists()) {

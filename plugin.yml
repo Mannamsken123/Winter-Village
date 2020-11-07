@@ -27,3 +27,5 @@
         - backpack
     test:
       description: test!
+    test2:
+      description: test!

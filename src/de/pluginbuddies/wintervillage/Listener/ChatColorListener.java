@@ -14,6 +14,16 @@ public class ChatColorListener implements Listener {
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
+        if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
+            String msg = e.getMessage();
+            e.setCancelled(true);
+            Bukkit.broadcastMessage("[§c" + p.getName() + "§r]: §r" + msg);
+        }
+        if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
+            String msg = e.getMessage();
+            e.setCancelled(true);
+            Bukkit.broadcastMessage("[§9" + p.getName() + "§r]: §r" + msg);
+        }
         if (p.hasPermission("wintervillage.prisonred")) {
             String msg = e.getMessage();
             e.setCancelled(true);
@@ -24,19 +34,6 @@ public class ChatColorListener implements Listener {
             e.setCancelled(true);
             Bukkit.broadcastMessage("[§1" + p.getName() + "§r]: §r" + msg);
         }
-        if (p.hasPermission("wintervillage.redteam")) {
-            String msg = e.getMessage();
-            e.setCancelled(true);
-            Bukkit.broadcastMessage("[§c" + p.getName() + "§r]: §r" + msg);
-        }
-        if (p.hasPermission("wintervillage.blueteam")) {
-            String msg = e.getMessage();
-            e.setCancelled(true);
-            Bukkit.broadcastMessage("[§9" + p.getName() + "§r]: §r" + msg);
-        }
-
 
     }
-
-
 }

@@ -270,6 +270,7 @@ public class Team {
     public static void prefix(Player p, String prefix) {
         String pr = prefix.replace("&", "§").replace("_", " ");
         org.bukkit.scoreboard.Team t = sb.getTeam(prefix);
+
         if (t == null) {
             t = sb.registerNewTeam(prefix);
             t.setPrefix(pr);
@@ -279,10 +280,10 @@ public class Team {
             if (p.hasPermission("wintervillage.prisonred")) {
                 t.setColor(ChatColor.DARK_RED);
             }
-            if (p.hasPermission("wintervillage.blueteam")) {
+            if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
                 t.setColor(ChatColor.BLUE);
             }
-            if (p.hasPermission("wintervillage.redteam")) {
+            if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
                 t.setColor(ChatColor.RED);
             }
         }

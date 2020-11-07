@@ -48,39 +48,6 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
-    public void handlePlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
-        if (player.hasPermission("wintervillage.prisonblue")) {
-            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
-        }
-        if (player.hasPermission("wintervillage.prisonred")) {
-            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
-        }
-
-        if (player.hasPermission("wintervillage.blueteam")) {
-            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
-        }
-        if (player.hasPermission("wintervillage.redteam")) {
-            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
-        }
-    }
-
-    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        PacketPlayOutTitle times;
-        if (title != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-        }
-        if (subtitle != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-        }
-        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-    }
-
-    @EventHandler
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
@@ -249,87 +216,133 @@ public class JoinListener implements Listener {
         File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
         YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-        String Vote1end = ymlConfigMessages.getString("Vote1end");
-        if (Vote1end.equals("true")) {
-            ymlConfigMessages.set("Vote1end", "false");
-            ymlConfigMessages.set("VoteOpen", "false");
-            ymlConfigMessages.set("VoteClose", "true");
-            try {
-                ymlConfigMessages.save(configMessages);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (ymlConfigMessages.contains("Vote1end")) {
+            String Vote1end = ymlConfigMessages.getString("Vote1end");
+            if (Vote1end.equals("true")) {
+                ymlConfigMessages.set("Vote1end", "false");
+                ymlConfigMessages.set("VoteOpen", "false");
+                ymlConfigMessages.set("VoteClose", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
             }
-            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
         }
-        String Vote2end = ymlConfigMessages.getString("Vote2end");
-        if (Vote2end.equals("true")) {
-            ymlConfigMessages.set("Vote2end", "false");
-            ymlConfigMessages.set("VoteOpen", "false");
-            ymlConfigMessages.set("VoteClose", "true");
-            try {
-                ymlConfigMessages.save(configMessages);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (ymlConfigMessages.contains("Vote2end")) {
+            String Vote2end = ymlConfigMessages.getString("Vote2end");
+            if (Vote2end.equals("true")) {
+                ymlConfigMessages.set("Vote2end", "false");
+                ymlConfigMessages.set("VoteOpen", "false");
+                ymlConfigMessages.set("VoteClose", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
             }
-            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
         }
-        String Vote3end = ymlConfigMessages.getString("Vote3end");
-        if (Vote3end.equals("true")) {
-            ymlConfigMessages.set("Vote3end", "false");
-            ymlConfigMessages.set("VoteOpen", "false");
-            ymlConfigMessages.set("VoteClose", "true");
-            try {
-                ymlConfigMessages.save(configMessages);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (ymlConfigMessages.contains("Vote3end")) {
+            String Vote3end = ymlConfigMessages.getString("Vote3end");
+            if (Vote3end.equals("true")) {
+                ymlConfigMessages.set("Vote3end", "false");
+                ymlConfigMessages.set("VoteOpen", "false");
+                ymlConfigMessages.set("VoteClose", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
             }
-            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
         }
-        String Vote4end = ymlConfigMessages.getString("Vote4end");
-        if (Vote4end.equals("true")) {
-            ymlConfigMessages.set("Vote4end", "false");
-            ymlConfigMessages.set("VoteOpen", "false");
-            ymlConfigMessages.set("VoteClose", "true");
-            try {
-                ymlConfigMessages.save(configMessages);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (ymlConfigMessages.contains("Vote4end")) {
+            String Vote4end = ymlConfigMessages.getString("Vote4end");
+            if (Vote4end.equals("true")) {
+                ymlConfigMessages.set("Vote4end", "false");
+                ymlConfigMessages.set("VoteOpen", "false");
+                ymlConfigMessages.set("VoteClose", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
+                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
             }
-            String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-            String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-            player.sendMessage(Main.getPlugin().PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + getName(redmeister).toUpperCase() + "\n§1BlauMeister: §7" + getName(bluemeister).toUpperCase());
         }
 
-
-        //event.setJoinMessage("§a§l>> §7" + player.getName() + " ist beigetreten!");
         st(player.getPlayer(), "§3Winter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
-
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                Team.prefix(all, "&9Blau: ");
+            }
+            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                Team.prefix(all, "&cRot: ");
+            }
+            if (all.hasPermission("wintervillage.prisonblue")) {
+                Team.prefix(all, "&1BlauMeister: ");
+            }
+            if (all.hasPermission("wintervillage.prisonred")) {
+                Team.prefix(all, "&4RotMeister: ");
+            }
+        }
+        if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
+            event.setJoinMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
+        }
+        if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
+            event.setJoinMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
+        }
         if (player.hasPermission("wintervillage.prisonblue")) {
-            Team.prefix(player, "&1BlauMeister: ");
             event.setJoinMessage("§a§l>> §1" + player.getName() + " §7ist beigetreten!");
         }
         if (player.hasPermission("wintervillage.prisonred")) {
-            Team.prefix(player, "&4RotMeister: ");
             event.setJoinMessage("§a§l>> §4" + player.getName() + " §7ist beigetreten!");
         }
 
-        if (player.hasPermission("wintervillage.blueteam")) {
-            Team.prefix(player, "&9Blau: ");
-            event.setJoinMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
-        }
-        if (player.hasPermission("wintervillage.redteam")) {
-            Team.prefix(player, "&cRot: ");
-            event.setJoinMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
-        }
 
+    }
 
+    @EventHandler
+    public void handlePlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
+        }
+        if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
+        }
+        if (player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
+        }
+        if (player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
+        }
+    }
+
+    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        PacketPlayOutTitle times;
+        if (title != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        if (subtitle != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
 
 }
