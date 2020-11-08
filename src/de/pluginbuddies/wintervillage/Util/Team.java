@@ -5,11 +5,16 @@ package de.pluginbuddies.wintervillage.Util;
 
 import de.pluginbuddies.wintervillage.Main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scoreboard.Scoreboard;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
-import java.util.UUID;
+import java.io.IOException;
+import java.net.URL;
 
 public class Team {
 
@@ -71,12 +76,22 @@ public class Team {
 
         TabList tl = new TabList();
         tl.update();
+
     }
 
     public static String getName(String uuid) {
-        UUID id = UUID.fromString(uuid);
-        String name = Bukkit.getPlayer(id).getDisplayName();
-        return name;
+        String url = "https://api.mojang.com/user/profiles/" + uuid.replace("-", "") + "/names";
+        try {
+            @SuppressWarnings("deprecation")
+            String nameJson = IOUtils.toString(new URL(url));
+            JSONArray nameValue = (JSONArray) JSONValue.parseWithException(nameJson);
+            String playerSlot = nameValue.get(nameValue.size() - 1).toString();
+            JSONObject nameObject = (JSONObject) JSONValue.parseWithException(playerSlot);
+            return nameObject.get("name").toString();
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+        return "error";
     }
 
 

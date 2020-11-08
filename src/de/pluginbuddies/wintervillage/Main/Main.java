@@ -36,27 +36,6 @@ import java.util.List;
 
 public class Main extends JavaPlugin {
 
-    private String test = "false";
-
-    public String getTest() {
-        return test;
-    }
-
-    public void setTest(String test) {
-        this.test = test;
-    }
-
-    private String test2 = "false";
-
-    public String getTest2() {
-        return test2;
-    }
-
-    public void setTest2(String test) {
-        this.test2 = test;
-    }
-
-
     private static Main plugin;
     public final String PREFIX = "§aServer " + "§8>> §r";
 
@@ -702,13 +681,13 @@ public class Main extends JavaPlugin {
                     }
 
                     //PENIS DELETE getTest true + command und alles
-                    if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate) || getTest() == "true" || getTest2() == "true") {
+                    if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate)) {
                         if (getVoteClose() == null) {
                             //vote close
                             setVoteOpen(null);
                             setVoteClose("true");
 
-                            if (!vote1closeDate.after(currentDate) || getTest() == "true") {
+                            if (!vote1closeDate.after(currentDate)) {
                                 setVote1close("2025/01/01");
                                 getYmlConfigVote().set("vote1close", "2025/01/01");
                                 try {
@@ -735,7 +714,7 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-                            if (!vote2closeDate.after(currentDate) || getTest2() == "true") {
+                            if (!vote2closeDate.after(currentDate)) {
                                 setVote2close("2025/01/01");
                                 getYmlConfigVote().set("vote2close", "2025/01/01");
                                 try {
@@ -870,9 +849,8 @@ public class Main extends JavaPlugin {
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
         getCommand("vote").setTabCompleter(new BürgermeisterVoteTabComplete());
         getCommand("meet").setExecutor(new MeetVillage());
+        getCommand("meet").setTabCompleter(new MeetVillageTabComplete());
         getCommand("bp").setExecutor(new BackpackCommand());
-        getCommand("test").setExecutor(new testcmd());
-        getCommand("test2").setExecutor(new testcmd2());
 
 
         PluginManager pluginManager = Bukkit.getPluginManager();
