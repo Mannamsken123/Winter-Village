@@ -47,6 +47,28 @@ public class BürgermeisterVoteTabComplete implements TabCompleter {
             if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
                     if (args.length == 1) {
+                       /* List<String> rotList = new ArrayList<String>();
+                        Scanner scanner = null;
+                        boolean rot = false;
+                        try {
+                            scanner = new Scanner(new File("plugins//Teams//config.yml"));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.equals("Rot::")) {
+                                rot = true;
+                            } else if (line.equals("Blau:") || line.equals("RotMeister:") || line.equals("BlauMeister:")) {
+                                rot = false;
+                            }
+                            if (rot == true) {
+                                if (line.length() > 15) {
+                                    rotList.add(getName(line.substring(7)));
+                                }
+                            }
+                        }
+                        return rotList;*/
                         List<String> rot = new ArrayList<String>();
                         for (int i = 1; i <= 10; i++) {
                             if (!ymlConfigteams.getString("Rot." + i).isEmpty()) {
@@ -60,6 +82,28 @@ public class BürgermeisterVoteTabComplete implements TabCompleter {
             if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
                     if (args.length == 1) {
+                       /* List<String> blauList = new ArrayList<String>();
+                        Scanner scanner = null;
+                        boolean blau = false;
+                        try {
+                            scanner = new Scanner(new File("plugins//Teams//config.yml"));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.equals("Blau:")) {
+                                blau = true;
+                            } else if (line.equals("Rot:") || line.equals("RotMeister:") || line.equals("BlauMeister:")) {
+                                blau = false;
+                            }
+                            if (blau == true) {
+                                if (line.length() > 15) {
+                                    blauList.add((line.substring(7)));
+                                }
+                            }
+                        }
+                        return blauList;*/
                         List<String> blau = new ArrayList<String>();
                         for (int i = 1; i <= 10; i++) {
                             if (!ymlConfigteams.getString("Blau." + i).isEmpty()) {
