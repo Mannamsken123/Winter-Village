@@ -28,10 +28,10 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
                             if (Main.getPlugin().namesred.contains(args[0].toLowerCase())) {
                                 Main.getPlugin().votesred.put(args[0].toLowerCase(), Main.getPlugin().votesred.get(args[0].toLowerCase()) + 1);
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0] + " §3gestimmt!");
+                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt!");
                                 Main.getPlugin().voted.add(p.getName());
                             } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
                         } else
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
                     } else
@@ -45,10 +45,10 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                         if (!Main.getPlugin().voted.contains(p.getName())) {
                             if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
                                 Main.getPlugin().votesblue.put(args[0].toLowerCase(), Main.getPlugin().votesblue.get(args[0].toLowerCase()) + 1);
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0] + " §3gestimmt!");
+                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0].toUpperCase() + " §3gestimmt!");
                                 Main.getPlugin().voted.add(p.getName());
                             } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler existiert nicht!");
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village");
                         } else
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
                     } else

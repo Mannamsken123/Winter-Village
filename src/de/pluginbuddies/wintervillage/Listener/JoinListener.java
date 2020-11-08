@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Listener;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import de.pluginbuddies.wintervillage.Util.TabList;
 import de.pluginbuddies.wintervillage.Util.Team;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
 import org.bukkit.Bukkit;
@@ -265,33 +266,23 @@ public class JoinListener implements Listener {
 
         st(player.getPlayer(), "§3Winter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                Team.prefix(all, "&9Blau: ");
-            }
-            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                Team.prefix(all, "&cRot: ");
-            }
-            if (all.hasPermission("wintervillage.prisonblue")) {
-                Team.prefix(all, "&1BlauMeister: ");
-            }
-            if (all.hasPermission("wintervillage.prisonred")) {
-                Team.prefix(all, "&4RotMeister: ");
-            }
-        }
+
         if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
             event.setJoinMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
+            new TabList().addPlayer(player);
         }
         if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
             event.setJoinMessage("§a§l>> §c" + player.getName() + " §7ist beigetreten!");
+            new TabList().addPlayer(player);
         }
         if (player.hasPermission("wintervillage.prisonblue")) {
             event.setJoinMessage("§a§l>> §1" + player.getName() + " §7ist beigetreten!");
+            new TabList().addPlayer(player);
         }
         if (player.hasPermission("wintervillage.prisonred")) {
             event.setJoinMessage("§a§l>> §4" + player.getName() + " §7ist beigetreten!");
+            new TabList().addPlayer(player);
         }
-
 
     }
 
@@ -301,15 +292,19 @@ public class JoinListener implements Listener {
 
         if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
             event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
         }
         if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
             event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
         }
         if (player.hasPermission("wintervillage.prisonblue")) {
             event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
         }
         if (player.hasPermission("wintervillage.prisonred")) {
             event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
         }
     }
 

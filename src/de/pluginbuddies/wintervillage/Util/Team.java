@@ -5,7 +5,6 @@ package de.pluginbuddies.wintervillage.Util;
 
 import de.pluginbuddies.wintervillage.Main.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -22,18 +21,23 @@ public class Team {
     public static Scoreboard sb;
 
     public static void maketeams() {
+
         String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
         String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
 
+
         for (int i = 1; i <= 10; i++) {
-            String rt = getName(Main.ymlConfigteams.getString("Rot." + i));
-            Player p = Bukkit.getPlayerExact(rt);
-            if (p != null) {
-                PermissionAttachment att = Bukkit.getPlayer(rt).addAttachment(Main.getPlugin());
-                att.setPermission("wintervillage.redteam", true);
-                Main.RotBuerger.put(Bukkit.getPlayer(rt), att);
+            if (!Main.ymlConfigteams.getString("Rot." + i).isEmpty()) {
+                String rt = getName(Main.ymlConfigteams.getString("Rot." + i));
+                Player p = Bukkit.getPlayerExact(rt);
+                if (p != null) {
+                    PermissionAttachment att = Bukkit.getPlayer(rt).addAttachment(Main.getPlugin());
+                    att.setPermission("wintervillage.redteam", true);
+                    Main.RotBuerger.put(Bukkit.getPlayer(rt), att);
+                }
             }
         }
+
         if (!redmeister.isEmpty()) {
             //RoterMeister
             String rmeister = getName(redmeister);
@@ -46,12 +50,14 @@ public class Team {
         }
 
         for (int i = 1; i <= 10; i++) {
-            String bt = getName(Main.ymlConfigteams.getString("Blau." + i));
-            Player p = Bukkit.getPlayerExact(bt);
-            if (p != null) {
-                PermissionAttachment att = Bukkit.getPlayer(bt).addAttachment(Main.getPlugin());
-                att.setPermission("wintervillage.redteam", true);
-                Main.BlauBuerger.put(Bukkit.getPlayer(bt), att);
+            if (!Main.ymlConfigteams.getString("Blau." + i).isEmpty()) {
+                String bt = getName(Main.ymlConfigteams.getString("Blau." + i));
+                Player p = Bukkit.getPlayerExact(bt);
+                if (p != null) {
+                    PermissionAttachment att = Bukkit.getPlayer(bt).addAttachment(Main.getPlugin());
+                    att.setPermission("wintervillage.blueteam", true);
+                    Main.BlauBuerger.put(Bukkit.getPlayer(bt), att);
+                }
             }
         }
 
@@ -66,6 +72,10 @@ public class Team {
             }
 
         }
+
+
+        TabList tl = new TabList();
+        tl.update();
     }
 
     public static String getName(String uuid) {
@@ -83,33 +93,7 @@ public class Team {
         return "error";
     }
 
-    public static void prefix(Player p, String prefix) {
-        String pr = prefix.replace("&", "§").replace("_", " ");
-        org.bukkit.scoreboard.Team t = sb.getTeam(prefix);
 
-        if (t == null) {
-            t = sb.registerNewTeam(prefix);
-            t.setPrefix(pr);
-            if (p.hasPermission("wintervillage.prisonblue")) {
-                t.setColor(ChatColor.DARK_BLUE);
-            }
-            if (p.hasPermission("wintervillage.prisonred")) {
-                t.setColor(ChatColor.DARK_RED);
-            }
-            if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
-                t.setColor(ChatColor.BLUE);
-            }
-            if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
-                t.setColor(ChatColor.RED);
-            }
-        }
-        t.addPlayer(p);
-
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            all.setScoreboard(sb);
-        }
-
-    }
 
 
 }

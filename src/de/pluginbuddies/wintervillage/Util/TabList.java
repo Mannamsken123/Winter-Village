@@ -33,36 +33,36 @@ public class TabList {
             t.setPrefix(prefix);
         }
         if (suffix != null) {
-            t.setSuffix(prefix);
+            t.setSuffix(suffix);
         }
 
         teams.put(permission, fullName);
-
     }
 
+    @SuppressWarnings("deprecation")
     public void addPlayer(Player p) {
         Team t = null;
-
         for (String perm : teams.keySet()) {
-            String currentTeamName = teams.get(perm);
-
-            if (t == null || this.getRank(currentTeamName) < this.getRank(t.getName())) {
-                t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(currentTeamName);
+            if (perm == null || p.hasPermission(perm)) {
+                String currentTeamName = teams.get(perm);
+                if (t == null || this.getRank(currentTeamName) < this.getRank(t.getName())) {
+                    t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(currentTeamName);
+                }
             }
         }
-
         if (t != null) {
             t.addPlayer(p);
         }
     }
 
     public void update() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            this.removePlayer(p);
-            this.addPlayer(p);
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            this.removePlayer(all);
+            this.addPlayer(all);
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void removePlayer(Player p) {
         for (String teamName : teams.values()) {
             Team t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(teamName);
@@ -72,7 +72,6 @@ public class TabList {
             }
         }
     }
-
 
     private int getRank(String teamName) {
         if (!teamName.contains("_")) {

@@ -317,10 +317,7 @@ public class Main extends JavaPlugin {
     }
 
     private void load() {
-
         Team.maketeams();
-        Team.sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
     }
 
     @Override
@@ -332,11 +329,13 @@ public class Main extends JavaPlugin {
         }
 
         TabList teams = new TabList();
-        teams.create("RotMeister", 10, "§4RotMeister: §r", null, "wintervillage.prisonred");
-        teams.create("Rot", 11, "§cRot: §r", null, "wintervillage.redteam");
-        teams.create("BlauMeister", 20, "§1BlauMeister: §r", null, "wintervillage.prisonblue");
-        teams.create("Blau", 21, "§9Blau: §r", null, "wintervillage.blueteam");
 
+        teams.create("prisonred", 10, "§4RotMeister: §r", null, "wintervillage.prisonred");
+        teams.create("prisonblue", 20, "§1BlauMeister: §r", null, "wintervillage.prisonblue");
+        teams.create("redteam", 11, "§cRot: §r", null, "wintervillage.redteam");
+        teams.create("blueteam", 21, "§9Blau: §r", null, "wintervillage.blueteam");
+
+        teams.update();
 
         votesred.clear();
         votesblue.clear();
@@ -345,6 +344,7 @@ public class Main extends JavaPlugin {
         voted.clear();
 
         //voteing
+
 
         //teams
         File folderTeams = new File("plugins//Teams");
@@ -386,15 +386,17 @@ public class Main extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         //end teams
 
+
         for (int i = 1; i <= 10; i++) {
-            if (ymlConfigteams.getString("Rot." + i) != "") {
+            if (!ymlConfigteams.getString("Rot." + i).isEmpty()) {
                 namesred.add(getName(ymlConfigteams.getString("Rot." + i)).toLowerCase());
             }
         }
         for (int i = 1; i <= 10; i++) {
-            if (ymlConfigteams.getString("Blau." + i) != "") {
+            if (!ymlConfigteams.getString("Blau." + i).isEmpty()) {
                 namesblue.add(getName(ymlConfigteams.getString("Blau." + i)).toLowerCase());
             }
         }
@@ -841,18 +843,7 @@ public class Main extends JavaPlugin {
                                     ymlConfigMessages.set("VoteOpen", "false");
 
                                     Team.maketeams();
-                                    if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                        Team.prefix(all, "&9Blau: ");
-                                    }
-                                    if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                        Team.prefix(all, "&cRot: ");
-                                    }
-                                    if (all.hasPermission("wintervillage.prisonblue")) {
-                                        Team.prefix(all, "&1BlauMeister: ");
-                                    }
-                                    if (all.hasPermission("wintervillage.prisonred")) {
-                                        Team.prefix(all, "&4RotMeister: ");
-                                    }
+                                    teams.update();
 
                                     all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
 
@@ -877,10 +868,12 @@ public class Main extends JavaPlugin {
         getCommand("prison").setExecutor(prisonCommand);
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
+        getCommand("vote").setTabCompleter(new BürgermeisterVoteTabComplete());
         getCommand("meet").setExecutor(new MeetVillage());
         getCommand("bp").setExecutor(new BackpackCommand());
         getCommand("test").setExecutor(new testcmd());
         getCommand("test2").setExecutor(new testcmd2());
+
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
