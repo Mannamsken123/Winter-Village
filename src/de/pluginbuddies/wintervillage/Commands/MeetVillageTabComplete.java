@@ -19,32 +19,33 @@ public class MeetVillageTabComplete implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (p.hasPermission("wintervillage.prisonred")) {
-                if (args.length == 1) {
-                    List<String> rot = new ArrayList<>();
-                    rot.add("all");
-                    for (Player all : Bukkit.getOnlinePlayers()) {
-                        if (all.hasPermission("wintervillage.redteam")) {
-                            rot.add(all.getName());
+            String w = p.getWorld().getName();
+            if (!w.equals("world-clash")) {
+                if (p.hasPermission("wintervillage.prisonred")) {
+                    if (args.length == 1) {
+                        List<String> rot = new ArrayList<>();
+                        rot.add("all");
+                        for (Player all : Bukkit.getOnlinePlayers()) {
+                            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                rot.add(all.getName());
+                            }
                         }
+                        return rot;
+
                     }
-
-                    return rot;
-
                 }
-            }
-            if (p.hasPermission("wintervillage.prisonblue")) {
-                if (args.length == 1) {
-                    List<String> blau = new ArrayList<>();
-                    blau.add("all");
-                    for (Player all : Bukkit.getOnlinePlayers()) {
-                        if (all.hasPermission("wintervillage.blueteam")) {
-                            blau.add(all.getName());
+                if (p.hasPermission("wintervillage.prisonblue")) {
+                    if (args.length == 1) {
+                        List<String> blau = new ArrayList<>();
+                        blau.add("all");
+                        for (Player all : Bukkit.getOnlinePlayers()) {
+                            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                blau.add(all.getName());
+                            }
                         }
+                        return blau;
+
                     }
-
-                    return blau;
-
                 }
             }
         }

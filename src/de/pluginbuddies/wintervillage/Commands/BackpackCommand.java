@@ -64,7 +64,7 @@ public class BackpackCommand implements CommandExecutor, Listener {
                         p.openInventory(backpackBlue);
                     }
                 } else {
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst während eines Clashes leider nicht das Backpack öffnen!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
                 }
             } else {
                 p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/bp §coder §r/backpack");

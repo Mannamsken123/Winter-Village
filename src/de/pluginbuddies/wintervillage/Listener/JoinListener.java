@@ -266,7 +266,6 @@ public class JoinListener implements Listener {
 
         st(player.getPlayer(), "§3Winter Village", "§7by mullemann25 & Mannam01", 5, 50, 5);
 
-
         if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
             event.setJoinMessage("§a§l>> §9" + player.getName() + " §7ist beigetreten!");
             new TabList().addPlayer(player);

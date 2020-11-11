@@ -299,9 +299,7 @@ public class Main extends JavaPlugin {
         return "error";
     }
 
-    private void load() {
-        Team.maketeams();
-    }
+
 
     @Override
     public void onEnable() {
@@ -313,10 +311,10 @@ public class Main extends JavaPlugin {
 
         TabList teams = new TabList();
 
-        teams.create("prisonred", 10, "§4RotMeister: §r", null, "wintervillage.prisonred");
-        teams.create("prisonblue", 20, "§1BlauMeister: §r", null, "wintervillage.prisonblue");
         teams.create("redteam", 11, "§cRot: §r", null, "wintervillage.redteam");
         teams.create("blueteam", 21, "§9Blau: §r", null, "wintervillage.blueteam");
+        teams.create("prisonred", 10, "§4RotMeister: §r", null, "wintervillage.prisonred");
+        teams.create("prisonblue", 20, "§1BlauMeister: §r", null, "wintervillage.prisonblue");
 
         teams.update();
 
@@ -342,8 +340,8 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
         ymlConfigteams.addDefault("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
         ymlConfigteams.addDefault("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
-        ymlConfigteams.addDefault("Rot.5", "");
-        ymlConfigteams.addDefault("Rot.6", "");
+        ymlConfigteams.addDefault("Rot.5", "ed85c100-78c1-46b9-85c1-0c902e2352f0");//Valentin
+        ymlConfigteams.addDefault("Rot.6", "e466347d-6c55-4619-bdd9-7404f2bc874b");//Chris
         ymlConfigteams.addDefault("Rot.7", "");
         ymlConfigteams.addDefault("Rot.8", "");
         ymlConfigteams.addDefault("Rot.9", "");
@@ -354,7 +352,7 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Blau.4", "8c500465-dcdd-4a5f-829c-3c34fe1d1904");//Vito
         ymlConfigteams.addDefault("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
         ymlConfigteams.addDefault("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
-        ymlConfigteams.addDefault("Blau.7", "");
+        ymlConfigteams.addDefault("Blau.7", "438febad-85db-4720-be25-49fe22c8d0cc");//Tobi
         ymlConfigteams.addDefault("Blau.8", "");
         ymlConfigteams.addDefault("Blau.9", "");
         ymlConfigteams.addDefault("Blau.10", "");
@@ -611,15 +609,15 @@ public class Main extends JavaPlugin {
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
                             //vote open
+                            setVoteOpen("true");
 
                             if (getVoteClose() != null) {
-                                setVoteClose(null); //der kollege macht ärger und ist dafür zuständig das keine on later join kommt
+                                setVoteClose(null); //PENIS der kollege macht ärger und ist dafür zuständig das keine on later join kommt
                             }
-                            setVoteOpen("true");
 
                             if (!vote1Date.after(currentDate)) {
                                 setVote1("2025/01/01");
-                                getYmlConfigVote().set("vote1", "2025/01/01");
+                                getYmlConfigVote().set("vote1", "2025/01/01");//PENIS Wenn keiner joint stellt sich das nicht um also der server macht das nicht auto.
                                 try {
                                     getYmlConfigVote().save(getConfigVote());
                                 } catch (IOException e) {
@@ -809,6 +807,12 @@ public class Main extends JavaPlugin {
                                 e.printStackTrace();
                             }
 
+                            BlauBuerger.clear();
+                            RotBuerger.clear();
+                            Buergermeisterred.clear();
+                            Buergermeisterblue.clear();
+                            Team.maketeams();
+
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
                                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
@@ -818,9 +822,6 @@ public class Main extends JavaPlugin {
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("VoteClose", "true");
                                     ymlConfigMessages.set("VoteOpen", "false");
-
-                                    Team.maketeams();
-                                    teams.update();
 
                                     all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
 
@@ -845,11 +846,11 @@ public class Main extends JavaPlugin {
         getCommand("prison").setExecutor(prisonCommand);
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
-        getCommand("vote").setTabCompleter(new BürgermeisterVoteTabComplete());
+        //getCommand("vote").setTabCompleter(new BürgermeisterVoteTabComplete());
         getCommand("meet").setExecutor(new MeetVillage());
         getCommand("meet").setTabCompleter(new MeetVillageTabComplete());
         getCommand("bp").setExecutor(new BackpackCommand());
-
+        getCommand("confi").setExecutor(new ConfiBothVillageCommand());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -994,8 +995,6 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //end vote
-
-        load();
     }
 
     public String getUuid(String name) {
