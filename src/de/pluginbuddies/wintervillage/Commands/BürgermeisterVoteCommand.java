@@ -4,14 +4,16 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class BürgermeisterVoteCommand implements CommandExecutor {
 
@@ -25,11 +27,31 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
             if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschRot() == true) {
                     if (args.length == 1) {
-                        if (!Main.getPlugin().voted.contains(p.getName())) {
+                        Scanner scanner = null;
+                        boolean voted = false;
+                        try {
+                            scanner = new Scanner(new File("plugins//Vote//voted.yml"));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.equals(p.getName())) {
+                                voted = true;
+                            }
+                        }
+                        if (voted == false) {
+                            voted = true;
                             if (Main.getPlugin().namesred.contains(args[0].toLowerCase())) {
-                                Main.getPlugin().votesred.put(args[0].toLowerCase(), Main.getPlugin().votesred.get(args[0].toLowerCase()) + 1);
+                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//votesred.yml", true))) {
+                                    output.printf("%s\r\n", args[0].toLowerCase());
+                                } catch (Exception e) {
+                                }
+                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//voted.yml", true))) {
+                                    output.printf("%s\r\n", p.getName());
+                                } catch (Exception e) {
+                                }
                                 p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt!");
-                                Main.getPlugin().voted.add(p.getName());
                             } else
                                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
                         } else
@@ -42,11 +64,31 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
             if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
                 if (Main.getPlugin().getVoteOpen() == "true" || Main.getPlugin().getPutschBlau() == true) {
                     if (args.length == 1) {
-                        if (!Main.getPlugin().voted.contains(p.getName())) {
+                        Scanner scanner = null;
+                        boolean voted = false;
+                        try {
+                            scanner = new Scanner(new File("plugins//Vote//voted.yml"));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        while (scanner.hasNextLine()) {
+                            String line = scanner.nextLine();
+                            if (line.equals(p.getName())) {
+                                voted = true;
+                            }
+                        }
+                        if (voted == false) { //penis maybe error
+                            voted = true;
                             if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
-                                Main.getPlugin().votesblue.put(args[0].toLowerCase(), Main.getPlugin().votesblue.get(args[0].toLowerCase()) + 1);
+                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//votesblue.yml", true))) {
+                                    output.printf("%s\r\n", args[0].toLowerCase());
+                                } catch (Exception e) {
+                                }
+                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//voted.yml", true))) {
+                                    output.printf("%s\r\n", p.getName());
+                                } catch (Exception e) {
+                                }
                                 p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0].toUpperCase() + " §3gestimmt!");
-                                Main.getPlugin().voted.add(p.getName());
                             } else
                                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village");
                         } else
@@ -69,31 +111,61 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
         return rEb;
     }
 
-    public void getResult() {
+    public void getResult() throws IOException {
+        HashMap<String, Integer> votesblue = new HashMap<>();
+        HashMap<String, Integer> votesred = new HashMap<>();
+
+        Scanner scannerRed = null;
+        try {
+            scannerRed = new Scanner(new File("plugins//Vote//votesred.yml"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        while (scannerRed.hasNextLine()) {
+            String line = scannerRed.nextLine();
+            votesred.put(line.toLowerCase(), votesred.get(line.toLowerCase()) + 1);
+
+            Bukkit.broadcastMessage("put red");
+            Bukkit.broadcastMessage(line.toLowerCase());
+            Bukkit.broadcastMessage(line.toLowerCase() + 1);
+        }
+        Scanner scannerBlue = null;
+        try {
+            scannerBlue = new Scanner(new File("plugins//Vote//votesblue.yml"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        while (scannerBlue.hasNextLine()) {
+            String line = scannerBlue.nextLine();
+            votesblue.put(line.toLowerCase(), votesblue.get(line.toLowerCase()) + 1);
+        }
+
         int maxred = 0;
-        for (int i : Main.getPlugin().votesred.values()) {
+        for (int i : votesred.values()) {
+            Bukkit.broadcastMessage("for maxred");
             if (i > maxred) {
                 maxred = i;
             }
         }
         int maxblue = 0;
-        for (int i : Main.getPlugin().votesblue.values()) {
+        for (int i : votesblue.values()) {
             if (i > maxblue) {
                 maxblue = i;
             }
         }
+
         List<String> winnerred = new ArrayList<>();
         int wr = 0;
-        for (String all : Main.getPlugin().votesred.keySet()) {
-            if (Main.getPlugin().votesred.get(all) == maxred) {
+        for (String all : votesred.keySet()) {
+            if (votesred.get(all) == maxred) {
                 winnerred.add(all);
                 wr++;
             }
         }
         List<String> winnerblue = new ArrayList<>();
         int wb = 0;
-        for (String all : Main.getPlugin().votesblue.keySet()) {
-            if (Main.getPlugin().votesblue.get(all) == maxblue) {
+        for (String all : votesblue.keySet()) {
+            if (votesblue.get(all) == maxblue) {
                 winnerblue.add(all);
                 wb++;
             }
@@ -112,12 +184,11 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
         while (workaround == true);
 
         //PENIS in config bürgermeister von false auf true
+        FileUtils.write(new File("plugins//Vote//votesred.yml"), "", Charset.defaultCharset());
+        FileUtils.write(new File("plugins//Vote//votesblue.yml"), "", Charset.defaultCharset());
+        FileUtils.write(new File("plugins//Vote//hasVoted.yml"), "", Charset.defaultCharset());
 
-
-        Main.getPlugin().votesred.clear();
-        Main.getPlugin().votesblue.clear();
         Main.getPlugin().namesred.clear();
         Main.getPlugin().namesblue.clear();
-        Main.getPlugin().voted.clear();
     }
 }

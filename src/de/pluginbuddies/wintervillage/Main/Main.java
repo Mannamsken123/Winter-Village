@@ -39,8 +39,6 @@ public class Main extends JavaPlugin {
     private static Main plugin;
     public final String PREFIX = "§aServer " + "§8>> §r";
 
-    public List<String> voted = new ArrayList<>();
-
     //putsch
     private boolean putschRot = false;
     private boolean putschBlau = false;
@@ -52,15 +50,27 @@ public class Main extends JavaPlugin {
     private String nikolausOpen;
     private String voteOpen;
     private String voteClose;
-    public HashMap<String, Integer> votesred = new HashMap<>();
 
     //Bürgermeister - Permisson - Vote
+    static File configVote = new File("plugins//Vote//config.yml");
+    public static YamlConfiguration ymlConfigVote = YamlConfiguration.loadConfiguration(configVote);
+
+    static File votesRed = new File("plugins//Vote//votesred.yml");
+    public static YamlConfiguration ymlvotesRed = YamlConfiguration.loadConfiguration(votesRed);
+    static File votesBlue = new File("plugins//Vote//votesblue.yml");
+    public static YamlConfiguration ymlvotesBlue = YamlConfiguration.loadConfiguration(votesBlue);
+    static File hasVoted = new File("plugins//Vote//voted.yml");
+    public static YamlConfiguration ymlHasVoted = YamlConfiguration.loadConfiguration(hasVoted);
+
     public static HashMap<Player, PermissionAttachment> Buergermeisterblue = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> Buergermeisterred = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> RotBuerger = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> BlauBuerger = new HashMap<Player, PermissionAttachment>();
 
-    public HashMap<String, Integer> votesblue = new HashMap<>();
+    /*public HashMap<String, Integer> votesblue = new HashMap<>();
+    public HashMap<String, Integer> votesred = new HashMap<>();
+    public List<String> voted = new ArrayList<>();*/
+
     public List<String> namesred = new ArrayList<>();
     public List<String> namesblue = new ArrayList<>();
     BürgermeisterVoteCommand bvc = new BürgermeisterVoteCommand();
@@ -99,10 +109,6 @@ public class Main extends JavaPlugin {
     static YamlConfiguration ymlFileAdvent = YamlConfiguration.loadConfiguration(fileAdvent);
     static File configAdvent = new File("plugins//Adventskalender//config.yml");
     public static YamlConfiguration ymlConfigAdvent = YamlConfiguration.loadConfiguration(configAdvent);
-
-    //vote
-    static File configVote = new File("plugins//Vote//config.yml");
-    public static YamlConfiguration ymlConfigVote = YamlConfiguration.loadConfiguration(configVote);
 
     //fix dates
     private String vote1 = getYmlConfigVote().getString("vote1");
@@ -193,8 +199,6 @@ public class Main extends JavaPlugin {
     public void setVote4close(String vote4close) {
         this.vote4close = vote4close;
     }
-
-    //vote end
 
     public static void setUsed(String UUID, int Day) {
         ymlFileAdvent.set(UUID + ".day" + Day, true);
@@ -316,11 +320,8 @@ public class Main extends JavaPlugin {
 
         teams.update();
 
-        votesred.clear();
-        votesblue.clear();
         namesred.clear();
         namesblue.clear();
-        voted.clear();
 
         //voteing
 
@@ -378,13 +379,6 @@ public class Main extends JavaPlugin {
             if (!ymlConfigteams.getString("Blau." + i).isEmpty()) {
                 namesblue.add(getName(ymlConfigteams.getString("Blau." + i)).toLowerCase());
             }
-        }
-
-        for (String all : namesred) {
-            votesred.put(all, 0);
-        }
-        for (String all : namesblue) {
-            votesblue.put(all, 0);
         }
 
         //VOTEING ENDs
@@ -796,7 +790,11 @@ public class Main extends JavaPlugin {
                                 }
                             }
 
-                            bvc.getResult();
+                            try {
+                                bvc.getResult();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             String winnerblau = bvc.getrEb();
                             String winnerrot = bvc.getrEr();
                             if (!bvc.getrEr().isEmpty()) {
@@ -953,6 +951,27 @@ public class Main extends JavaPlugin {
         if (!configVote.exists()) {
             try {
                 configVote.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!votesRed.exists()) {
+            try {
+                votesRed.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!votesBlue.exists()) {
+            try {
+                votesBlue.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!hasVoted.exists()) {
+            try {
+                hasVoted.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
