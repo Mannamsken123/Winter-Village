@@ -4,7 +4,6 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -112,8 +111,16 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
     }
 
     public void getResult() throws IOException {
+
         HashMap<String, Integer> votesblue = new HashMap<>();
         HashMap<String, Integer> votesred = new HashMap<>();
+
+        for (String all : Main.getPlugin().namesred) {
+            votesred.put(all, 0);
+        }
+        for (String all : Main.getPlugin().namesblue) {
+            votesblue.put(all, 0);
+        }
 
         Scanner scannerRed = null;
         try {
@@ -124,10 +131,6 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
         while (scannerRed.hasNextLine()) {
             String line = scannerRed.nextLine();
             votesred.put(line.toLowerCase(), votesred.get(line.toLowerCase()) + 1);
-
-            Bukkit.broadcastMessage("put red");
-            Bukkit.broadcastMessage(line.toLowerCase());
-            Bukkit.broadcastMessage(line.toLowerCase() + 1);
         }
         Scanner scannerBlue = null;
         try {
@@ -142,7 +145,6 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
 
         int maxred = 0;
         for (int i : votesred.values()) {
-            Bukkit.broadcastMessage("for maxred");
             if (i > maxred) {
                 maxred = i;
             }
