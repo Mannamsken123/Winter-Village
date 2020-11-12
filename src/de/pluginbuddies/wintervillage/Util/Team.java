@@ -21,6 +21,7 @@ public class Team {
     public static Scoreboard sb;
 
     public static void maketeams() {
+        TabList tl = new TabList();
 
         Main.RotBuerger.clear();
         Main.BlauBuerger.clear();
@@ -29,7 +30,6 @@ public class Team {
 
         String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
         String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-
 
         for (int i = 1; i <= 10; i++) {
             if (!Main.ymlConfigteams.getString("Rot." + i).isEmpty()) {
@@ -78,8 +78,7 @@ public class Team {
 
         }
 
-        Bukkit.broadcastMessage("vagina");
-        TabList tl = new TabList();
+
         tl.update();
 
     }

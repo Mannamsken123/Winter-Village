@@ -54,6 +54,25 @@ public class Main extends JavaPlugin {
         this.travelWithEntity = travelWithEntity;
     }
 
+    private boolean travelUse = false;
+    private Player current;
+
+    public boolean getTravelUse() {
+        return travelUse;
+    }
+
+    public void setTravelUse(boolean travelUse) {
+        this.travelUse = travelUse;
+    }
+
+    public Player getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(Player current) {
+        this.current = current;
+    }
+
     //booleans for TIME CHECKER
     private String netherOpen;
     private String endOpen;
@@ -798,7 +817,10 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                Buergermeisterred.remove(all);
+                                Buergermeisterblue.remove(all);
+                            }
                             try {
                                 bvc.getResult();
                             } catch (IOException e) {
