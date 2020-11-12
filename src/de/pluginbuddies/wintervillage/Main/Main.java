@@ -353,7 +353,7 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
         ymlConfigteams.addDefault("Rot.5", "ed85c100-78c1-46b9-85c1-0c902e2352f0");//Valentin
         ymlConfigteams.addDefault("Rot.6", "e466347d-6c55-4619-bdd9-7404f2bc874b");//Chris
-        ymlConfigteams.addDefault("Rot.7", "");
+        ymlConfigteams.addDefault("Rot.7", "598fc90a-ffe6-4500-a3c4-6a1207e09812");//Nils
         ymlConfigteams.addDefault("Rot.8", "");
         ymlConfigteams.addDefault("Rot.9", "");
         ymlConfigteams.addDefault("Rot.10", "");
@@ -513,8 +513,8 @@ public class Main extends JavaPlugin {
                         if (getNetherOpen() == null) {
                             setNetherOpen("true");
                             World world = Bukkit.getWorld("world");
-                            Location loc1 = new Location(world, 129, 40, -77);
-                            Location loc2 = new Location(world, 129, 44, -83);
+                            Location loc1 = new Location(world, 129, 39, -78);
+                            Location loc2 = new Location(world, 129, 43, -82);
                             int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
                             int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());
                             int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
@@ -855,7 +855,6 @@ public class Main extends JavaPlugin {
         getCommand("village").setExecutor(new VillageCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("spawn").setTabCompleter(new SpawnTabComplete());
-        //getCommand("village").setTabCompleter(new VillageTabComplete());
         getCommand("prison").setExecutor(prisonCommand);
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
@@ -875,7 +874,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new VillageCommand(), this);
         pluginManager.registerEvents(new DeathListener(), this);
         pluginManager.registerEvents(new BackpackCommand(), this);
-        pluginManager.registerEvents(new TravelWithEntity(), this);
+        pluginManager.registerEvents(new SpawnCommand(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");

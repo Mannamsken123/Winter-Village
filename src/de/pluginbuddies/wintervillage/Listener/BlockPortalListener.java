@@ -99,6 +99,24 @@ public class BlockPortalListener implements Listener {
                     }
                 }
 
+                Location loc3 = new Location(world, 118, 31, -59);
+                Location loc4 = new Location(world, 118, 33, -62);
+                int minX2 = Math.min(loc3.getBlockX(), loc4.getBlockX());
+                int minY2 = Math.min(loc3.getBlockY(), loc4.getBlockY());
+                int minZ2 = Math.min(loc3.getBlockZ(), loc4.getBlockZ());
+                int maxX2 = Math.max(loc3.getBlockX(), loc4.getBlockX());
+                int maxY2 = Math.max(loc3.getBlockY(), loc4.getBlockY());
+                int maxZ2 = Math.max(loc3.getBlockZ(), loc4.getBlockZ());
+
+                for (int x = minX2; x <= maxX2; x++) {
+                    for (int y = minY2; y <= maxY2; y++) {
+                        for (int z = minZ2; z <= maxZ2; z++) {
+                            Block block2 = world.getBlockAt(x, y, z);
+                            block2.setType(Material.AIR);
+                        }
+                    }
+                }
+
             }
         }
     }

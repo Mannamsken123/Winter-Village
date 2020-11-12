@@ -11,10 +11,13 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class SpawnCommand implements CommandExecutor {
+public class SpawnCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -26,7 +29,6 @@ public class SpawnCommand implements CommandExecutor {
                 if (args.length == 0) {
                     new BukkitRunnable() {
                         int time = 4;
-
                         @Override
                         public void run() {
                             time--;
@@ -47,7 +49,7 @@ public class SpawnCommand implements CommandExecutor {
                 }
                 if (args.length == 1) {
                     if (args[0].equalsIgnoreCase("withentity")) {
-                        if (w.equals("world")) { //FarmweltNr1
+                        if (w.equals("FarmweltNr1")) {
                             p.sendMessage(Main.getPlugin().PREFIX + "§6Du kannst jetzt ein Entity mit dir mit teleportieren, indem du es mit einem §rRechtsklick §6markierst!");
                             Main.getPlugin().setTravelWithEntity(true);
                             new BukkitRunnable() {
@@ -56,6 +58,7 @@ public class SpawnCommand implements CommandExecutor {
                                 @Override
                                 public void run() {
                                     time--;
+
                                     if (time == 0) {
                                         World world = Bukkit.getWorld("world");
                                         Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
@@ -71,7 +74,8 @@ public class SpawnCommand implements CommandExecutor {
 
                                 }
                             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                        }
+                        } else
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst dies nur in der Farmwelt!");
                     } else
                         p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/spawn withentity§c!");
                 }
@@ -79,6 +83,37 @@ public class SpawnCommand implements CommandExecutor {
                 p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
         }
         return false;
+    }
+
+
+    @EventHandler
+    public void onInteract(PlayerInteractEntityEvent e) {
+        if (Main.getPlugin().getTravelWithEntity() == true) {
+            Entity entity = e.getRightClicked();
+            Player p = e.getPlayer();
+            if (entity instanceof Animals || entity instanceof Villager || entity instanceof Dolphin || entity instanceof WanderingTrader) {
+                if (entity instanceof Villager || entity instanceof WanderingTrader) {
+                    e.setCancelled(true);
+                }
+
+                p.sendMessage(Main.getPlugin().PREFIX + entity.getName() + " §2✔");
+
+                new BukkitRunnable() {
+                    int time = 7;
+
+                    @Override
+                    public void run() {
+                        time--;
+                        if (time == 0) {
+                            Location loc = p.getLocation();
+                            entity.teleport(loc);
+                            cancel();
+                        }
+                    }
+                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+            }
+            Main.getPlugin().setTravelWithEntity(false);
+        }
     }
 }
 
