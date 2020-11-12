@@ -23,22 +23,43 @@ public class SpawnCommand implements CommandExecutor {
             if (args.length == 0) {
                 String w = p.getWorld().getName();
                 if (!w.equals("world-clash")) {
-                    new BukkitRunnable() {
-                        int time = 4;
+                    if (w.equals("world")) { //penis farmwelt muss an dieser stelle rein
+                        p.sendMessage(Main.getPlugin().PREFIX + "§6Du kannst jetzt ein Entity mit dir mit teleportieren, indem du es mit einem §rRechtsklick §6markierst!");
+                        Main.getPlugin().setTravelWithEntity(true);
+                        new BukkitRunnable() {
+                            int time = 7;
 
-                        @Override
-                        public void run() {
-                            time--;
-                            if (time == 0) {
-                                World world = Bukkit.getWorld("world");
-                                Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-                                p.teleport(location);
-                                p.setGameMode(GameMode.SURVIVAL);
-                                cancel();
-                            } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                        }
-                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                            @Override
+                            public void run() {
+                                time--;
+                                if (time == 0) {
+                                    World world = Bukkit.getWorld("world");
+                                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                                    p.teleport(location);
+                                    p.setGameMode(GameMode.SURVIVAL);
+                                    cancel();
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                            }
+                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                    } else {
+                        new BukkitRunnable() {
+                            int time = 4;
+
+                            @Override
+                            public void run() {
+                                time--;
+                                if (time == 0) {
+                                    World world = Bukkit.getWorld("world");
+                                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                                    p.teleport(location);
+                                    p.setGameMode(GameMode.SURVIVAL);
+                                    cancel();
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                            }
+                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                    }
                 } else
                     p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst dich während eines Clashes nicht teleportieren!");
             } else
@@ -46,6 +67,5 @@ public class SpawnCommand implements CommandExecutor {
         }
         return false;
     }
-
 }
 

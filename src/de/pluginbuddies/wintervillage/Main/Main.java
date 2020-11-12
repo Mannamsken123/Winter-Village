@@ -43,6 +43,17 @@ public class Main extends JavaPlugin {
     private boolean putschRot = false;
     private boolean putschBlau = false;
 
+    //TravelWithEntity
+    private boolean travelWithEntity = false;
+
+    public boolean getTravelWithEntity() {
+        return travelWithEntity;
+    }
+
+    public void setTravelWithEntity(boolean travelWithEntity) {
+        this.travelWithEntity = travelWithEntity;
+    }
+
     //booleans for TIME CHECKER
     private String netherOpen;
     private String endOpen;
@@ -861,6 +872,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new VillageCommand(), this);
         pluginManager.registerEvents(new DeathListener(), this);
         pluginManager.registerEvents(new BackpackCommand(), this);
+        pluginManager.registerEvents(new TravelWithEntity(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");
