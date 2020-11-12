@@ -19,7 +19,11 @@ public class TravelWithEntity implements Listener {
             Entity entity = e.getRightClicked();
             Player p = e.getPlayer();
             if (entity instanceof Animals || entity instanceof Villager || entity instanceof Dolphin || entity instanceof WanderingTrader) {
-                p.sendMessage(Main.getPlugin().PREFIX + entity.getName() + "§2✔");
+                if (entity instanceof Villager || entity instanceof WanderingTrader) {
+                    e.setCancelled(true);
+                }
+
+                p.sendMessage(Main.getPlugin().PREFIX + entity.getName() + " §2✔");
 
                 new BukkitRunnable() {
                     int time = 7;

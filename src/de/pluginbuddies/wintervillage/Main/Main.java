@@ -854,6 +854,8 @@ public class Main extends JavaPlugin {
         getCommand("gm").setTabCompleter(new GamemodesTabComplete());
         getCommand("village").setExecutor(new VillageCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
+        getCommand("spawn").setTabCompleter(new SpawnTabComplete());
+        //getCommand("village").setTabCompleter(new VillageTabComplete());
         getCommand("prison").setExecutor(prisonCommand);
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());

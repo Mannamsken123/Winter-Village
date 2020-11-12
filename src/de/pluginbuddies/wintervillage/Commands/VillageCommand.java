@@ -24,8 +24,9 @@ public class VillageCommand implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
+            String w = p.getWorld().getName();
+
             if (args.length == 0) {
-                String w = p.getWorld().getName();
                 if (!w.equals("world-clash")) {
                     new BukkitRunnable() {
                         int time = 4;
