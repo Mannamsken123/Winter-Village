@@ -51,11 +51,13 @@ public class TabList {
             }
         }
         if (t != null) {
+            Bukkit.broadcastMessage(p + "   addplayer");
             t.addPlayer(p);
         }
     }
 
     public void update() {
+        Bukkit.broadcastMessage("Penis");
         for (Player all : Bukkit.getOnlinePlayers()) {
             this.removePlayer(all);
             this.addPlayer(all);
@@ -68,6 +70,7 @@ public class TabList {
             Team t = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(teamName);
 
             if (t != null && t.hasPlayer(p)) {
+                Bukkit.broadcastMessage(p + "   removeplayer");
                 t.removePlayer(p);
             }
         }

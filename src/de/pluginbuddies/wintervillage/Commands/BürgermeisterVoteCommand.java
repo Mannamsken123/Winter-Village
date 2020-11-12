@@ -188,7 +188,7 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
         //PENIS in config bürgermeister von false auf true
         FileUtils.write(new File("plugins//Vote//votesred.yml"), "", Charset.defaultCharset());
         FileUtils.write(new File("plugins//Vote//votesblue.yml"), "", Charset.defaultCharset());
-        FileUtils.write(new File("plugins//Vote//hasVoted.yml"), "", Charset.defaultCharset());
+        FileUtils.write(new File("plugins//Vote//voted.yml"), "", Charset.defaultCharset());
 
         Main.getPlugin().namesred.clear();
         Main.getPlugin().namesblue.clear();

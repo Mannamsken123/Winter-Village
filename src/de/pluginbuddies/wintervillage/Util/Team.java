@@ -22,6 +22,11 @@ public class Team {
 
     public static void maketeams() {
 
+        Main.RotBuerger.clear();
+        Main.BlauBuerger.clear();
+        Main.Buergermeisterblue.clear();
+        Main.Buergermeisterred.clear();
+
         String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
         String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
 
@@ -73,7 +78,7 @@ public class Team {
 
         }
 
-
+        Bukkit.broadcastMessage("vagina");
         TabList tl = new TabList();
         tl.update();
 

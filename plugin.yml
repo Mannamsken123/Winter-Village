@@ -25,3 +25,5 @@
       description: Oeffnet dein Team-Backpack.
       aliases:
         - backpack
+    confi:
+      description: Startet eine Serverkonferent, sofern der andere Bürgermeister aktzeptiert!

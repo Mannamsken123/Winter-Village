@@ -61,7 +61,7 @@ public class SpawnCommand implements CommandExecutor {
                         }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                     }
                 } else
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst dich während eines Clashes nicht teleportieren!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
             } else
                 p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/spawn§c!");
         }

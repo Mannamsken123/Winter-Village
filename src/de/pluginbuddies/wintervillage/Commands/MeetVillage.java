@@ -25,153 +25,156 @@ public class MeetVillage implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player) sender;
+            Player p = (Player) sender;
+            String w = p.getWorld().getName();
+            if (!w.equals("world-clash")) {
+                if (p.hasPermission("wintervillage.prisonred")) {
+                    if (args.length == 1) {
+                        if (args[0].equalsIgnoreCase("all")) {
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Der RotMeister §4" + p.getName() + " §3möchte mit euch sprechen!");
+                                }
+                            }
+                            new BukkitRunnable() {
+                                int time = 4;
+                                World world2 = Bukkit.getWorld("world");
+                                Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
 
-            if (player.hasPermission("wintervillage.prisonred")) {
-                if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("all")) {
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (all.hasPermission("wintervillage.redteam")) {
-                                all.sendMessage(Main.getPlugin().PREFIX + "§bDer RotMeister §4" + player.getName() + " §bmöchte mit euch sprechen!");
+                                @Override
+                                public void run() {
+                                    time--;
+                                    if (time == 0) {
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                                all.teleport(location);
+                                            }
+                                        }
+                                        p.teleport(location);
+                                        p.setGameMode(GameMode.SURVIVAL);
+                                        cancel();
+                                    } else {
+                                        p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+
+                        } else {
+                            Player target = Bukkit.getPlayer(args[0]);
+                            if (p == target) {
+                                p.sendMessage("§aServer " + "§8>> " + "§cDu kannst dich nicht mit dir selber treffen!");
+                                return false;
+                            } else if (target != null) {
+                                if (target.hasPermission("wintervillage.redteam")) {
+                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der RotMeister §4" + p.getName() + " §bmöchte mit dir sprechen!");
+                                    new BukkitRunnable() {
+                                        int time = 4;
+
+                                        @Override
+                                        public void run() {
+                                            time--;
+                                            if (time == 0) {
+                                                World world2 = Bukkit.getWorld("world");
+                                                Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
+                                                target.teleport(location);
+                                                target.setGameMode(GameMode.SURVIVAL);
+                                                p.teleport(location);
+                                                p.setGameMode(GameMode.SURVIVAL);
+                                                cancel();
+                                            } else
+                                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                        }
+                                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
                             }
                         }
-                        new BukkitRunnable() {
-                            int time = 4;
-                            World world2 = Bukkit.getWorld("world");
-                            Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
+                    } else
+                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
 
-                            @Override
-                            public void run() {
-                                time--;
-                                if (time == 0) {
-                                    for (Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.redteam")) {
-                                            all.teleport(location);
+
+                } else if (p.hasPermission("wintervillage.prisonblue")) {
+                    if (args.length == 1) {
+                        if (args[0].equalsIgnoreCase("all")) {
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §bmöchte mit euch sprechen!");
+                                }
+                            }
+                            new BukkitRunnable() {
+                                int time = 4;
+                                World world2 = Bukkit.getWorld("world");
+                                Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
+
+                                @Override
+                                public void run() {
+                                    time--;
+                                    if (time == 0) {
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                                all.teleport(location);
+                                            }
                                         }
-                                    }
-                                    player.teleport(location);
-                                    player.setGameMode(GameMode.SURVIVAL);
-                                    cancel();
-                                } else {
-                                    player.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-
-                                    for (Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.redteam")) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                        p.teleport(location);
+                                        p.setGameMode(GameMode.SURVIVAL);
+                                        cancel();
+                                    } else {
+                                        p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            }
                                         }
                                     }
 
                                 }
-                            }
-                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
 
-                    } else {
-                        Player target = Bukkit.getPlayer(args[0]);
-                        if (player == target) {
-                            player.sendMessage("§aServer " + "§8>> " + "§cDu kannst dich nicht mit dir selber treffen!");
-                            return false;
-                        } else if (target != null) {
-                            if (target.hasPermission("wintervillage.redteam")) {
-                                target.sendMessage(Main.getPlugin().PREFIX + "§bDer RotMeister §4" + player.getName() + " §bmöchte mit dir sprechen!");
-                                new BukkitRunnable() {
-                                    int time = 4;
+                        } else {
+                            Player target = Bukkit.getPlayer(args[0]);
+                            if (p == target) {
+                                p.sendMessage("§aServer " + "§8>> " + "§cDu kannst dich nicht mit dir selber treffen!");
+                                return false;
+                            } else if (target != null) {
+                                if (target.hasPermission("wintervillage.blueteam")) {
+                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §bmöchte mit dir sprechen!");
+                                    new BukkitRunnable() {
+                                        int time = 4;
 
-                                    @Override
-                                    public void run() {
-                                        time--;
-                                        if (time == 0) {
-                                            World world2 = Bukkit.getWorld("world");
-                                            Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
-                                            target.teleport(location);
-                                            target.setGameMode(GameMode.SURVIVAL);
-                                            player.teleport(location);
-                                            player.setGameMode(GameMode.SURVIVAL);
-                                            cancel();
-                                        } else
-                                            player.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                        target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                    }
-                                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                            } else
-                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
-                        }
-                    }
-                } else
-                    player.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
-
-
-            } else if (player.hasPermission("wintervillage.prisonblue")) {
-                if (args.length == 1) {
-                    if (args[0].equalsIgnoreCase("all")) {
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (all.hasPermission("wintervillage.blueteam")) {
-                                all.sendMessage(Main.getPlugin().PREFIX + "§bDer BlauMeister §1" + player.getName() + " §bmöchte mit euch sprechen!");
-                            }
-                        }
-                        new BukkitRunnable() {
-                            int time = 4;
-                            World world2 = Bukkit.getWorld("world");
-                            Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
-
-                            @Override
-                            public void run() {
-                                time--;
-                                if (time == 0) {
-                                    for (Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.blueteam")) {
-                                            all.teleport(location);
+                                        @Override
+                                        public void run() {
+                                            time--;
+                                            if (time == 0) {
+                                                World world2 = Bukkit.getWorld("world");
+                                                Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
+                                                p.teleport(location);
+                                                p.setGameMode(GameMode.SURVIVAL);
+                                                target.teleport(location);
+                                                target.setGameMode(GameMode.SURVIVAL);
+                                                cancel();
+                                            } else
+                                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
                                         }
-                                    }
-                                    player.teleport(location);
-                                    player.setGameMode(GameMode.SURVIVAL);
-                                    cancel();
-                                } else {
-                                    player.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                    for (Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.blueteam")) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                        }
-                                    }
-                                }
-
+                                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
                             }
-                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-
-                    } else {
-                        Player target = Bukkit.getPlayer(args[0]);
-                        if (player == target) {
-                            player.sendMessage("§aServer " + "§8>> " + "§cDu kannst dich nicht mit dir selber treffen!");
-                            return false;
-                        } else if (target != null) {
-                            if (target.hasPermission("wintervillage.blueteam")) {
-                                target.sendMessage(Main.getPlugin().PREFIX + "§bDer BlauMeister §1" + player.getName() + " §bmöchte mit dir sprechen!");
-                                new BukkitRunnable() {
-                                    int time = 4;
-
-                                    @Override
-                                    public void run() {
-                                        time--;
-                                        if (time == 0) {
-                                            World world2 = Bukkit.getWorld("world");
-                                            Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
-                                            player.teleport(location);
-                                            player.setGameMode(GameMode.SURVIVAL);
-                                            target.teleport(location);
-                                            target.setGameMode(GameMode.SURVIVAL);
-                                            cancel();
-                                        } else
-                                            player.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                        target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                    }
-                                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                            } else
-                                player.sendMessage(Main.getPlugin().PREFIX + "§cDer Spieler §r" + target.getName() + " §cist nicht in deinem Village!");
                         }
-                    }
+                    } else
+                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
                 } else
-                    player.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
+                    p.sendMessage("§aServer " + "§8>> " + "§cNur der Bürgermeister darf dies!");
             } else
-                player.sendMessage("§aServer " + "§8>> " + "§cNur der Bürgermeister darf dies!");
+                p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
         }
         return false;
     }

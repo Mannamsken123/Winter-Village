@@ -62,7 +62,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                     }
                     p.openInventory(inv);
                 } else {
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst während eines Clashes leider nicht den Adventskalender öffnen!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
                 }
             } else {
                 p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§cEs ist derzeit keine Adventszeit");
