@@ -4,13 +4,20 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import de.pluginbuddies.wintervillage.Util.Team;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -18,6 +25,9 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
 
     private String rEr = ""; //FINAL Winner Rot
     private String rEb = ""; //FINAL Winner Blau
+    static File configteams = new File("plugins//Teams//config.yml");
+    public static YamlConfiguration ymlConfigteams = YamlConfiguration.loadConfiguration(configteams);
+    private int RotPutschVotes = 0;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -50,7 +60,68 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                                     output.printf("%s\r\n", p.getName());
                                 } catch (Exception e) {
                                 }
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt!");
+
+
+                                //PENIS Putsch fängt hier an nur ein bespiel wie es gehen soll
+                                if (Main.getPlugin().getPutschRot() == true) {
+                                    RotPutschVotes++;
+
+                                    //PENIS ROTPUTSCHVOTES in files wegen neustart
+
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt und damit den Putsch unterstützt!");
+                                    if (RotPutschVotes == 5) {
+                                        //PENIS ROTPUTSCHVOTES FILE LÖSCHEN
+                                        //PENIS Außerdem müssen hier dei VoteOpen sachen zurückgesetzt werden!
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.prisonred")) {
+                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
+                                            }
+                                        }
+                                        try {
+                                            getResult();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        String winnerblau = getrEb();
+                                        String winnerrot = getrEr();
+                                        if (!getrEr().isEmpty()) {
+                                            ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
+                                        }
+                                        try {
+                                            ymlConfigteams.save(configteams);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        Main.BlauBuerger.clear();
+                                        Main.RotBuerger.clear();
+                                        Main.Buergermeisterred.clear();
+                                        Main.Buergermeisterblue.clear();
+                                        Team.maketeams();
+                                        Main.getPlugin().setPutschRot(false);
+
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                            String xxx = ymlConfigMessages.getString("VoteClose");
+
+                                            if (xxx.equals("false")) {
+                                                ymlConfigMessages.set("VoteClose", "true");
+                                                ymlConfigMessages.set("VoteOpen", "false");
+
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
+
+                                                try {
+                                                    ymlConfigMessages.save(configMessages);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt!");
                             } else
                                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
                         } else
@@ -192,5 +263,20 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
 
         Main.getPlugin().namesred.clear();
         Main.getPlugin().namesblue.clear();
+    }
+
+    public String getUuid(String name) {
+        String url = "https://api.mojang.com/users/profiles/minecraft/" + name;
+        try {
+            @SuppressWarnings("deprecation")
+            String UUIDJson = IOUtils.toString(new URL(url));
+            if (UUIDJson.isEmpty()) return "invalid name";
+            JSONObject UUIDObject = (JSONObject) JSONValue.parseWithException(UUIDJson);
+            return UUIDObject.get("id").toString();
+        } catch (IOException | org.json.simple.parser.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return "error";
     }
 }

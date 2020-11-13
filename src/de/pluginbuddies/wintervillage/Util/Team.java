@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
-import org.bukkit.scoreboard.Scoreboard;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -17,8 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Team {
-
-    public static Scoreboard sb;
 
     public static void maketeams() {
         TabList tl = new TabList();
@@ -35,6 +32,7 @@ public class Team {
             if (!Main.ymlConfigteams.getString("Rot." + i).isEmpty()) {
                 String rt = getName(Main.ymlConfigteams.getString("Rot." + i));
                 Player p = Bukkit.getPlayerExact(rt);
+
                 if (p != null) {
                     PermissionAttachment att = Bukkit.getPlayer(rt).addAttachment(Main.getPlugin());
                     att.setPermission("wintervillage.redteam", true);

@@ -636,18 +636,20 @@ public class Main extends JavaPlugin {
                         }
                     }
 
-                    if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
+                    if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate) || getPutschBlau() == true || getPutschRot() == true) {
                         if (getVoteOpen() == null) {
                             //vote open
                             setVoteOpen("true");
 
+                            //PENIS PUTSCH-VARIABLE IN VOTE UND MESSAGES
+
                             if (getVoteClose() != null) {
-                                setVoteClose(null); //PENIS der kollege macht ärger und ist dafür zuständig das keine on later join kommt
+                                setVoteClose(null);
                             }
 
                             if (!vote1Date.after(currentDate)) {
                                 setVote1("2025/01/01");
-                                getYmlConfigVote().set("vote1", "2025/01/01");//PENIS Wenn keiner joint stellt sich das nicht um also der server macht das nicht auto.
+                                getYmlConfigVote().set("vote1", "2025/01/01");
                                 try {
                                     getYmlConfigVote().save(getConfigVote());
                                 } catch (IOException e) {
@@ -818,8 +820,12 @@ public class Main extends JavaPlugin {
                                 }
                             }
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                Buergermeisterred.remove(all);
-                                Buergermeisterblue.remove(all);
+                                if (all.hasPermission("wintervillage.prisonred")) {
+                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
+                                }
+                                if (all.hasPermission("wintervillage.prisonblue")) {
+                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
+                                }
                             }
                             try {
                                 bvc.getResult();
