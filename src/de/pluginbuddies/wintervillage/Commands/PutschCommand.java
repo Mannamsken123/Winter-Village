@@ -41,16 +41,16 @@ public class PutschCommand implements CommandExecutor {
                 if (args.length == 0) {
                     if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschRot() == false) { //PENIS Gucken ob vote phase bevor steht
                         Main.getPlugin().setPutschRot(true);
-                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/vote <NAME> §3für einen neuen RotMeister ab!");
+                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen RotMeister ab!");
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
                                 if (all != p) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/vote <Name> §3benutzt, um einen neuen RotMeister zu wählen!");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen RotMeister zu wählen!");
                                 }
                             }
                         }
                         new BukkitRunnable() {
-                            int time = 1200;
+                            int time = 10;////PENIS 1200
                             String t1;
                             String t2;
                             int sec = 60;
@@ -65,18 +65,12 @@ public class PutschCommand implements CommandExecutor {
                                     min--;
                                 }
                                 if (time == 0) {
-                                    if (votesRed == 5) {
+                                    if (votesRed == 1) {//PENIS
                                         for (final Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
                                                 t2 = String.format("§6§lPutsch vorbei!");
                                                 String message2 = t2;
                                                 all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
-                                            }
-                                        }
-                                        //PENIS AUSLESEN
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.prisonred")) {
-                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
                                             }
                                         }
                                         try {
@@ -87,11 +81,17 @@ public class PutschCommand implements CommandExecutor {
                                         String winnerrot = getrEr();
                                         if (!getrEr().isEmpty()) {
                                             ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
+                                            try {
+                                                ymlConfigteams.save(configteams);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
                                         }
-                                        try {
-                                            ymlConfigteams.save(configteams);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
+
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.prisonred")) {
+                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                            }
                                         }
 
                                         Main.BlauBuerger.clear();
@@ -100,36 +100,20 @@ public class PutschCommand implements CommandExecutor {
                                         Main.Buergermeisterblue.clear();
                                         Team.maketeams();
 
-                                        File file = new File("plugins//Messages");
-                                        String contents[] = file.list();
-                                        for (int i = 0; i < contents.length; i++) {
-                                            try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
-                                                output.printf("%s\r\n", "PutschRot: 'true'");
-                                            } catch (Exception e) {
-                                            }
-                                        }
-
                                         for (Player all : Bukkit.getOnlinePlayers()) {
                                             all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
-
-                                            File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
-                                            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
-                                            ymlConfigMessages.set("PutschRot", "false");
-                                            try {
-                                                ymlConfigMessages.save(configMessages);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
                                         }
-
-
+                                        votesRed = 0;
+                                        Main.getPlugin().setPutschRot(false);
                                         cancel();
                                     } else {
                                         for (Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige MitBürger abgestimmt. Probiert es später erneut!");
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut!");
                                             }
                                         }
+                                        votesRed = 0;
+                                        Main.getPlugin().setPutschRot(false);
                                         cancel();
                                     }
                                 } else {
@@ -188,7 +172,7 @@ public class PutschCommand implements CommandExecutor {
                 }
             } else {
                 if (p.hasPermission("wintervillage.prisonred")) {
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst keinen Putsch gegen dich selber starten!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cBist du des WAHNSINNS?! Wenn du unzufrieden mit dir bist, dann mach deinen Job richtig...");
                 }
             }
             //////***************************************BLAU*******************
@@ -196,11 +180,11 @@ public class PutschCommand implements CommandExecutor {
                 if (args.length == 0) {
                     if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschBlau() == false) { //PENIS Gucken ob vote phase bevor steht
                         Main.getPlugin().setPutschBlau(true);
-                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/vote <NAME> §3für einen neuen BlauMeister ab!");
+                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen BlauMeister ab!");
                         for (Player all : Bukkit.getOnlinePlayers()) {
                             if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
                                 if (all != p) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/vote <Name> §3benutzt, um einen neuen BlauMeister zu wählen!");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen BlauMeister zu wählen!");
                                 }
                             }
                         }
@@ -228,12 +212,6 @@ public class PutschCommand implements CommandExecutor {
                                                 all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
                                             }
                                         }
-                                        //PENIS AUSLESEN
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.prisonblue")) {
-                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
-                                            }
-                                        }
                                         try {
                                             getResult();
                                         } catch (IOException e) {
@@ -248,6 +226,11 @@ public class PutschCommand implements CommandExecutor {
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            if (all.hasPermission("wintervillage.prisonblue")) {
+                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                            }
+                                        }
 
                                         Main.BlauBuerger.clear();
                                         Main.RotBuerger.clear();
@@ -255,36 +238,20 @@ public class PutschCommand implements CommandExecutor {
                                         Main.Buergermeisterblue.clear();
                                         Team.maketeams();
 
-                                        File file = new File("plugins//Messages");
-                                        String contents[] = file.list();
-                                        for (int i = 0; i < contents.length; i++) {
-                                            try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
-                                                output.printf("%s\r\n", "PutschBlau: 'true'");
-                                            } catch (Exception e) {
-                                            }
-                                        }
-
                                         for (Player all : Bukkit.getOnlinePlayers()) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Blau hat einen neuen Bürgermeister gewählt! \n§1BlaumeisterMeister: §7" + winnerblau.toUpperCase());
-
-                                            File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
-                                            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
-                                            ymlConfigMessages.set("PutschBlau", "false");
-                                            try {
-                                                ymlConfigMessages.save(configMessages);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
                                         }
-
-
+                                        votesBlue = 0;
+                                        Main.getPlugin().setPutschRot(false);
                                         cancel();
                                     } else {
                                         for (Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige MitBürger abgestimmt. Probiert es später erneut (5 Bürger müssen)!");
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut (5 Bürger müssen)!");
                                             }
                                         }
+                                        votesBlue = 0;
+                                        Main.getPlugin().setPutschRot(false);
                                         cancel();
                                     }
                                 } else {
@@ -343,7 +310,7 @@ public class PutschCommand implements CommandExecutor {
                 }
             } else {
                 if (p.hasPermission("wintervillage.prisonblue")) {
-                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst keinen Putsch gegen dich selber starten!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cBist du des WAHNSINNS?! Wenn du unzufrieden mit dir bist, dann mach deinen Job richtig...");
                 }
             }
         }

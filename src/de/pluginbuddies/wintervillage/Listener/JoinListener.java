@@ -182,9 +182,9 @@ public class JoinListener implements Listener {
             File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-            String voteOpen = ymlConfigMessages.getString("VoteOpen");
+            String xxx = ymlConfigMessages.getString("VoteOpen");
 
-            if (voteOpen.equals("false")) {
+            if (xxx.equals("false")) {
                 ymlConfigMessages.set("VoteOpen", "true");
                 try {
                     ymlConfigMessages.save(configMessages);
@@ -194,45 +194,6 @@ public class JoinListener implements Listener {
                 player.sendMessage(Main.getPlugin().PREFIX + "§3Es kann ab jetzt ein neuer Bürgermeister gewählt werden! Nutze §r/vote <Name>§3.");
             }
         }
-
-        if (Main.getPlugin().getPutschBlau() == true) {
-            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
-
-            String putschBlau = ymlConfigMessages.getString("PutschBlau");
-
-            if (putschBlau.equals("true")) {
-                String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
-                player.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + bluemeister.toUpperCase());
-
-                ymlConfigMessages.set("PutschBlau", "false");
-                try {
-                    ymlConfigMessages.save(configMessages);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        if (Main.getPlugin().getPutschRot() == true) {
-            File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
-
-            String putschRot = ymlConfigMessages.getString("PutschRot");
-
-            if (putschRot.equals("true")) {
-                String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
-                player.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + redmeister.toUpperCase());
-
-                ymlConfigMessages.set("PutschRot", "false");
-                try {
-                    ymlConfigMessages.save(configMessages);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
         File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
         YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 

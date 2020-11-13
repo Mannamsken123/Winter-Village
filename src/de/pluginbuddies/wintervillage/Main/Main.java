@@ -119,7 +119,7 @@ public class Main extends JavaPlugin {
     //Bürgermeister - Permisson - Vote end
 
     //teams
-    static File configteams = new File("plugins//Teams//config.yml");
+    public static File configteams = new File("plugins//Teams//config.yml");
     public static YamlConfiguration ymlConfigteams = YamlConfiguration.loadConfiguration(configteams);
 
     //blockportals
@@ -826,14 +826,6 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                if (all.hasPermission("wintervillage.prisonred")) {
-                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
-                                }
-                                if (all.hasPermission("wintervillage.prisonblue")) {
-                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben!");
-                                }
-                            }
                             try {
                                 bvc.getResult();
                             } catch (IOException e) {
@@ -852,6 +844,44 @@ public class Main extends JavaPlugin {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.prisonred")) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                    String xxx = ymlConfigMessages.getString("VoteClose");
+
+                                    if (xxx.equals("false")) {
+                                        ymlConfigMessages.set("VoteClose", "true");
+                                        ymlConfigMessages.set("VoteOpen", "false");
+                                        try {
+                                            ymlConfigMessages.save(configMessages);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Neue Bürgermeister sind: \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                }
+                                if (all.hasPermission("wintervillage.prisonblue")) {
+                                    File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                    YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+
+                                    String xxx = ymlConfigMessages.getString("VoteClose");
+
+                                    if (xxx.equals("false")) {
+                                        ymlConfigMessages.set("VoteClose", "true");
+                                        ymlConfigMessages.set("VoteOpen", "false");
+                                        try {
+                                            ymlConfigMessages.save(configMessages);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Neue Bürgermeister sind: \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                }
+                            }
+
 
                             BlauBuerger.clear();
                             RotBuerger.clear();

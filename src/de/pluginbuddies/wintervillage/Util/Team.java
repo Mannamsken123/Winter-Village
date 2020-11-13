@@ -5,6 +5,7 @@ package de.pluginbuddies.wintervillage.Util;
 
 import de.pluginbuddies.wintervillage.Main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -25,8 +26,15 @@ public class Team {
         Main.Buergermeisterblue.clear();
         Main.Buergermeisterred.clear();
 
+        try {
+            Main.ymlConfigteams.load("plugins//Teams//config.yml");
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+
         String redmeister = Main.ymlConfigteams.getString("RotMeister.1");
         String bluemeister = Main.ymlConfigteams.getString("BlauMeister.1");
+
 
         for (int i = 1; i <= 10; i++) {
             if (!Main.ymlConfigteams.getString("Rot." + i).isEmpty()) {
