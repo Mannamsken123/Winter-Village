@@ -75,10 +75,7 @@ public class Team {
             }
 
         }
-
-
         tl.update();
-
     }
 
     public static String getName(String uuid) {

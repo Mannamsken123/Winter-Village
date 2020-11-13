@@ -92,6 +92,13 @@ public class Main extends JavaPlugin {
     static File hasVoted = new File("plugins//Vote//voted.yml");
     public static YamlConfiguration ymlHasVoted = YamlConfiguration.loadConfiguration(hasVoted);
 
+    static File putschVotesRed = new File("plugins//Vote//putschvotesred.yml");
+    public static YamlConfiguration ymlPutschVotesRed = YamlConfiguration.loadConfiguration(putschVotesRed);
+    static File putschVotesBlue = new File("plugins//Vote//putschvotesblue.yml");
+    public static YamlConfiguration ymlPutschVotesBlue = YamlConfiguration.loadConfiguration(putschVotesBlue);
+    static File putschHasVoted = new File("plugins//Vote//putschvoted.yml");
+    public static YamlConfiguration ymlputschHasVoted = YamlConfiguration.loadConfiguration(putschHasVoted);
+
     public static HashMap<Player, PermissionAttachment> Buergermeisterblue = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> Buergermeisterred = new HashMap<Player, PermissionAttachment>();
     public static HashMap<Player, PermissionAttachment> RotBuerger = new HashMap<Player, PermissionAttachment>();
@@ -636,7 +643,7 @@ public class Main extends JavaPlugin {
                         }
                     }
 
-                    if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate) || getPutschBlau() == true || getPutschRot() == true) {
+                    if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
                             //vote open
                             setVoteOpen("true");
@@ -891,6 +898,7 @@ public class Main extends JavaPlugin {
         getCommand("meet").setTabCompleter(new MeetVillageTabComplete());
         getCommand("bp").setExecutor(new BackpackCommand());
         getCommand("confi").setExecutor(new ConfiBothVillageCommand());
+        getCommand("putsch").setExecutor(new PutschCommand());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -1018,7 +1026,27 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-
+        if (!putschVotesRed.exists()) {
+            try {
+                putschVotesRed.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!putschVotesBlue.exists()) {
+            try {
+                putschVotesBlue.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!putschHasVoted.exists()) {
+            try {
+                putschHasVoted.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         //fix dates
         ymlConfigVote.options().copyDefaults(true);
         ymlConfigVote.addDefault("vote1", "2020/11/05");

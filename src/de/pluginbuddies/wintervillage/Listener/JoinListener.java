@@ -91,7 +91,6 @@ public class JoinListener implements Listener {
             ymlConfigMessages.addDefault("Nikolaus", "false");
             ymlConfigMessages.addDefault("VoteOpen", "false");
             ymlConfigMessages.addDefault("VoteClose", "false");
-            //PENIS BÜRGERMEISTER JA ODER NEIN
 
             try {
                 ymlConfigMessages.save(configMessages);

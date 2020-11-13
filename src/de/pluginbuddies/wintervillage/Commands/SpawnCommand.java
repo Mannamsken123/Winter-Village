@@ -4,6 +4,8 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -103,8 +105,9 @@ public class SpawnCommand implements CommandExecutor, Listener {
                         if (entity instanceof Villager || entity instanceof WanderingTrader) {
                             e.setCancelled(true);
                         }
-
-                        p.sendMessage(Main.getPlugin().PREFIX + entity.getName() + " §2✔");
+                        String t2 = String.format(entity.getName() + " §2✔");
+                        String message2 = t2;
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
 
                         new BukkitRunnable() {
                             int time = 7;
