@@ -255,7 +255,27 @@ public class PutschCommand implements CommandExecutor {
                                         Main.Buergermeisterblue.clear();
                                         Team.maketeams();
 
-                                        //PENIS BEKANNTGABE MESSAGES FÜR ALLE AUF DEM SERVER UND onJOIN
+                                        File file = new File("plugins//Messages");
+                                        String contents[] = file.list();
+                                        for (int i = 0; i < contents.length; i++) {
+                                            try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
+                                                output.printf("%s\r\n", "PutschBlau: 'true'");
+                                            } catch (Exception e) {
+                                            }
+                                        }
+
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Blau hat einen neuen Bürgermeister gewählt! \n§1BlaumeisterMeister: §7" + winnerblau.toUpperCase());
+
+                                            File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                            ymlConfigMessages.set("PutschBlau", "false");
+                                            try {
+                                                ymlConfigMessages.save(configMessages);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
 
 
                                         cancel();
