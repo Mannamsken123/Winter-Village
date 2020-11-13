@@ -100,7 +100,27 @@ public class PutschCommand implements CommandExecutor {
                                         Main.Buergermeisterblue.clear();
                                         Team.maketeams();
 
-                                        //BEKANNTGABE MESSAGES FÜR ALLE AUF DEM SERVER UND onJOIN
+                                        File file = new File("plugins//Messages");
+                                        String contents[] = file.list();
+                                        for (int i = 0; i < contents.length; i++) {
+                                            try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Messages//" + contents[i], true))) {
+                                                output.printf("%s\r\n", "PutschRot: 'true'");
+                                            } catch (Exception e) {
+                                            }
+                                        }
+
+                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
+
+                                            File configMessages = new File("plugins//Messages//" + all.getUniqueId() + ".yml");
+                                            YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                                            ymlConfigMessages.set("PutschRot", "false");
+                                            try {
+                                                ymlConfigMessages.save(configMessages);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
 
 
                                         cancel();
@@ -200,7 +220,7 @@ public class PutschCommand implements CommandExecutor {
                                     min--;
                                 }
                                 if (time == 0) {
-                                    if (votesRed == 5) {
+                                    if (votesBlue == 5) {
                                         for (final Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
                                                 t2 = String.format("§6§lPutsch vorbei!");
