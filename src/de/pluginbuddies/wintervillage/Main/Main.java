@@ -5,6 +5,7 @@ package de.pluginbuddies.wintervillage.Main;
 
 import de.pluginbuddies.wintervillage.Commands.*;
 import de.pluginbuddies.wintervillage.Listener.*;
+import de.pluginbuddies.wintervillage.Util.Clash;
 import de.pluginbuddies.wintervillage.Util.TabList;
 import de.pluginbuddies.wintervillage.Util.Team;
 import org.bukkit.Bukkit;
@@ -12,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
@@ -80,6 +82,12 @@ public class Main extends JavaPlugin {
     private String nikolausOpen;
     private String voteOpen;
     private String voteClose;
+    //clash
+    static File configClash = new File("plugins//Clash//Dates//config.yml");
+    public static YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+    private String clashOpen;
+    private String clash1 = getYmlConfigClash().getString("clash1");
+    private String clash2 = getYmlConfigClash().getString("clash2");
 
     //Bürgermeister - Permisson - Vote
     static File configVote = new File("plugins//Vote//config.yml");
@@ -156,6 +164,64 @@ public class Main extends JavaPlugin {
     private String vote3close = getYmlConfigVote().getString("vote3close");
     private String vote4 = getYmlConfigVote().getString("vote4");
     private String vote4close = getYmlConfigVote().getString("vote4close");
+    private String clash3 = getYmlConfigClash().getString("clash3");
+    private String clash4 = getYmlConfigClash().getString("clash4");
+
+    public static YamlConfiguration getYmlConfigClash() {
+        return ymlConfigClash;
+    }
+
+    public static void setYmlConfigClash(YamlConfiguration ymlConfigClash) {
+        Main.ymlConfigClash = ymlConfigClash;
+    }
+
+    public static File getConfigClash() {
+        return configClash;
+    }
+
+    public static void setConfigClash(File configClash) {
+        Main.configClash = configClash;
+    }
+
+    public String getClashOpen() {
+        return clashOpen;
+    }
+
+    public void setClashOpen(String clashOpen) {
+        this.clashOpen = clashOpen;
+    }
+
+    public String getClash1() {
+        return clash1;
+    }
+
+    public void setClash1(String clash1) {
+        this.clash1 = clash1;
+    }
+
+    public String getClash2() {
+        return clash2;
+    }
+
+    public void setClash2(String clash2) {
+        this.clash2 = clash2;
+    }
+
+    public String getClash3() {
+        return clash3;
+    }
+
+    public void setClash3(String clash3) {
+        this.clash3 = clash3;
+    }
+
+    public String getClash4() {
+        return clash4;
+    }
+
+    public void setClash4(String clash4) {
+        this.clash4 = clash4;
+    }
 
     public static File getConfigVote() {
         return configVote;
@@ -526,11 +592,36 @@ public class Main extends JavaPlugin {
                         e.printStackTrace();
                     }
 
-                    //putsch -> vote sys
-                    if (getPutschRot() == true) {
+                    //CLASH 1
+                    Date clash1Date = null;
+                    try {
+                        clash1Date = sdf.parse(getClash1());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
 
-                    if (getPutschBlau() == true) {
+                    //CLASH 2
+                    Date clash2Date = null;
+                    try {
+                        clash2Date = sdf.parse(getClash2());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    //CLASH 3
+                    Date clash3Date = null;
+                    try {
+                        clash3Date = sdf.parse(getClash3());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    //CLASH 4
+                    Date clash4Date = null;
+                    try {
+                        clash4Date = sdf.parse(getClash4());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
 
                     Date currentDate = new Date();
@@ -640,6 +731,56 @@ public class Main extends JavaPlugin {
                                 }
                             }
                             //set boolean to true for double ore listener or other stuff
+                        }
+                    }
+
+                    if (!clash1Date.after(currentDate) || !clash2Date.after(currentDate) || !clash3Date.after(currentDate) || !clash4Date.after(currentDate)) {
+                        if (getClashOpen() == null) {
+                            setClashOpen("true");
+
+                            if (!clash1Date.after(currentDate)) {
+                                setClash1("2025/01/01");
+                                getYmlConfigClash().set("clash1", "2025/01/01");
+                                try {
+                                    getYmlConfigClash().save(getConfigClash());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if (!clash2Date.after(currentDate)) {
+                                setClash2("2025/01/01");
+                                getYmlConfigClash().set("clash2", "2025/01/01");
+                                try {
+                                    getYmlConfigClash().save(getConfigClash());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if (!clash3Date.after(currentDate)) {
+                                setClash3("2025/01/01");
+                                getYmlConfigClash().set("clash3", "2025/01/01");
+                                try {
+                                    getYmlConfigClash().save(getConfigClash());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if (!clash4Date.after(currentDate)) {
+                                setClash4("2025/01/01");
+                                getYmlConfigClash().set("clash4", "2025/01/01");
+                                try {
+                                    getYmlConfigClash().save(getConfigClash());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+                            String command = "/clash start";
+                            Bukkit.dispatchCommand(console, command);
                         }
                     }
 
@@ -929,6 +1070,7 @@ public class Main extends JavaPlugin {
         getCommand("bp").setExecutor(new BackpackCommand());
         getCommand("confi").setExecutor(new ConfiBothVillageCommand());
         getCommand("putsch").setExecutor(new PutschCommand());
+        getCommand("clash").setExecutor(new Clash());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -1035,6 +1177,51 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+
+        //fix dates
+        ymlConfigVote.options().copyDefaults(true);
+        ymlConfigVote.addDefault("vote1", "2020/11/26");
+        ymlConfigVote.addDefault("vote1close", "2020/11/27");
+        ymlConfigVote.addDefault("vote2", "2020/12/04");
+        ymlConfigVote.addDefault("vote2close", "2020/12/05");
+        ymlConfigVote.addDefault("vote3", "2020/12/12");
+        ymlConfigVote.addDefault("vote3close", "2020/12/13");
+        ymlConfigVote.addDefault("vote4", "2020/12/20");
+        ymlConfigVote.addDefault("vote4close", "2020/12/21");
+
+        try {
+            ymlConfigVote.save(configVote);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //end vote
+
+        //clash
+
+        File folderClash = new File("plugins//Clash/Dates");
+        if (!folderClash.exists()) {
+            folderClash.mkdir();
+        }
+        if (!configClash.exists()) {
+            try {
+                configClash.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ymlConfigClash.options().copyDefaults(true);
+        ymlConfigClash.addDefault("clash1", "2020/12/02");
+        ymlConfigClash.addDefault("clash2", "2020/12/09");
+        ymlConfigClash.addDefault("clash3", "2020/12/16");
+        ymlConfigClash.addDefault("clash4", "2020/12/23");
+
+        try {
+            ymlConfigClash.save(configClash);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (!votesRed.exists()) {
             try {
                 votesRed.createNewFile();
@@ -1077,23 +1264,6 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        //fix dates
-        ymlConfigVote.options().copyDefaults(true);
-        ymlConfigVote.addDefault("vote1", "2020/11/05");
-        ymlConfigVote.addDefault("vote1close", "2020/11/27");
-        ymlConfigVote.addDefault("vote2", "2020/12/04");
-        ymlConfigVote.addDefault("vote2close", "2020/12/05");
-        ymlConfigVote.addDefault("vote3", "2020/12/12");
-        ymlConfigVote.addDefault("vote3close", "2020/12/13");
-        ymlConfigVote.addDefault("vote4", "2020/12/20");
-        ymlConfigVote.addDefault("vote4close", "2020/12/21");
-
-        try {
-            ymlConfigVote.save(configVote);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //end vote
     }
 
     public String getUuid(String name) {
