@@ -14,7 +14,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.ArrayList;
@@ -24,21 +23,14 @@ public class PrisonCommand implements CommandExecutor, Listener {
     private ArrayList<String> knastplayers = new ArrayList<>();
 
     @EventHandler
-    public void handleMutedChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
-        if (knastplayers.contains(p.getName())) {
-            p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
-            e.setCancelled(true);
-        }
-
-    }
-
-    @EventHandler
     public void handlecommandoutput(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
-        if (knastplayers.contains(p.getName())) {
-            p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
-            e.setCancelled(true);
+        String w = p.getWorld().getName();
+        if (!w.equals("world-clash")) {
+            if (knastplayers.contains(p.getName())) {
+                p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
+                e.setCancelled(true);
+            }
         }
     }
 
