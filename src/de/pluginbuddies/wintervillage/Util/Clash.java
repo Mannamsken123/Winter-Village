@@ -13,7 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_16_R2.util.CraftChatMessage;
@@ -66,7 +66,7 @@ public class Clash implements CommandExecutor, Listener {
         new BukkitRunnable() {
             int count = -1;
             double progress = 1.0;
-            double time = 1.0 / (60 * 60); //PENIS (1.0/(60 * 60)
+            double time = 1.0 / (10); //PENIS (1.0/(60 * 60)
             int lastHour = 3600;
             int sec = 60;
             int min = 59;
@@ -114,7 +114,7 @@ public class Clash implements CommandExecutor, Listener {
                             checkDirectory();
                             ArrayList<ItemStack> list = new ArrayList<>();
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                File file = new File("plugins//Clash//Inventories//" + all + ".yml");
+                                File file = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
 
                                 try {
                                     file.createNewFile();
@@ -232,13 +232,21 @@ public class Clash implements CommandExecutor, Listener {
         String w = p.getWorld().getName();
 
         if (w.equals("world-clash")) {
-            FileConfiguration config = Main.getPlugin().getConfig();
-            config.set("Death.World", p.getWorld().getName());
-            config.set("Death.X", p.getLocation().getX());
-            config.set("Death.Y", p.getLocation().getY());
-            config.set("Death.Z", p.getLocation().getZ());
-            Main.getPlugin().saveConfig();
-            p.setGameMode(GameMode.SPECTATOR);
+            e.setDeathMessage(p.getName() + "  §7ist in der Rauferei umgekommen!");
+            File file = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
+            YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
+            double sX = p.getLocation().getX();
+            double sY = p.getLocation().getY();
+            double sZ = p.getLocation().getZ();
+            inv.set("DX", sX);
+            inv.set("DY", sY);
+            inv.set("DZ", sZ);
+
+            try {
+                inv.save(file);
+            } catch (IOException v) {
+                v.printStackTrace();
+            }
 
             if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
                 fighterRed--;
@@ -256,61 +264,70 @@ public class Clash implements CommandExecutor, Listener {
                         //PENIS schreibe wer den clash gewonnen hat -> MENÜ
                     }
                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                }
 
-                    new BukkitRunnable() {
-                        int time = 16;
+                new BukkitRunnable() {
+                    int time = 16;
 
-                        @Override
-                        public void run() {
-                            time--;
-                            if (time == 0) {
-                                //Get Inventory
-                                for (Player all : Bukkit.getOnlinePlayers()) {
-                                    File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
-                                    if (inventory.exists()) {
-                                        YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                                        all.getInventory().clear();
-                                        List<?> list = inv.getList("Inventory");
-                                        List<?> slot = inv.getList("Slot");
+                    @Override
+                    public void run() {
+                        time--;
+                        if (time == 0) {
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                if (inventory.exists()) {
+                                    YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                                    all.getInventory().clear();
 
-                                        double health = inv.getDouble("Health");
-                                        all.setHealth(health);
-                                        double exp = inv.getDouble("Exp");
-                                        all.setExp((float) exp);
-                                        int level = inv.getInt("Level");
-                                        all.setLevel(level);
-                                        int hunger = inv.getInt("Hunger");
-                                        all.setFoodLevel(hunger);
-
-                                        World world = Bukkit.getWorld(inv.getString("world"));
-                                        Double X = inv.getDouble("X");
-                                        Double Y = inv.getDouble("Y");
-                                        Double Z = inv.getDouble("Z");
-                                        Location loc = new Location(world, X, Y, Z);
-                                        all.teleport(loc);
-
-                                        inventory.delete();
-
-                                        for (int j = 0; j < all.getInventory().getSize(); j++) {
-                                            all.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
-                                        }
-                                    } else {
-                                        World world = Bukkit.getWorld("world");
-                                        Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-                                        p.teleport(location);
+                                    try {
+                                        inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                    } catch (IOException | InvalidConfigurationException e) {
+                                        e.printStackTrace();
                                     }
-                                }
-                                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world world-clash");
-                                cancel();
 
-                            } else if (time <= 5) {
+                                    List<?> list = inv.getList("Inventory");
+                                    List<?> slot = inv.getList("Slot");
+
+                                    double health = inv.getDouble("Health");
+                                    all.setHealth(health);
+                                    double exp = inv.getDouble("Exp");
+                                    all.setExp((float) exp);
+                                    int level = inv.getInt("Level");
+                                    all.setLevel(level);
+                                    int hunger = inv.getInt("Hunger");
+                                    all.setFoodLevel(hunger);
+
+
+                                    World world = Bukkit.getWorld("world");
+                                    Double X = inv.getDouble("X");
+                                    Double Y = inv.getDouble("Y");
+                                    Double Z = inv.getDouble("Z");
+                                    Location loc = new Location(world, X, Y + 1, Z);
+                                    all.teleport(loc);
+                                    inventory.delete();
+
+                                    for (int j = 0; j <= all.getInventory().getSize(); j++) {
+                                        all.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                                    }
+                                } else {
+                                    World world = Bukkit.getWorld("world");
+                                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                                    all.teleport(location);
+                                }
+                            }
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                            cancel();
+                        } else {
+                            if (time < 6) {
                                 for (Player all : Bukkit.getOnlinePlayers()) {
                                     all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
                                 }
                             }
                         }
-                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                }
+                    }
+                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+
             }
         }
     }
@@ -321,14 +338,21 @@ public class Clash implements CommandExecutor, Listener {
         String w = p.getWorld().getName();
 
         if (w.equals("world-clash")) {
-            FileConfiguration config = Main.getPlugin().getConfig();
-            World world = Bukkit.getWorld(config.getString("Death.World"));
-            double x = config.getDouble("Death.X");
-            double y = config.getDouble("Death.Y");
-            double z = config.getDouble("Death.Z");
-            Location location = new Location(world, x, y, z);
+            p.setGameMode(GameMode.SPECTATOR);
+            File inventory = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
+            YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+            try {
+                inv.load("plugins//Clash//Inventories//" + p.getName() + ".yml");
+            } catch (IOException | InvalidConfigurationException v) {
+                v.printStackTrace();
+            }
+            World world = Bukkit.getWorld("world-clash");
+            Double dX = inv.getDouble("DX");
+            Double dY = inv.getDouble("DY");
+            Double dZ = inv.getDouble("DZ");
+            Location loc = new Location(world, dX, dY + 1, dZ);
 
-            e.setRespawnLocation(location);
+            e.setRespawnLocation(loc);
         }
     }
 

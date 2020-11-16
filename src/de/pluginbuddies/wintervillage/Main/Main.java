@@ -782,7 +782,10 @@ public class Main extends JavaPlugin {
                             String command = "/clash start";
                             Bukkit.dispatchCommand(console, command);
                         }
+
+
                     }
+
 
                     if (!vote1Date.after(currentDate) || !vote2Date.after(currentDate) || !vote3Date.after(currentDate) || !vote4Date.after(currentDate)) {
                         if (getVoteOpen() == null) {
@@ -1083,6 +1086,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new DeathListener(), this);
         pluginManager.registerEvents(new BackpackCommand(), this);
         pluginManager.registerEvents(new SpawnCommand(), this);
+        pluginManager.registerEvents(new Clash(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");

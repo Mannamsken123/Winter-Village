@@ -18,10 +18,14 @@ public class DeathListener implements Listener {
     public void onRespawnEVENT(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
 
-        World world = Bukkit.getWorld("world");
-        Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-        p.setGameMode(GameMode.SURVIVAL);
-        e.setRespawnLocation(location);
+        String w = p.getWorld().getName();
+
+        if (!w.equals("world-clash")) {
+            World world = Bukkit.getWorld("world");
+            Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+            p.setGameMode(GameMode.SURVIVAL);
+            e.setRespawnLocation(location);
+        }
 
     }
 

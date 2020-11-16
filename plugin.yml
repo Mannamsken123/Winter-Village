@@ -29,3 +29,5 @@
       description: Startet eine Serverkonferent, sofern der andere Bürgermeister aktzeptiert!
     putsch:
       description: Erlaubt es dir, wenn weitere fuenf Mitbuerger aus deinem Dorf abstimmen, einen Putsch zu starten und deinen Buergermeister abzuwaehlen!
+    clash:
+      description: Oeffnet dir das Clash-Inventar!
