@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,6 +30,7 @@ import org.json.simple.JSONValue;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 
 public class JoinListener implements Listener {
@@ -48,6 +50,42 @@ public class JoinListener implements Listener {
             e.printStackTrace();
         }
         return "error";
+    }
+
+    @EventHandler
+    public void handlePlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+
+        if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
+        }
+        if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
+        }
+        if (player.hasPermission("wintervillage.prisonblue")) {
+            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
+        }
+        if (player.hasPermission("wintervillage.prisonred")) {
+            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
+            new TabList().removePlayer(player);
+        }
+    }
+
+    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+        PacketPlayOutTitle times;
+        if (title != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        if (subtitle != null) {
+            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+        }
+        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
 
     @EventHandler
@@ -120,44 +158,6 @@ public class JoinListener implements Listener {
                     }
                 }
             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-        }
-
-        File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-        YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
-        if (ymlConfigMessages2.getString("givebackstuff") == "true") {
-            File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
-            if (inventory.exists()) {
-                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                player.getInventory().clear();
-
-                try {
-                    inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
-                } catch (IOException | InvalidConfigurationException e) {
-                    e.printStackTrace();
-                }
-
-                double health = inv.getDouble("Health");
-                player.setHealth(health);
-                double exp = inv.getDouble("Exp");
-                player.setExp((float) exp);
-                int level = inv.getInt("Level");
-                player.setLevel(level);
-                int hunger = inv.getInt("Hunger");
-                player.setFoodLevel(hunger);
-
-
-                World world = Bukkit.getWorld("world");
-                Double X = inv.getDouble("X");
-                Double Y = inv.getDouble("Y");
-                Double Z = inv.getDouble("Z");
-                Location loc = new Location(world, X, Y + 1, Z);
-                player.teleport(loc);
-                inventory.delete();
-            } else {
-                World world = Bukkit.getWorld("world");
-                Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-                player.teleport(location);
-            }
         }
 
         if (Main.getPlugin().getNetherOpen() == "true") {
@@ -342,42 +342,70 @@ public class JoinListener implements Listener {
             new TabList().addPlayer(player);
         }
 
+        File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+        YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
+        try {
+            ymlConfigMessages2.load("plugins//Messages//" + player.getUniqueId() + ".yml");
+        } catch (IOException | InvalidConfigurationException v) {
+            v.printStackTrace();
+        }
+        if (ymlConfigMessages2.getString("givebackstuff").equals("true")) {
+            invbackworkaround(player);
+        }
+
     }
 
-    @EventHandler
-    public void handlePlayerLeave(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+    public void invbackworkaround(Player player) {
+        Bukkit.broadcastMessage("true");
+        File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+        YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
+        try {
+            ymlConfigMessages2.load("plugins//Messages//" + player.getUniqueId() + ".yml");
+        } catch (IOException | InvalidConfigurationException v) {
+            v.printStackTrace();
+        }
+        ymlConfigMessages2.set("givebackstuff", "false");
+        try {
+            ymlConfigMessages2.save(configMessages2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
+        if (inventory.exists()) {
+            YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+            player.getInventory().clear();
 
-        if (player.hasPermission("wintervillage.blueteam") && !player.hasPermission("wintervillage.prisonblue")) {
-            event.setQuitMessage("§c§l<< §9" + player.getName() + " §7hat verlassen!");
-            new TabList().removePlayer(player);
-        }
-        if (player.hasPermission("wintervillage.redteam") && !player.hasPermission("wintervillage.prisonred")) {
-            event.setQuitMessage("§c§l<< §c" + player.getName() + " §7hat verlassen!");
-            new TabList().removePlayer(player);
-        }
-        if (player.hasPermission("wintervillage.prisonblue")) {
-            event.setQuitMessage("§c§l<< §1" + player.getName() + " §7hat verlassen!");
-            new TabList().removePlayer(player);
-        }
-        if (player.hasPermission("wintervillage.prisonred")) {
-            event.setQuitMessage("§c§l<< §4" + player.getName() + " §7hat verlassen!");
-            new TabList().removePlayer(player);
-        }
-    }
+            try {
+                inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
 
-    public void st(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
-        PacketPlayOutTitle times;
-        if (title != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, CraftChatMessage.fromString(title)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
+            List<?> list = inv.getList("Inventory");
+            List<?> slot = inv.getList("Slot");
+
+            double health = inv.getDouble("Health");
+            player.setHealth(health);
+            double exp = inv.getDouble("Exp");
+            player.setExp((float) exp);
+            int level = inv.getInt("Level");
+            player.setLevel(level);
+            int hunger = inv.getInt("Hunger");
+            player.setFoodLevel(hunger);
+
+
+            World world = Bukkit.getWorld("world");
+            Double X = inv.getDouble("X");
+            Double Y = inv.getDouble("Y");
+            Double Z = inv.getDouble("Z");
+            Location loc = new Location(world, X, Y + 1, Z);
+            player.teleport(loc);
+            inventory.delete();
+
+            for (int j = 0; j <= player.getInventory().getSize(); j++) {
+                player.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+            }
         }
-        if (subtitle != null) {
-            times = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, CraftChatMessage.fromString(subtitle)[0]);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
-        }
-        times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
 
 }
