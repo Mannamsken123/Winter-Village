@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer;
@@ -119,6 +120,44 @@ public class JoinListener implements Listener {
                     }
                 }
             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+        }
+
+        File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+        YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
+        if (ymlConfigMessages2.getString("givebackstuff") == "true") {
+            File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
+            if (inventory.exists()) {
+                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                player.getInventory().clear();
+
+                try {
+                    inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
+                } catch (IOException | InvalidConfigurationException e) {
+                    e.printStackTrace();
+                }
+
+                double health = inv.getDouble("Health");
+                player.setHealth(health);
+                double exp = inv.getDouble("Exp");
+                player.setExp((float) exp);
+                int level = inv.getInt("Level");
+                player.setLevel(level);
+                int hunger = inv.getInt("Hunger");
+                player.setFoodLevel(hunger);
+
+
+                World world = Bukkit.getWorld("world");
+                Double X = inv.getDouble("X");
+                Double Y = inv.getDouble("Y");
+                Double Z = inv.getDouble("Z");
+                Location loc = new Location(world, X, Y + 1, Z);
+                player.teleport(loc);
+                inventory.delete();
+            } else {
+                World world = Bukkit.getWorld("world");
+                Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                player.teleport(location);
+            }
         }
 
         if (Main.getPlugin().getNetherOpen() == "true") {

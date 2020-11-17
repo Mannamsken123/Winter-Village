@@ -9,6 +9,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_16_R2.PacketPlayInClientCommand;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -38,16 +39,33 @@ import java.util.List;
 public class Clash implements CommandExecutor, Listener {
 
     private BossBar bar;
-    private int fighterRed;
-    private int fighterBlue;
+    private File folderClash = new File("plugins//Clash");
+    private File configClash = new File("plugins//Clash//config.yml");
+    private YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
             if (args[0].equalsIgnoreCase("start")) {
                 createBar();
-                fighterRed = 0;
-                fighterBlue = 0;
+                if (!folderClash.exists()) {
+                    folderClash.mkdir();
+                }
+                if (!configClash.exists()) {
+                    try {
+                        configClash.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                ymlConfigClash.set("Fighter.Red", 0);
+                ymlConfigClash.set("Fighter.Blue", 0);
+
+                try {
+                    ymlConfigClash.save(configClash);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         if (sender instanceof Player) {
@@ -207,15 +225,56 @@ public class Clash implements CommandExecutor, Listener {
                                     if (time == 0) {
                                         for (Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.redteam")) {
-                                                fighterRed++;
+                                                try {
+                                                    ymlConfigClash.load("plugins//Clash//config.yml");
+                                                } catch (IOException | InvalidConfigurationException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                int tempRed = ymlConfigClash.getInt("Fighter.Red") + 1;
+                                                ymlConfigClash.set("Fighter.Red", tempRed);
+                                                try {
+                                                    ymlConfigClash.save(configClash);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 55.5, 40, 106.5, -90, -3);
                                                 all.teleport(location);
                                             } else if (all.hasPermission("wintervillage.blueteam")) {
-                                                fighterBlue++;
+                                                try {
+                                                    ymlConfigClash.load("plugins//Clash//config.yml");
+                                                } catch (IOException | InvalidConfigurationException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                int tempBlue = ymlConfigClash.getInt("Fighter.Blue") + 1;
+                                                ymlConfigClash.set("Fighter.Blue", tempBlue);
+                                                try {
+                                                    ymlConfigClash.save(configClash);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 149.5, 40, -229.5, 90, -3);
                                                 all.teleport(location);
+                                            }
+                                        }
+
+                                        World world = Bukkit.getWorld("world-clash");
+                                        Location loc1 = new Location(world, 90, 25, -75);
+                                        Location loc2 = new Location(world, 99, 17, -84);
+                                        int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
+                                        int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());
+                                        int minZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+                                        int maxX = Math.max(loc1.getBlockX(), loc2.getBlockX());
+                                        int maxY = Math.max(loc1.getBlockY(), loc2.getBlockY());
+                                        int maxZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+
+                                        for (int x = minX; x <= maxX; x++) {
+                                            for (int y = minY; y <= maxY; y++) {
+                                                for (int z = minZ; z <= maxZ; z++) {
+                                                    Block block = world.getBlockAt(x, y, z);
+                                                    block.setType(Material.STONE);
+                                                }
                                             }
                                         }
 
@@ -232,11 +291,16 @@ public class Clash implements CommandExecutor, Listener {
 
                                             @Override
                                             public void run() {
-                                                if (fighterRed == 0 || fighterBlue == 0) {
+                                                try {
+                                                    ymlConfigClash.load("plugins//Clash//config.yml");
+                                                } catch (IOException | InvalidConfigurationException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (ymlConfigClash.getInt("Fighter.Red") == 0 || ymlConfigClash.getInt("Fighter.Blue") == 0) {
                                                     cancel();
                                                 } else
                                                     for (Player all : Bukkit.getOnlinePlayers()) {
-                                                        String message = "§6§lBorder: " + (int) border.getSize() + " x " + (int) border.getSize() + "  §7||  " + "§c§lRot: " + fighterRed + "  §7||  " + " §9§lBlau: " + fighterBlue;
+                                                        String message = "§6§lBorder: " + (int) border.getSize() + " x " + (int) border.getSize() + "  §7||  " + "§c§lRot: " + ymlConfigClash.getInt("Fighter.Red") + "  §7||  " + " §9§lBlau: " + ymlConfigClash.getInt("Fighter.Blue");
                                                         all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                                     }
                                             }
@@ -296,7 +360,6 @@ public class Clash implements CommandExecutor, Listener {
                 }
             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
 
-            e.setDeathMessage(p.getName() + "  §7ist in der Rauferei umgekommen!");
             File file = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
             YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
             double sX = p.getLocation().getX();
@@ -313,19 +376,44 @@ public class Clash implements CommandExecutor, Listener {
             }
 
             if (p.hasPermission("wintervillage.redteam")) {
-                fighterRed--;
-                Bukkit.broadcastMessage(String.valueOf(fighterRed));
+                try {
+                    ymlConfigClash.load("plugins//Clash//config.yml");
+                } catch (IOException | InvalidConfigurationException v) {
+                    v.printStackTrace();
+                }
+                int tempRed = ymlConfigClash.getInt("Fighter.Red") - 1;
+                ymlConfigClash.set("Fighter.Red", tempRed);
+                try {
+                    ymlConfigClash.save(configClash);
+                } catch (IOException v) {
+                    v.printStackTrace();
+                }
             } else if (p.hasPermission("wintervillage.blueteam")) {
-                fighterBlue--;
-                Bukkit.broadcastMessage(String.valueOf(fighterBlue));
+                try {
+                    ymlConfigClash.load("plugins//Clash//config.yml");
+                } catch (IOException | InvalidConfigurationException v) {
+                    v.printStackTrace();
+                }
+                int tempBlue = ymlConfigClash.getInt("Fighter.Red") - 1;
+                ymlConfigClash.set("Fighter.Blue", tempBlue);
+                try {
+                    ymlConfigClash.save(configClash);
+                } catch (IOException v) {
+                    v.printStackTrace();
+                }
             }
 
-            if (fighterRed == 0 || fighterBlue == 0) {
+            try {
+                ymlConfigClash.load("plugins//Clash//config.yml");
+            } catch (IOException | InvalidConfigurationException v) {
+                v.printStackTrace();
+            }
+            if (ymlConfigClash.getInt("Fighter.Red") == 0 || ymlConfigClash.getInt("Fighter.Blue") == 0) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (fighterRed == 0) {
+                    if (ymlConfigClash.getInt("Fighter.Red") == 0) {
                         st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
                         //PENIS schreibe wer den clash gewonnen hat -> MENÜ
-                    } else if (fighterBlue == 0) {
+                    } else if (ymlConfigClash.getInt("Fighter.Blue") == 0) {
                         st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
                         //PENIS schreibe wer den clash gewonnen hat -> MENÜ
                     }
@@ -377,6 +465,7 @@ public class Clash implements CommandExecutor, Listener {
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
                             Main.getPlugin().setClashOpen(null);
+                            configClash.delete();
 
                             cancel();
                         } else {
@@ -418,84 +507,114 @@ public class Clash implements CommandExecutor, Listener {
 
     @EventHandler
     public void handlePlayerLeave(PlayerQuitEvent e) {
-        Bukkit.broadcastMessage(Main.getPlugin().getClashOpen());
-        Bukkit.broadcastMessage("hello1");
-        if (Main.getPlugin().getClashOpen() == "true") {
-            Bukkit.broadcastMessage("hello2");
-            if (e.getPlayer().hasPermission("wintervillage.redteam")) {
-                fighterRed--;
-
-            } else if (e.getPlayer().hasPermission("wintervillage.blueteam")) {
-                fighterBlue--;
-            }
-            Bukkit.broadcastMessage("hallo");
-
-            if (fighterRed == 0 || fighterBlue == 0) {
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (fighterRed == 0) {
-                        st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
-                    } else if (fighterBlue == 0) {
-                        st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
+        if (e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+            if (Main.getPlugin().getClashOpen() == "true") {
+                File configMessages = new File("plugins//Messages//" + e.getPlayer().getUniqueId() + ".yml");
+                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                ymlConfigMessages.set("givebackstuff", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException v) {
+                    v.printStackTrace();
+                }
+                if (e.getPlayer().hasPermission("wintervillage.redteam")) {
+                    try {
+                        ymlConfigClash.load("plugins//Clash//config.yml");
+                    } catch (IOException | InvalidConfigurationException v) {
+                        v.printStackTrace();
                     }
-                    all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                    int tempRed = ymlConfigClash.getInt("Fighter.Red") - 1;
+                    ymlConfigClash.set("Fighter.Red", tempRed);
+                    try {
+                        ymlConfigClash.save(configClash);
+                    } catch (IOException v) {
+                        v.printStackTrace();
+                    }
+                } else if (e.getPlayer().hasPermission("wintervillage.blueteam")) {
+                    try {
+                        ymlConfigClash.load("plugins//Clash//config.yml");
+                    } catch (IOException | InvalidConfigurationException v) {
+                        v.printStackTrace();
+                    }
+                    int tempBlue = ymlConfigClash.getInt("Fighter.Red") - 1;
+                    ymlConfigClash.set("Fighter.Blue", tempBlue);
+                    try {
+                        ymlConfigClash.save(configClash);
+                    } catch (IOException v) {
+                        v.printStackTrace();
+                    }
                 }
 
-                new BukkitRunnable() {
-                    int time = 16;
+                if (ymlConfigClash.getInt("Fighter.Red") == 0 || ymlConfigClash.getInt("Fighter.Blue") == 0) {
+                    for (Player all : Bukkit.getOnlinePlayers()) {
+                        if (ymlConfigClash.getInt("Fighter.Red") == 0) {
+                            st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
+                            //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+                        } else if (ymlConfigClash.getInt("Fighter.Blue") == 0) {
+                            st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
+                            //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+                        }
+                        all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                    }
 
-                    @Override
-                    public void run() {
-                        time--;
-                        if (time == 0) {
-                            for (Player all : Bukkit.getOnlinePlayers()) {
-                                File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
-                                if (inventory.exists()) {
-                                    YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                                    all.getInventory().clear();
+                    new BukkitRunnable() {
+                        int time = 16;
 
-                                    try {
-                                        inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
-                                    } catch (IOException | InvalidConfigurationException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    double health = inv.getDouble("Health");
-                                    all.setHealth(health);
-                                    double exp = inv.getDouble("Exp");
-                                    all.setExp((float) exp);
-                                    int level = inv.getInt("Level");
-                                    all.setLevel(level);
-                                    int hunger = inv.getInt("Hunger");
-                                    all.setFoodLevel(hunger);
-
-
-                                    World world = Bukkit.getWorld("world");
-                                    Double X = inv.getDouble("X");
-                                    Double Y = inv.getDouble("Y");
-                                    Double Z = inv.getDouble("Z");
-                                    Location loc = new Location(world, X, Y + 1, Z);
-                                    all.teleport(loc);
-                                    inventory.delete();
-                                } else {
-                                    World world = Bukkit.getWorld("world");
-                                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-                                    all.teleport(location);
-                                }
-                            }
-                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
-                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
-                            Main.getPlugin().setClashOpen(null);
-
-                            cancel();
-                        } else {
-                            if (time < 6) {
+                        @Override
+                        public void run() {
+                            time--;
+                            if (time == 0) {
                                 for (Player all : Bukkit.getOnlinePlayers()) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                    File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                    if (inventory.exists()) {
+                                        YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                                        all.getInventory().clear();
+
+                                        try {
+                                            inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                        } catch (IOException | InvalidConfigurationException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        double health = inv.getDouble("Health");
+                                        all.setHealth(health);
+                                        double exp = inv.getDouble("Exp");
+                                        all.setExp((float) exp);
+                                        int level = inv.getInt("Level");
+                                        all.setLevel(level);
+                                        int hunger = inv.getInt("Hunger");
+                                        all.setFoodLevel(hunger);
+
+
+                                        World world = Bukkit.getWorld("world");
+                                        Double X = inv.getDouble("X");
+                                        Double Y = inv.getDouble("Y");
+                                        Double Z = inv.getDouble("Z");
+                                        Location loc = new Location(world, X, Y + 1, Z);
+                                        all.teleport(loc);
+                                        inventory.delete();
+                                    } else {
+                                        World world = Bukkit.getWorld("world");
+                                        Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                                        all.teleport(location);
+                                    }
+                                }
+                                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
+                                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                                Main.getPlugin().setClashOpen(null);
+                                configClash.delete();
+
+                                cancel();
+                            } else {
+                                if (time < 6) {
+                                    for (Player all : Bukkit.getOnlinePlayers()) {
+                                        all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                    }
                                 }
                             }
                         }
-                    }
-                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                }
             }
         }
     }
