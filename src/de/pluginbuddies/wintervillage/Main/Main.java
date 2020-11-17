@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
@@ -439,7 +438,7 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         ymlConfigteams.options().copyDefaults(true);
-        ymlConfigteams.addDefault("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
+        ymlConfigteams.addDefault("Rot.1", "");//Mulli
         ymlConfigteams.addDefault("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
         ymlConfigteams.addDefault("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
         ymlConfigteams.addDefault("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
@@ -456,7 +455,7 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
         ymlConfigteams.addDefault("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
         ymlConfigteams.addDefault("Blau.7", "438febad-85db-4720-be25-49fe22c8d0cc");//Tobi
-        ymlConfigteams.addDefault("Blau.8", "");
+        ymlConfigteams.addDefault("Blau.8", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
         ymlConfigteams.addDefault("Blau.9", "");
         ymlConfigteams.addDefault("Blau.10", "");
         ymlConfigteams.addDefault("RotMeister.1", "");
@@ -778,9 +777,7 @@ public class Main extends JavaPlugin {
                                 }
                             }
 
-                            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                            String command = "/clash start";
-                            Bukkit.dispatchCommand(console, command);
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "clash start");
                         }
 
 

@@ -4,6 +4,9 @@
 package de.pluginbuddies.wintervillage.Util;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_16_R2.PacketPlayInClientCommand;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -21,6 +24,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -41,6 +46,8 @@ public class Clash implements CommandExecutor, Listener {
         if (sender instanceof ConsoleCommandSender) {
             if (args[0].equalsIgnoreCase("start")) {
                 createBar();
+                fighterRed = 0;
+                fighterBlue = 0;
             }
         }
         if (sender instanceof Player) {
@@ -89,20 +96,37 @@ public class Clash implements CommandExecutor, Listener {
                     }
                 } else if (count == 1) { //PENIS 21
                     if (Bukkit.getOnlinePlayers().size() > 0) {
-                        if (Bukkit.getOnlinePlayers().size() == 1) {
+                        int onlyred = 0;
+                        int onlyblue = 0;
+                        for (Player all : Bukkit.getOnlinePlayers()) {
+                            if (all.hasPermission("wintervillage.redteam")) {
+                                onlyred++;
+                            }
+                            if (all.hasPermission("wintervillage.blueteam")) {
+                                onlyblue++;
+                            }
+                        }
+                        if (onlyred == 0) {
                             for (Player all : Bukkit.getOnlinePlayers()) {
-                                if (all.hasPermission("wintervillage.redteam") || all.hasPermission("wintervillage.prisonred")) {
-                                    st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
-                                    all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                    //PENIS schreibe wer den clash gewonnen hat -> MENÜ
-                                }
-                                if (all.hasPermission("wintervillage.blueteam") || all.hasPermission("wintervillage.prisonblue")) {
+                                if (all.hasPermission("wintervillage.blueteam")) {
                                     st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                                     //PENIS schreibe wer den clash gewonnen hat -> MENÜ
                                 }
                             }
                             bar.removeAll();
+                            Main.getPlugin().setClashOpen(null);
+                            cancel();
+                        } else if (onlyblue == 0) {
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.redteam")) {
+                                    st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
+                                    all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                                    //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+                                }
+                            }
+                            bar.removeAll();
+                            Main.getPlugin().setClashOpen(null);
                             cancel();
                         } else {
                             bar.removeAll();
@@ -182,18 +206,43 @@ public class Clash implements CommandExecutor, Listener {
                                     time--;
                                     if (time == 0) {
                                         for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.redteam") || all.hasPermission("wintervillage.prisonred")) {
+                                            if (all.hasPermission("wintervillage.redteam")) {
                                                 fighterRed++;
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 55.5, 40, 106.5, -90, -3);
                                                 all.teleport(location);
-                                            } else if (all.hasPermission("wintervillage.blueteam") || all.hasPermission("wintervillage.prisonblue")) {
+                                            } else if (all.hasPermission("wintervillage.blueteam")) {
                                                 fighterBlue++;
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 149.5, 40, -229.5, 90, -3);
                                                 all.teleport(location);
                                             }
                                         }
+
+                                        World clash = Bukkit.getWorld("world-clash");
+                                        WorldBorder border = clash.getWorldBorder();
+                                        border.setCenter(114.528, -71.520);
+                                        border.setSize(30, 45 * 60);
+                                        border.setWarningDistance(5);
+                                        border.setDamageAmount(2);
+
+                                        new BukkitRunnable() {
+                                            World clash = Bukkit.getWorld("world-clash");
+                                            WorldBorder border = clash.getWorldBorder();
+
+                                            @Override
+                                            public void run() {
+                                                if (fighterRed == 0 || fighterBlue == 0) {
+                                                    cancel();
+                                                } else
+                                                    for (Player all : Bukkit.getOnlinePlayers()) {
+                                                        String message = "§6§lBorder: " + (int) border.getSize() + " x " + (int) border.getSize() + "  §7||  " + "§c§lRot: " + fighterRed + "  §7||  " + " §9§lBlau: " + fighterBlue;
+                                                        all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                    }
+                                            }
+                                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+
+
                                         cancel();
                                     } else
                                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -232,6 +281,21 @@ public class Clash implements CommandExecutor, Listener {
         String w = p.getWorld().getName();
 
         if (w.equals("world-clash")) {
+
+            new BukkitRunnable() {
+                int time = 2;
+
+                @Override
+                public void run() {
+                    time--;
+                    if (time == 0) {
+                        PacketPlayInClientCommand packet = new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN);
+                        ((CraftPlayer) p).getHandle().playerConnection.a(packet);
+                        cancel();
+                    }
+                }
+            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+
             e.setDeathMessage(p.getName() + "  §7ist in der Rauferei umgekommen!");
             File file = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
             YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
@@ -248,19 +312,21 @@ public class Clash implements CommandExecutor, Listener {
                 v.printStackTrace();
             }
 
-            if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
+            if (p.hasPermission("wintervillage.redteam")) {
                 fighterRed--;
-            } else if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
+                Bukkit.broadcastMessage(String.valueOf(fighterRed));
+            } else if (p.hasPermission("wintervillage.blueteam")) {
                 fighterBlue--;
+                Bukkit.broadcastMessage(String.valueOf(fighterBlue));
             }
 
             if (fighterRed == 0 || fighterBlue == 0) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     if (fighterRed == 0) {
-                        st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 100, 5);
+                        st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
                         //PENIS schreibe wer den clash gewonnen hat -> MENÜ
                     } else if (fighterBlue == 0) {
-                        st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
+                        st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
                         //PENIS schreibe wer den clash gewonnen hat -> MENÜ
                     }
                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
@@ -285,9 +351,6 @@ public class Clash implements CommandExecutor, Listener {
                                         e.printStackTrace();
                                     }
 
-                                    List<?> list = inv.getList("Inventory");
-                                    List<?> slot = inv.getList("Slot");
-
                                     double health = inv.getDouble("Health");
                                     all.setHealth(health);
                                     double exp = inv.getDouble("Exp");
@@ -305,10 +368,6 @@ public class Clash implements CommandExecutor, Listener {
                                     Location loc = new Location(world, X, Y + 1, Z);
                                     all.teleport(loc);
                                     inventory.delete();
-
-                                    for (int j = 0; j <= all.getInventory().getSize(); j++) {
-                                        all.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
-                                    }
                                 } else {
                                     World world = Bukkit.getWorld("world");
                                     Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
@@ -317,6 +376,8 @@ public class Clash implements CommandExecutor, Listener {
                             }
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                            Main.getPlugin().setClashOpen(null);
+
                             cancel();
                         } else {
                             if (time < 6) {
@@ -327,7 +388,6 @@ public class Clash implements CommandExecutor, Listener {
                         }
                     }
                 }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-
             }
         }
     }
@@ -353,6 +413,115 @@ public class Clash implements CommandExecutor, Listener {
             Location loc = new Location(world, dX, dY + 1, dZ);
 
             e.setRespawnLocation(loc);
+        }
+    }
+
+    @EventHandler
+    public void handlePlayerLeave(PlayerQuitEvent e) {
+        Bukkit.broadcastMessage(Main.getPlugin().getClashOpen());
+        Bukkit.broadcastMessage("hello1");
+        if (Main.getPlugin().getClashOpen() == "true") {
+            Bukkit.broadcastMessage("hello2");
+            if (e.getPlayer().hasPermission("wintervillage.redteam")) {
+                fighterRed--;
+
+            } else if (e.getPlayer().hasPermission("wintervillage.blueteam")) {
+                fighterBlue--;
+            }
+            Bukkit.broadcastMessage("hallo");
+
+            if (fighterRed == 0 || fighterBlue == 0) {
+                for (Player all : Bukkit.getOnlinePlayers()) {
+                    if (fighterRed == 0) {
+                        st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
+                    } else if (fighterBlue == 0) {
+                        st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
+                    }
+                    all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                }
+
+                new BukkitRunnable() {
+                    int time = 16;
+
+                    @Override
+                    public void run() {
+                        time--;
+                        if (time == 0) {
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                if (inventory.exists()) {
+                                    YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                                    all.getInventory().clear();
+
+                                    try {
+                                        inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                    } catch (IOException | InvalidConfigurationException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    double health = inv.getDouble("Health");
+                                    all.setHealth(health);
+                                    double exp = inv.getDouble("Exp");
+                                    all.setExp((float) exp);
+                                    int level = inv.getInt("Level");
+                                    all.setLevel(level);
+                                    int hunger = inv.getInt("Hunger");
+                                    all.setFoodLevel(hunger);
+
+
+                                    World world = Bukkit.getWorld("world");
+                                    Double X = inv.getDouble("X");
+                                    Double Y = inv.getDouble("Y");
+                                    Double Z = inv.getDouble("Z");
+                                    Location loc = new Location(world, X, Y + 1, Z);
+                                    all.teleport(loc);
+                                    inventory.delete();
+                                } else {
+                                    World world = Bukkit.getWorld("world");
+                                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                                    all.teleport(location);
+                                }
+                            }
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                            Main.getPlugin().setClashOpen(null);
+
+                            cancel();
+                        } else {
+                            if (time < 6) {
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                }
+                            }
+                        }
+                    }
+                }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
+        if (e.getFrom().equals(Bukkit.getWorld("world-clash"))) {
+            Player p = e.getPlayer();
+            File inventory = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
+            if (inventory.exists()) {
+                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                p.getInventory().clear();
+
+                try {
+                    inv.load("plugins//Clash//Inventories//" + p.getName() + ".yml");
+                } catch (IOException | InvalidConfigurationException v) {
+                    v.printStackTrace();
+                }
+
+                List<?> list = inv.getList("Inventory");
+                List<?> slot = inv.getList("Slot");
+
+                for (int j = 0; j <= p.getInventory().getSize(); j++) {
+                    p.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                }
+            }
         }
     }
 

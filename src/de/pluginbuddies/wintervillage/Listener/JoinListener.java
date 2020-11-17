@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -97,6 +98,27 @@ public class JoinListener implements Listener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        //clash
+        if (Main.getPlugin().getClashOpen() == "true") {
+            World w = Bukkit.getWorld("world-clash");
+            Player p = event.getPlayer();
+            Location location = new Location(w, 114.528, 75, -71.520, -90, -3);
+            p.teleport(location);
+
+            new BukkitRunnable() {
+                int time = 2;
+
+                @Override
+                public void run() {
+                    time--;
+                    if (time == 0) {
+                        p.setGameMode(GameMode.SPECTATOR);
+                        cancel();
+                    }
+                }
+            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
         }
 
         if (Main.getPlugin().getNetherOpen() == "true") {
