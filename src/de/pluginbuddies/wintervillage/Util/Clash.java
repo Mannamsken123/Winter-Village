@@ -431,7 +431,6 @@ public class Clash implements CommandExecutor, Listener {
                                 File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
                                 if (inventory.exists()) {
                                     YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                                    all.getInventory().clear();
 
                                     try {
                                         inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
@@ -453,9 +452,11 @@ public class Clash implements CommandExecutor, Listener {
                                     Double X = inv.getDouble("X");
                                     Double Y = inv.getDouble("Y");
                                     Double Z = inv.getDouble("Z");
-                                    Location loc = new Location(world, X, Y + 1, Z);
+                                    Location loc = new Location(world, X, Y, Z);
                                     all.teleport(loc);
+
                                     inventory.delete();
+
                                 } else {
                                     World world = Bukkit.getWorld("world");
                                     Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
@@ -464,6 +465,9 @@ public class Clash implements CommandExecutor, Listener {
                             }
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                all.setGameMode(GameMode.SURVIVAL);
+                            }
                             Main.getPlugin().setClashOpen(null);
                             configClash.delete();
 
@@ -564,11 +568,11 @@ public class Clash implements CommandExecutor, Listener {
                         public void run() {
                             time--;
                             if (time == 0) {
+
                                 for (Player all : Bukkit.getOnlinePlayers()) {
                                     File inventory = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
                                     if (inventory.exists()) {
                                         YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                                        all.getInventory().clear();
 
                                         try {
                                             inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
@@ -590,8 +594,10 @@ public class Clash implements CommandExecutor, Listener {
                                         Double X = inv.getDouble("X");
                                         Double Y = inv.getDouble("Y");
                                         Double Z = inv.getDouble("Z");
-                                        Location loc = new Location(world, X, Y + 1, Z);
+                                        Location loc = new Location(world, X, Y, Z);
                                         all.teleport(loc);
+
+
                                         inventory.delete();
                                     } else {
                                         World world = Bukkit.getWorld("world");
@@ -601,10 +607,14 @@ public class Clash implements CommandExecutor, Listener {
                                 }
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                                for (Player all : Bukkit.getOnlinePlayers()) {
+                                    all.setGameMode(GameMode.SURVIVAL);
+                                }
                                 Main.getPlugin().setClashOpen(null);
                                 configClash.delete();
-
                                 cancel();
+
+
                             } else {
                                 if (time < 6) {
                                     for (Player all : Bukkit.getOnlinePlayers()) {
@@ -621,8 +631,9 @@ public class Clash implements CommandExecutor, Listener {
 
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
-        if (e.getFrom().equals(Bukkit.getWorld("world-clash"))) {
-            Player p = e.getPlayer();
+        Player p = e.getPlayer();
+        if (e.getFrom().equals(Bukkit.getWorld("world-clash")) && Main.getPlugin().getClashOpen() == "true") {
+
             File inventory = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
             if (inventory.exists()) {
                 YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
@@ -634,11 +645,16 @@ public class Clash implements CommandExecutor, Listener {
                     v.printStackTrace();
                 }
 
-                List<?> list = inv.getList("Inventory");
-                List<?> slot = inv.getList("Slot");
 
-                for (int j = 0; j <= p.getInventory().getSize(); j++) {
-                    p.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
+                List<Integer> slot1 = (List<Integer>) inv.getList("Slot");
+
+                for (int j = 0; j <= slot1.size(); j++) {
+                    p.getInventory().setItem(slot1.get(j), list1.get(j));
+                    if (j == slot1.size()) {
+                        list1.clear();
+                        slot1.clear();
+                    }
                 }
             }
         }
@@ -664,4 +680,6 @@ public class Clash implements CommandExecutor, Listener {
         times = new PacketPlayOutTitle(fadeIn, stay, fadeOut);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(times);
     }
+
+
 }

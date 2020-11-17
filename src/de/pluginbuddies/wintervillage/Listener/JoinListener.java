@@ -342,6 +342,7 @@ public class JoinListener implements Listener {
             new TabList().addPlayer(player);
         }
 
+
         File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
         YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
         try {
@@ -356,54 +357,55 @@ public class JoinListener implements Listener {
     }
 
     public void invbackworkaround(Player player) {
-        Bukkit.broadcastMessage("true");
-        File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-        YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
-        try {
-            ymlConfigMessages2.load("plugins//Messages//" + player.getUniqueId() + ".yml");
-        } catch (IOException | InvalidConfigurationException v) {
-            v.printStackTrace();
-        }
-        ymlConfigMessages2.set("givebackstuff", "false");
-        try {
-            ymlConfigMessages2.save(configMessages2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
-        if (inventory.exists()) {
-            YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-            player.getInventory().clear();
-
+        if (Main.getPlugin().getClashOpen() != "true") {
+            File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
+            YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
             try {
-                inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
-            } catch (IOException | InvalidConfigurationException e) {
+                ymlConfigMessages2.load("plugins//Messages//" + player.getUniqueId() + ".yml");
+            } catch (IOException | InvalidConfigurationException v) {
+                v.printStackTrace();
+            }
+            ymlConfigMessages2.set("givebackstuff", "false");
+            try {
+                ymlConfigMessages2.save(configMessages2);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+            File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
+            if (inventory.exists()) {
+                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
+                player.getInventory().clear();
 
-            List<?> list = inv.getList("Inventory");
-            List<?> slot = inv.getList("Slot");
+                try {
+                    inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
+                } catch (IOException | InvalidConfigurationException e) {
+                    e.printStackTrace();
+                }
 
-            double health = inv.getDouble("Health");
-            player.setHealth(health);
-            double exp = inv.getDouble("Exp");
-            player.setExp((float) exp);
-            int level = inv.getInt("Level");
-            player.setLevel(level);
-            int hunger = inv.getInt("Hunger");
-            player.setFoodLevel(hunger);
+                List<?> list = inv.getList("Inventory");
+                List<?> slot = inv.getList("Slot");
+
+                double health = inv.getDouble("Health");
+                player.setHealth(health);
+                double exp = inv.getDouble("Exp");
+                player.setExp((float) exp);
+                int level = inv.getInt("Level");
+                player.setLevel(level);
+                int hunger = inv.getInt("Hunger");
+                player.setFoodLevel(hunger);
 
 
-            World world = Bukkit.getWorld("world");
-            Double X = inv.getDouble("X");
-            Double Y = inv.getDouble("Y");
-            Double Z = inv.getDouble("Z");
-            Location loc = new Location(world, X, Y + 1, Z);
-            player.teleport(loc);
-            inventory.delete();
+                World world = Bukkit.getWorld("world");
+                Double X = inv.getDouble("X");
+                Double Y = inv.getDouble("Y");
+                Double Z = inv.getDouble("Z");
+                Location loc = new Location(world, X, Y, Z);
+                player.teleport(loc);
+                inventory.delete();
 
-            for (int j = 0; j <= player.getInventory().getSize(); j++) {
-                player.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                for (int j = 0; j <= player.getInventory().getSize(); j++) {
+                    player.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                }
             }
         }
     }
