@@ -27,7 +27,7 @@ public class VillageCommand implements CommandExecutor, Listener {
             String w = p.getWorld().getName();
 
             if (args.length == 0) {
-                if (!w.equals("world-clash")) {
+                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
                     new BukkitRunnable() {
                         int time = 4;
 

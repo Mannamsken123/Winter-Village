@@ -27,10 +27,11 @@ public class SpawnCommand implements CommandExecutor, Listener {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
 
-            if (!w.equals("world-clash")) {
+            if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
                 if (args.length == 0) {
                     new BukkitRunnable() {
                         int time = 4;
+
                         @Override
                         public void run() {
                             time--;

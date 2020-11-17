@@ -35,7 +35,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
             if (monat.format(now).equals("12")) {
                 //Ist Dezember
                 String w = p.getWorld().getName();
-                if (!w.equals("world-clash")) {
+                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
                     //es ist kein clash
                     Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
                     for (int i = 1; i <= 24; i++) {

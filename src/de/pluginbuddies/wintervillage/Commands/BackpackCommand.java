@@ -32,7 +32,7 @@ public class BackpackCommand implements CommandExecutor, Listener {
             Player p = (Player) sender;
             if (args.length == 0) {
                 String w = p.getWorld().getName();
-                if (!w.equals("world-clash")) {
+                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
                     if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
                         backpackRed.clear();
                         File file = new File("plugins//Backpacks//red.yml");

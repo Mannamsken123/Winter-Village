@@ -37,7 +37,7 @@ public class ConfiBothVillageCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
-            if (!w.equals("world-clash")) {
+            if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
                 if (p.hasPermission("wintervillage.prisonred")) {
                     if (args.length != 1) {
                         setConfistart(true);
