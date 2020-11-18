@@ -35,13 +35,15 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
             if (monat.format(now).equals("12")) {
                 //Ist Dezember
                 String w = p.getWorld().getName();
-                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
+                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
                     //es ist kein clash
                     Inventory inv = Bukkit.createInventory(p, 27, "§6Adventskalender");
                     for (int i = 1; i <= 24; i++) {
                         String j = null;
                         if (i <= 9) {
                             j = "0" + i;
+                        } else {
+                            j = String.valueOf(i);
                         }
 
                         if (tag.format(now).equals(j)) {
@@ -78,7 +80,6 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
         if (!(e.getWhoClicked() instanceof Player)) return;
         Player p = (Player) e.getWhoClicked();
 
-
         if (e.getView().getTitle().equals("§6Adventskalender")) {
             e.setCancelled(true);
             if (e.getCurrentItem().getType() == Material.SPRUCE_DOOR) {
@@ -87,6 +88,8 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                     String j = null;
                     if (i <= 9) {
                         j = "0" + i;
+                    } else {
+                        j = String.valueOf(i);
                     }
                     if (tag.format(now).equals(j)) {
                         if (!Main.hasUsed(p.getUniqueId().toString(), i)) {
@@ -94,7 +97,7 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                             p.closeInventory();
                             p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung aus dem " + i + ". Türchen");
                             p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
-                            Main.setUsed(p.getUniqueId().toString(), 1);
+                            Main.setUsed(p.getUniqueId().toString(), Integer.parseInt(j));
                             return;
                         } else {
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast dieses Türchen bereits geöffnet.");
@@ -108,7 +111,6 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
                 p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Tag ist heute nicht!");
             }
         }
-
     }
 
 

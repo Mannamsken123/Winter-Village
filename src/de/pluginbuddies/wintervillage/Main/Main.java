@@ -85,6 +85,16 @@ public class Main extends JavaPlugin {
     static File configClash = new File("plugins//Clash//Dates//config.yml");
     public static YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
     private String clashOpen;
+    private String clashOpen2 = "false";
+
+    public String getClashOpen2() {
+        return clashOpen2;
+    }
+
+    public void setClashOpen2(String clashOpen2) {
+        this.clashOpen2 = clashOpen2;
+    }
+
     private String clash1 = getYmlConfigClash().getString("clash1");
     private String clash2 = getYmlConfigClash().getString("clash2");
 
@@ -1199,7 +1209,7 @@ public class Main extends JavaPlugin {
 
         //clash
 
-        File folderClash = new File("plugins//Clash/Dates");
+        File folderClash = new File("plugins//Clash//Dates");
         if (!folderClash.exists()) {
             folderClash.mkdir();
         }
@@ -1264,6 +1274,33 @@ public class Main extends JavaPlugin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        File folderClashWins = new File("plugins//Clash//Wins");
+        File configClashWins = new File("plugins//Clash//Wins//config.yml");
+        YamlConfiguration ymlConfigClashWins = YamlConfiguration.loadConfiguration(configClashWins);
+
+        if (!folderClashWins.exists()) {
+            folderClashWins.mkdir();
+        }
+        if (!configClashWins.exists()) {
+            try {
+                configClashWins.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ymlConfigClashWins.options().copyDefaults(true);
+        ymlConfigClashWins.addDefault("winner1", "null");
+        ymlConfigClashWins.addDefault("winner2", "null");
+        ymlConfigClashWins.addDefault("winner3", "null");
+        ymlConfigClashWins.addDefault("winner4", "null");
+
+        try {
+            ymlConfigClashWins.save(configClashWins);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

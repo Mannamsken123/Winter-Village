@@ -25,10 +25,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -69,9 +72,170 @@ public class Clash implements CommandExecutor, Listener {
             }
         }
         if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (args.length == 1) {
+            Player p = (Player) sender;
+            if (args.length == 0) {
+                String w = p.getWorld().getName();
+                if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
+                    Inventory inv = Bukkit.createInventory(p, 36, "§6Clash Übersicht");
 
+                    ItemStack Clash1 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemMeta imOpen1 = Clash1.getItemMeta();
+                    String name1;
+                    if (Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                        name1 = "§c§lClash 1 - 02/12/2020";
+                    } else {
+                        name1 = "§a§lClash 1 - 02/12/2020";
+                    }
+                    imOpen1.setDisplayName(name1);
+                    Clash1.setItemMeta(imOpen1);
+                    Clash1.setAmount(1);
+                    inv.setItem(9 + 1, Clash1);
+
+                    ItemStack Clash2 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemMeta imOpen2 = Clash2.getItemMeta();
+                    String name2;
+                    if (Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                        name2 = "§c§lClash 2 - 09/12/2020";
+                    } else {
+                        name2 = "§a§lClash 2 - 09/12/2020";
+                    }
+                    imOpen2.setDisplayName(name2);
+                    Clash2.setItemMeta(imOpen2);
+                    Clash2.setAmount(1);
+                    inv.setItem(9 + 3, Clash2);
+
+                    ItemStack Clash3 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemMeta imOpen3 = Clash3.getItemMeta();
+                    String name3;
+                    if (Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                        name3 = "§c§lClash 3 - 16/12/2020";
+                    } else {
+                        name3 = "§a§lClash 3 - 16/12/2020";
+                    }
+                    imOpen3.setDisplayName(name3);
+                    Clash3.setItemMeta(imOpen3);
+                    Clash3.setAmount(1);
+                    inv.setItem(9 + 5, Clash3);
+
+                    ItemStack Clash4 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemMeta imOpen4 = Clash4.getItemMeta();
+                    String name4;
+                    if (Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                        name4 = "§c§lClash 4 - 23/12/2020";
+                    } else {
+                        name4 = "§a§lClash 4 - 23/12/2020";
+                    }
+                    imOpen4.setDisplayName(name4);
+                    Clash4.setItemMeta(imOpen4);
+                    Clash4.setAmount(1);
+                    inv.setItem(9 + 7, Clash4);
+
+                    //colorblocks
+                    File configClash = new File("plugins//Clash//Wins//config.yml");
+                    YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                    try {
+                        ymlConfigClash.load("plugins//Clash//Wins//config.yml");
+                    } catch (IOException | InvalidConfigurationException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (ymlConfigClash.getString("winner1").equals("blue")) {
+                        ItemStack Win1 = new ItemStack(Material.BLUE_CONCRETE);
+                        ItemMeta imOpenWin1 = Win1.getItemMeta();
+                        imOpenWin1.setDisplayName("§9Village Blau hat diesen Clash gewonnen");
+                        Win1.setItemMeta(imOpenWin1);
+                        Win1.setAmount(1);
+                        inv.setItem(9 + 9 + 1, Win1);
+                    } else if (ymlConfigClash.getString("winner1").equals("red")) {
+                        ItemStack Win1 = new ItemStack(Material.RED_CONCRETE);
+                        ItemMeta imOpenWin1 = Win1.getItemMeta();
+                        imOpenWin1.setDisplayName("§cVillage Rot hat diesen Clash gewonnen");
+                        Win1.setItemMeta(imOpenWin1);
+                        Win1.setAmount(1);
+                        inv.setItem(9 + 9 + 1, Win1);
+                    } else {
+                        ItemStack Win1 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemMeta imOpenWin1 = Win1.getItemMeta();
+                        imOpenWin1.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
+                        Win1.setItemMeta(imOpenWin1);
+                        Win1.setAmount(1);
+                        inv.setItem(9 + 9 + 1, Win1);
+                    }
+
+                    if (ymlConfigClash.getString("winner2").equals("blue")) {
+                        ItemStack Win2 = new ItemStack(Material.BLUE_CONCRETE);
+                        ItemMeta imOpenWin2 = Win2.getItemMeta();
+                        imOpenWin2.setDisplayName("§9Village Blau hat diesen Clash gewonnen");
+                        Win2.setItemMeta(imOpenWin2);
+                        Win2.setAmount(1);
+                        inv.setItem(9 + 9 + 3, Win2);
+                    } else if (ymlConfigClash.getString("winner2").equals("red")) {
+                        ItemStack Win2 = new ItemStack(Material.RED_CONCRETE);
+                        ItemMeta imOpenWin2 = Win2.getItemMeta();
+                        imOpenWin2.setDisplayName("§cVillage Rot hat diesen Clash gewonnen");
+                        Win2.setItemMeta(imOpenWin2);
+                        Win2.setAmount(1);
+                        inv.setItem(9 + 9 + 3, Win2);
+                    } else {
+                        ItemStack Win2 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemMeta imOpenWin2 = Win2.getItemMeta();
+                        imOpenWin2.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
+                        Win2.setItemMeta(imOpenWin2);
+                        Win2.setAmount(1);
+                        inv.setItem(9 + 9 + 3, Win2);
+                    }
+
+                    if (ymlConfigClash.getString("winner3").equals("blue")) {
+                        ItemStack Win3 = new ItemStack(Material.BLUE_CONCRETE);
+                        ItemMeta imOpenWin3 = Win3.getItemMeta();
+                        imOpenWin3.setDisplayName("§9Village Blau hat diesen Clash gewonnen");
+                        Win3.setItemMeta(imOpenWin3);
+                        Win3.setAmount(1);
+                        inv.setItem(9 + 9 + 5, Win3);
+                    } else if (ymlConfigClash.getString("winner3").equals("red")) {
+                        ItemStack Win3 = new ItemStack(Material.RED_CONCRETE);
+                        ItemMeta imOpenWin3 = Win3.getItemMeta();
+                        imOpenWin3.setDisplayName("§cVillage Rot hat diesen Clash gewonnen");
+                        Win3.setItemMeta(imOpenWin3);
+                        Win3.setAmount(1);
+                        inv.setItem(9 + 9 + 5, Win3);
+                    } else {
+                        ItemStack Win3 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemMeta imOpenWin3 = Win3.getItemMeta();
+                        imOpenWin3.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
+                        Win3.setItemMeta(imOpenWin3);
+                        Win3.setAmount(1);
+                        inv.setItem(9 + 9 + 5, Win3);
+                    }
+
+                    if (ymlConfigClash.getString("winner4").equals("blue")) {
+                        ItemStack Win4 = new ItemStack(Material.BLUE_CONCRETE);
+                        ItemMeta imOpenWin4 = Win4.getItemMeta();
+                        imOpenWin4.setDisplayName("§9Village Blau hat diesen Clash gewonnen");
+                        Win4.setItemMeta(imOpenWin4);
+                        Win4.setAmount(1);
+                        inv.setItem(9 + 9 + 7, Win4);
+                    } else if (ymlConfigClash.getString("winner4").equals("red")) {
+                        ItemStack Win4 = new ItemStack(Material.RED_CONCRETE);
+                        ItemMeta imOpenWin4 = Win4.getItemMeta();
+                        imOpenWin4.setDisplayName("§cVillage Rot hat diesen Clash gewonnen");
+                        Win4.setItemMeta(imOpenWin4);
+                        Win4.setAmount(1);
+                        inv.setItem(9 + 9 + 7, Win4);
+                    } else {
+                        ItemStack Win4 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemMeta imOpenWin4 = Win4.getItemMeta();
+                        imOpenWin4.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
+                        Win4.setItemMeta(imOpenWin4);
+                        Win4.setAmount(1);
+                        inv.setItem(9 + 9 + 7, Win4);
+                    }
+
+                    p.openInventory(inv);
+                } else {
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
+                }
             }
         }
         return false;
@@ -129,7 +293,40 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.blueteam")) {
                                     st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                    //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                                    File folderClash = new File("plugins//Clash//Wins");
+                                    File configClash = new File("plugins//Clash//Wins//config.yml");
+                                    YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                                    if (!folderClash.exists()) {
+                                        folderClash.mkdir();
+                                    }
+                                    if (!configClash.exists()) {
+                                        try {
+                                            configClash.createNewFile();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner1", "blue");
+                                    }
+                                    if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner2", "blue");
+                                    }
+                                    if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner3", "blue");
+                                    }
+                                    if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner4", "blue");
+                                    }
+
+                                    try {
+                                        ymlConfigClash.save(configClash);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             bar.removeAll();
@@ -140,17 +337,51 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.redteam")) {
                                     st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                    //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                                    File folderClash = new File("plugins//Clash//Wins");
+                                    File configClash = new File("plugins//Clash//Wins//config.yml");
+                                    YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+                                    if (!folderClash.exists()) {
+                                        folderClash.mkdir();
+                                    }
+                                    if (!configClash.exists()) {
+                                        try {
+                                            configClash.createNewFile();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner1", "red");
+                                    }
+                                    if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner2", "red");
+                                    }
+                                    if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner3", "red");
+                                    }
+                                    if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                                        ymlConfigClash.set("winner4", "red");
+                                    }
+
+                                    try {
+                                        ymlConfigClash.save(configClash);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             bar.removeAll();
                             Main.getPlugin().setClashOpen(null);
+                            Main.getPlugin().setClashOpen2("false");
                             cancel();
                         } else {
                             bar.removeAll();
 
                             //create world-clash
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv clone world world-clash");
+                            Main.getPlugin().setClashOpen2("true");
 
                             //save inventories
                             checkDirectory();
@@ -412,10 +643,76 @@ public class Clash implements CommandExecutor, Listener {
                 for (Player all : Bukkit.getOnlinePlayers()) {
                     if (ymlConfigClash.getInt("Fighter.Red") == 0) {
                         st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
-                        //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                        File folderClash = new File("plugins//Clash//Wins");
+                        File configClash = new File("plugins//Clash//Wins//config.yml");
+                        YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                        if (!folderClash.exists()) {
+                            folderClash.mkdir();
+                        }
+                        if (!configClash.exists()) {
+                            try {
+                                configClash.createNewFile();
+                            } catch (IOException v) {
+                                v.printStackTrace();
+                            }
+                        }
+
+                        if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner1", "blue");
+                        }
+                        if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner2", "blue");
+                        }
+                        if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner3", "blue");
+                        }
+                        if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner4", "blue");
+                        }
+
+                        try {
+                            ymlConfigClash.save(configClash);
+                        } catch (IOException v) {
+                            v.printStackTrace();
+                        }
                     } else if (ymlConfigClash.getInt("Fighter.Blue") == 0) {
                         st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
-                        //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                        File folderClash = new File("plugins//Clash//Wins");
+                        File configClash = new File("plugins//Clash//Wins//config.yml");
+                        YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                        if (!folderClash.exists()) {
+                            folderClash.mkdir();
+                        }
+                        if (!configClash.exists()) {
+                            try {
+                                configClash.createNewFile();
+                            } catch (IOException v) {
+                                v.printStackTrace();
+                            }
+                        }
+
+                        if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner1", "red");
+                        }
+                        if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner2", "red");
+                        }
+                        if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner3", "red");
+                        }
+                        if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                            ymlConfigClash.set("winner4", "red");
+                        }
+
+                        try {
+                            ymlConfigClash.save(configClash);
+                        } catch (IOException v) {
+                            v.printStackTrace();
+                        }
                     }
                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                 }
@@ -469,6 +766,7 @@ public class Clash implements CommandExecutor, Listener {
                                 all.setGameMode(GameMode.SURVIVAL);
                             }
                             Main.getPlugin().setClashOpen(null);
+                            Main.getPlugin().setClashOpen2("false");
                             configClash.delete();
 
                             cancel();
@@ -553,10 +851,76 @@ public class Clash implements CommandExecutor, Listener {
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         if (ymlConfigClash.getInt("Fighter.Red") == 0) {
                             st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
-                            //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                            File folderClash = new File("plugins//Clash//Wins");
+                            File configClash = new File("plugins//Clash//Wins//config.yml");
+                            YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                            if (!folderClash.exists()) {
+                                folderClash.mkdir();
+                            }
+                            if (!configClash.exists()) {
+                                try {
+                                    configClash.createNewFile();
+                                } catch (IOException v) {
+                                    v.printStackTrace();
+                                }
+                            }
+
+                            if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner1", "blue");
+                            }
+                            if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner2", "blue");
+                            }
+                            if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner3", "blue");
+                            }
+                            if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner4", "blue");
+                            }
+
+                            try {
+                                ymlConfigClash.save(configClash);
+                            } catch (IOException v) {
+                                v.printStackTrace();
+                            }
                         } else if (ymlConfigClash.getInt("Fighter.Blue") == 0) {
                             st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 500, 5);
-                            //PENIS schreibe wer den clash gewonnen hat -> MENÜ
+
+                            File folderClash = new File("plugins//Clash//Wins");
+                            File configClash = new File("plugins//Clash//Wins//config.yml");
+                            YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+                            if (!folderClash.exists()) {
+                                folderClash.mkdir();
+                            }
+                            if (!configClash.exists()) {
+                                try {
+                                    configClash.createNewFile();
+                                } catch (IOException v) {
+                                    v.printStackTrace();
+                                }
+                            }
+
+                            if (ymlConfigClash.getString("winner1").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner1", "red");
+                            }
+                            if (ymlConfigClash.getString("winner2").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner2", "red");
+                            }
+                            if (ymlConfigClash.getString("winner3").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner3", "red");
+                            }
+                            if (ymlConfigClash.getString("winner4").equals("null") && Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
+                                ymlConfigClash.set("winner4", "red");
+                            }
+
+                            try {
+                                ymlConfigClash.save(configClash);
+                            } catch (IOException v) {
+                                v.printStackTrace();
+                            }
                         }
                         all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                     }
@@ -611,6 +975,7 @@ public class Clash implements CommandExecutor, Listener {
                                     all.setGameMode(GameMode.SURVIVAL);
                                 }
                                 Main.getPlugin().setClashOpen(null);
+                                Main.getPlugin().setClashOpen2("false");
                                 configClash.delete();
                                 cancel();
 
@@ -627,6 +992,16 @@ public class Clash implements CommandExecutor, Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player)) return;
+
+        if (e.getView().getTitle().equals("§6Clash Übersicht")) {
+            e.setCancelled(true);
+        }
+
     }
 
     @EventHandler

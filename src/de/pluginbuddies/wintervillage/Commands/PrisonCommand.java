@@ -26,7 +26,7 @@ public class PrisonCommand implements CommandExecutor, Listener {
     public void handlecommandoutput(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
         String w = p.getWorld().getName();
-        if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
+        if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
             if (knastplayers.contains(p.getName())) {
                 p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
                 e.setCancelled(true);
@@ -39,7 +39,7 @@ public class PrisonCommand implements CommandExecutor, Listener {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             String w = p.getWorld().getName();
-            if (!w.equals("world-clash") && Main.getPlugin().getClashOpen() != "true") {
+            if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
                 if (p.hasPermission("wintervillage.prisonred")) {
                     if (args.length == 1) {
                         Player target = Bukkit.getPlayer(args[0]);
