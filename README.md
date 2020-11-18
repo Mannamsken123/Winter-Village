@@ -1,5 +1,5 @@
 # Winter-Village
-Winter-Village-Plugin just fpr private use.
+Winter-Village-Plugin just for private use.
 
 
 # License
