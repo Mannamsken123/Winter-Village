@@ -113,7 +113,7 @@ public class Clash implements CommandExecutor, Listener {
                         addPlayer(all);
                     }
                 } else if (count == 1) { //PENIS 21
-                    if (Bukkit.getOnlinePlayers().size() > 0) {
+                    if (Bukkit.getOnlinePlayers().size() > 0) { //PENIS 1
                         int onlyred = 0;
                         int onlyblue = 0;
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -146,6 +146,8 @@ public class Clash implements CommandExecutor, Listener {
                             bar.removeAll();
                             Main.getPlugin().setClashOpen(null);
                             cancel();
+
+
                         } else {
                             bar.removeAll();
 
@@ -198,9 +200,9 @@ public class Clash implements CommandExecutor, Listener {
                                 inv.set("Exp", exp);
                                 inv.set("Level", level);
                                 inv.set("Hunger", hunger);
-                                inv.set("X", X);
-                                inv.set("Y", Y);
-                                inv.set("Z", Z);
+                                inv.set("X", X);    //PENIS sind nicht im Object
+                                inv.set("Y", Y);    //PENIS sind nicht im Object
+                                inv.set("Z", Z);    //PENIS sind nicht im Object
 
                                 try {
                                     inv.save(file);
@@ -597,8 +599,17 @@ public class Clash implements CommandExecutor, Listener {
                                         Location loc = new Location(world, X, Y, Z);
                                         all.teleport(loc);
 
-
+                                        List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
+                                        List<Integer> slot1 = (List<Integer>) inv.getList("Slot");
                                         inventory.delete();
+
+                                        for (int j = 0; j <= slot1.size(); j++) {
+                                            all.getInventory().setItem(slot1.get(j), list1.get(j));
+                                            if (j == slot1.size()) {
+                                                list1.clear();
+                                                slot1.clear();
+                                            }
+                                        }
                                     } else {
                                         World world = Bukkit.getWorld("world");
                                         Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
