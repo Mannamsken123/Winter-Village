@@ -1084,7 +1084,6 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new BackpackCommand(), this);
         pluginManager.registerEvents(new SpawnCommand(), this);
         pluginManager.registerEvents(new Clash(), this);
-        pluginManager.registerEvents(new changeworld(), this);
 
         //blockportals
         File folderBlockPortal = new File("plugins//BlockPortal");

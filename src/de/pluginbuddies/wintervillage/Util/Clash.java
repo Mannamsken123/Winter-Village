@@ -25,16 +25,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Clash implements CommandExecutor, Listener {
 
@@ -113,7 +110,7 @@ public class Clash implements CommandExecutor, Listener {
                         addPlayer(all);
                     }
                 } else if (count == 1) { //PENIS 21
-                    if (Bukkit.getOnlinePlayers().size() > 0) { //PENIS 1
+                    if (Bukkit.getOnlinePlayers().size() > 0) {
                         int onlyred = 0;
                         int onlyblue = 0;
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -157,7 +154,20 @@ public class Clash implements CommandExecutor, Listener {
                             //save inventories
                             checkDirectory();
                             ArrayList<ItemStack> list = new ArrayList<>();
+
                             for (Player all : Bukkit.getOnlinePlayers()) {
+
+                                try {
+                                    FileOutputStream fileOut = new FileOutputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+                                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                                    out.writeObject(new PlayerSerialize(all));
+                                    out.close();
+                                    fileOut.close();
+                                } catch (IOException e) {
+                                    return;
+                                }
+
+
                                 File file = new File("plugins//Clash//Inventories//" + all.getName() + ".yml");
 
                                 try {
@@ -168,7 +178,7 @@ public class Clash implements CommandExecutor, Listener {
 
                                 YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
 
-                                ArrayList<Integer> slot = new ArrayList<>();
+                                /*ArrayList<Integer> slot = new ArrayList<>();
 
                                 for (int i = 0; i <= all.getInventory().getSize(); i++) {
                                     if (all.getInventory().getItem(i) != null) {
@@ -190,16 +200,18 @@ public class Clash implements CommandExecutor, Listener {
                                     }
                                 }
 
+                                 */
+
                                 double X = all.getLocation().getX();
                                 double Y = all.getLocation().getY();
                                 double Z = all.getLocation().getZ();
 
-                                inv.set("Slot", slot);
-                                inv.set("Inventory", list);
-                                inv.set("Health", health);
-                                inv.set("Exp", exp);
-                                inv.set("Level", level);
-                                inv.set("Hunger", hunger);
+                                //inv.set("Slot", slot);
+                                //inv.set("Inventory", list);
+                                //inv.set("Health", health);
+                                //inv.set("Exp", exp);
+                                //inv.set("Level", level);
+                                // inv.set("Hunger", hunger);
                                 inv.set("X", X);    //PENIS sind nicht im Object
                                 inv.set("Y", Y);    //PENIS sind nicht im Object
                                 inv.set("Z", Z);    //PENIS sind nicht im Object
@@ -440,6 +452,7 @@ public class Clash implements CommandExecutor, Listener {
                                         e.printStackTrace();
                                     }
 
+                                    /*
                                     double health = inv.getDouble("Health");
                                     all.setHealth(health);
                                     double exp = inv.getDouble("Exp");
@@ -448,6 +461,8 @@ public class Clash implements CommandExecutor, Listener {
                                     all.setLevel(level);
                                     int hunger = inv.getInt("Hunger");
                                     all.setFoodLevel(hunger);
+
+                                     */
 
 
                                     World world = Bukkit.getWorld("world");
@@ -458,6 +473,36 @@ public class Clash implements CommandExecutor, Listener {
                                     all.teleport(loc);
 
                                     inventory.delete();
+
+
+                                    PlayerSerialize newInv = null;
+
+                                    File f = new File("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+
+                                    if (f.isFile() && f.canRead()) {
+                                        try {
+                                            FileInputStream fileIn = new FileInputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+                                            ObjectInputStream in = new ObjectInputStream(fileIn);
+                                            newInv = (PlayerSerialize) in.readObject();
+                                            in.close();
+                                            fileIn.close();
+                                        } catch (IOException | ClassNotFoundException ignored) {
+                                            return;
+                                        }
+                                    }
+
+                                    if (newInv != null) {
+                                        all.getInventory().setContents(newInv.inventory.getContents());
+                                        all.setHealth(newInv.health);
+                                        all.setFoodLevel((int) newInv.hunger);
+                                        all.setFlySpeed((float) newInv.flySpeed);
+                                        all.setWalkSpeed((float) newInv.walkSpeed);
+                                        all.setLevel(newInv.levels);
+                                        all.setExp((float) newInv.xp);
+                                        all.setSaturation((float) newInv.saturation);
+                                        all.setExhaustion((float) newInv.fatigue);
+                                    }
+
 
                                 } else {
                                     World world = Bukkit.getWorld("world");
@@ -582,6 +627,7 @@ public class Clash implements CommandExecutor, Listener {
                                             e.printStackTrace();
                                         }
 
+                                        /*
                                         double health = inv.getDouble("Health");
                                         all.setHealth(health);
                                         double exp = inv.getDouble("Exp");
@@ -591,6 +637,8 @@ public class Clash implements CommandExecutor, Listener {
                                         int hunger = inv.getInt("Hunger");
                                         all.setFoodLevel(hunger);
 
+                                         */
+
 
                                         World world = Bukkit.getWorld("world");
                                         Double X = inv.getDouble("X");
@@ -599,7 +647,7 @@ public class Clash implements CommandExecutor, Listener {
                                         Location loc = new Location(world, X, Y, Z);
                                         all.teleport(loc);
 
-                                        List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
+                                        /*List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
                                         List<Integer> slot1 = (List<Integer>) inv.getList("Slot");
                                         inventory.delete();
 
@@ -610,6 +658,36 @@ public class Clash implements CommandExecutor, Listener {
                                                 slot1.clear();
                                             }
                                         }
+
+                                         */
+                                        PlayerSerialize newInv = null;
+
+                                        File f = new File("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+
+                                        if (f.isFile() && f.canRead()) {
+                                            try {
+                                                FileInputStream fileIn = new FileInputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+                                                ObjectInputStream in = new ObjectInputStream(fileIn);
+                                                newInv = (PlayerSerialize) in.readObject();
+                                                in.close();
+                                                fileIn.close();
+                                            } catch (IOException | ClassNotFoundException ignored) {
+                                                return;
+                                            }
+                                        }
+
+                                        if (newInv != null) {
+                                            all.getInventory().setContents(newInv.inventory.getContents());
+                                            all.setHealth(newInv.health);
+                                            all.setFoodLevel((int) newInv.hunger);
+                                            all.setFlySpeed((float) newInv.flySpeed);
+                                            all.setWalkSpeed((float) newInv.walkSpeed);
+                                            all.setLevel(newInv.levels);
+                                            all.setExp((float) newInv.xp);
+                                            all.setSaturation((float) newInv.saturation);
+                                            all.setExhaustion((float) newInv.fatigue);
+                                        }
+
                                     } else {
                                         World world = Bukkit.getWorld("world");
                                         Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
@@ -640,7 +718,7 @@ public class Clash implements CommandExecutor, Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
         if (e.getFrom().equals(Bukkit.getWorld("world-clash")) && Main.getPlugin().getClashOpen() == "true") {
@@ -670,6 +748,7 @@ public class Clash implements CommandExecutor, Listener {
             }
         }
     }
+    */
 
     public void checkDirectory() {
         File file = new File("plugins//Clash//Inventories");
