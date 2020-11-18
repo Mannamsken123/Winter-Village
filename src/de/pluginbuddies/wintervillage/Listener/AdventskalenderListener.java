@@ -35,10 +35,12 @@ public class AdventskalenderListener implements Listener {
                             String j = null;
                             if (i <= 9) {
                                 j = "0" + i;
+                            } else {
+                                j = String.valueOf(i);
+                            }
 
-                                if (tag.format(now).equals(j)) if (!Main.hasUsed(p.getUniqueId().toString(), i) && p.isOnline() == true) {
-                                    p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du hast ein ungeöffnetes Adventskalender-Türchen!");
-                                }
+                            if (tag.format(now).equals(j)) if (!Main.hasUsed(p.getUniqueId().toString(), i) && p.isOnline() == true) {
+                                p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du hast ein ungeöffnetes Adventskalender-Türchen!");
                             }
                         }
                     }
