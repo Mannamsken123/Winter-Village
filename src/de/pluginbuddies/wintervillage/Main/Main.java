@@ -455,7 +455,7 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Rot.5", "ed85c100-78c1-46b9-85c1-0c902e2352f0");//Valentin
         ymlConfigteams.addDefault("Rot.6", "e466347d-6c55-4619-bdd9-7404f2bc874b");//Chris
         ymlConfigteams.addDefault("Rot.7", "598fc90a-ffe6-4500-a3c4-6a1207e09812");//Nils
-        ymlConfigteams.addDefault("Rot.8", "");
+        ymlConfigteams.addDefault("Rot.8", "558393f4-4a5b-4615-b780-1ebf2d8f2e9d");//Julius
         ymlConfigteams.addDefault("Rot.9", "");
         ymlConfigteams.addDefault("Rot.10", "");
         ymlConfigteams.addDefault("Blau.1", "309f61d4-d7dd-4449-aa1d-13e212946920");//Fabio
@@ -465,9 +465,9 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Blau.5", "666d78a6-c431-474b-bd80-9498e0c58923");//Janni
         ymlConfigteams.addDefault("Blau.6", "2feb1630-f1ca-4400-938d-09349fccf5de");//Anton
         ymlConfigteams.addDefault("Blau.7", "438febad-85db-4720-be25-49fe22c8d0cc");//Tobi
-        ymlConfigteams.addDefault("Blau.8", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");
-        ymlConfigteams.addDefault("Blau.9", "");
-        ymlConfigteams.addDefault("Blau.10", "");
+        ymlConfigteams.addDefault("Blau.8", "896088f9-d998-49ce-a743-b566c478a1e6");//Friedrich
+        ymlConfigteams.addDefault("Blau.9", "b1de1149-e8d6-4104-a003-cbde6bd4aa64");//Jannis
+        ymlConfigteams.addDefault("Blau.10", "f033f53b-f8c4-4e75-817a-1db8b0cf93a5");//Tilo
         ymlConfigteams.addDefault("RotMeister.1", "");
         ymlConfigteams.addDefault("BlauMeister.1", "");
 
@@ -1081,6 +1081,8 @@ public class Main extends JavaPlugin {
         getCommand("confi").setExecutor(new ConfiBothVillageCommand());
         getCommand("putsch").setExecutor(new PutschCommand());
         getCommand("clash").setExecutor(new Clash());
+        getCommand("pos").setExecutor(new PositionSafeCommand());
+        getCommand("pos").setTabCompleter(new PositionSafeTabComplete());
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new JoinListener(), this);
@@ -1121,6 +1123,19 @@ public class Main extends JavaPlugin {
         File folderMessages = new File("plugins//Messages");
         if (!folderMessages.exists()) {
             folderMessages.mkdir();
+        }
+        //positionen
+        File folderPos = new File("plugins//Positionen");
+        if (!folderPos.exists()) {
+            folderPos.mkdir();
+        }
+        File folderPosRot = new File("plugins//Positionen//TeamRot");
+        if (!folderPosRot.exists()) {
+            folderPosRot.mkdir();
+        }
+        File folderPosBlau = new File("plugins//Positionen//TeamBlau");
+        if (!folderPosBlau.exists()) {
+            folderPosBlau.mkdir();
         }
 
         //adventkalender
