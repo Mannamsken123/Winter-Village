@@ -298,7 +298,7 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.blueteam")) {
                                     st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Rot ist nicht angetreten!");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§cRot §3ist nicht angetreten!");
 
                                     File folderClash = new File("plugins//Clash//Wins");
                                     File configClash = new File("plugins//Clash//Wins//config.yml");
@@ -345,7 +345,7 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.redteam")) {
                                     st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Blau ist nicht angetreten!");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§9Blau §3ist nicht angetreten!");
 
                                     File folderClash = new File("plugins//Clash//Wins");
                                     File configClash = new File("plugins//Clash//Wins//config.yml");
