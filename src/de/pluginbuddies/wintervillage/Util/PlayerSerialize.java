@@ -4,14 +4,25 @@
 package de.pluginbuddies.wintervillage.Util;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.ItemStack;
 
-public final class PlayerSerialize {
+import java.io.Serializable;
+
+/**
+ * Player object that can be safely serialized and deserialized!
+ * <p>
+ *
+ * @author PatrickMSM
+ * @version 1.0
+ * @since 2020-11-18
+ */
+
+public final class PlayerSerialize implements Serializable {
     // All values that should be stored
 
     // Player's inventory
 
-    public final PlayerInventory inventory;
+    public final ItemStack[] inventory;
 
     // Players other stats
 
@@ -45,8 +56,7 @@ public final class PlayerSerialize {
      * @param player The player object to serialize
      */
     public PlayerSerialize(Player player) {
-        inventory = player.getInventory();
-
+        inventory = player.getInventory().getContents();
 
         health = player.getHealth();
         hunger = player.getFoodLevel();

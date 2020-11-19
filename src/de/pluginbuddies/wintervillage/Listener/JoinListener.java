@@ -4,6 +4,7 @@
 package de.pluginbuddies.wintervillage.Listener;
 
 import de.pluginbuddies.wintervillage.Main.Main;
+import de.pluginbuddies.wintervillage.Util.PlayerSerialize;
 import de.pluginbuddies.wintervillage.Util.TabList;
 import de.pluginbuddies.wintervillage.Util.Team;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
@@ -21,16 +22,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.io.BukkitObjectInputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 
 public class JoinListener implements Listener {
@@ -140,7 +141,7 @@ public class JoinListener implements Listener {
         }
 
         //clash
-        if (Main.getPlugin().getClashOpen() == "true") {
+        if (Main.getPlugin().getClashOpen2() == "true") {
             World w = Bukkit.getWorld("world-clash");
             Player p = event.getPlayer();
             Location location = new Location(w, 114.528, 75, -71.520, -90, -3);
@@ -351,64 +352,87 @@ public class JoinListener implements Listener {
             v.printStackTrace();
         }
         if (ymlConfigMessages2.getString("givebackstuff").equals("true")) {
-            invbackworkaround(player);
-        }
-
-    }
-
-    public void invbackworkaround(Player player) {
-        if (Main.getPlugin().getClashOpen() != "true") {
-            File configMessages2 = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
-            YamlConfiguration ymlConfigMessages2 = YamlConfiguration.loadConfiguration(configMessages2);
-            try {
-                ymlConfigMessages2.load("plugins//Messages//" + player.getUniqueId() + ".yml");
-            } catch (IOException | InvalidConfigurationException v) {
-                v.printStackTrace();
-            }
-            ymlConfigMessages2.set("givebackstuff", "false");
-            try {
-                ymlConfigMessages2.save(configMessages2);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            File inventory = new File("plugins//Clash//Inventories//" + player.getName() + ".yml");
-            if (inventory.exists()) {
-                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                player.getInventory().clear();
-
+            File inventory = new File("plugins//Clash//Inventories2//" + player.getName() + ".yml");
+            if (Main.getPlugin().getClashOpen2() == "true") {
+                ymlConfigMessages2.set("givebackstuff", "false");
                 try {
-                    inv.load("plugins//Clash//Inventories//" + player.getName() + ".yml");
-                } catch (IOException | InvalidConfigurationException e) {
+                    ymlConfigMessages2.save(configMessages2);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else {
 
-                List<?> list = inv.getList("Inventory");
-                List<?> slot = inv.getList("Slot");
+                if (inventory.exists()) {
+                    YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
 
-                double health = inv.getDouble("Health");
-                player.setHealth(health);
-                double exp = inv.getDouble("Exp");
-                player.setExp((float) exp);
-                int level = inv.getInt("Level");
-                player.setLevel(level);
-                int hunger = inv.getInt("Hunger");
-                player.setFoodLevel(hunger);
+                    try {
+                        inv.load("plugins//Clash//Inventories2//" + player.getName() + ".yml");
+                    } catch (IOException | InvalidConfigurationException e) {
+                        e.printStackTrace();
+                    }
 
+                    World world = Bukkit.getWorld(inv.getString("World"));
+                    Double X = inv.getDouble("X");
+                    Double Y = inv.getDouble("Y");
+                    Double Z = inv.getDouble("Z");
+                    Location loc = new Location(world, X, Y, Z);
+                    player.teleport(loc);
+                    inventory.delete();
 
-                World world = Bukkit.getWorld("world");
-                Double X = inv.getDouble("X");
-                Double Y = inv.getDouble("Y");
-                Double Z = inv.getDouble("Z");
-                Location loc = new Location(world, X, Y, Z);
-                player.teleport(loc);
-                inventory.delete();
-
-                for (int j = 0; j <= player.getInventory().getSize(); j++) {
-                    player.getInventory().setItem((Integer) slot.get(j), (ItemStack) list.get(j));
+                } else {
+                    World world = Bukkit.getWorld("world");
+                    Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
+                    player.teleport(location);
                 }
+
+                PlayerSerialize newInv = null;
+
+                File f = new File("plugins//Clash//Inventories//" + player.getName() + ".playerinv");
+
+                if (!f.exists())
+                    try {
+                        f.getParentFile().mkdir();
+                        f.createNewFile();
+                    } catch (IOException v) {
+                        v.printStackTrace();
+                        return;
+                    }
+
+                try (FileInputStream fileIn = new FileInputStream(f);
+                     BukkitObjectInputStream in = new BukkitObjectInputStream(fileIn)) {
+                    newInv = (PlayerSerialize) in.readObject();
+                } catch (IOException | ClassNotFoundException v) {
+                    v.printStackTrace();
+                    return;
+                }
+
+                if (newInv != null) {
+                    player.getInventory().setContents(newInv.inventory);
+                    player.setHealth(newInv.health);
+                    player.setFoodLevel((int) newInv.hunger);
+                    player.setFlySpeed((float) newInv.flySpeed);
+                    player.setWalkSpeed((float) newInv.walkSpeed);
+                    player.setLevel(newInv.levels);
+                    player.setExp((float) newInv.xp);
+                    player.setSaturation((float) newInv.saturation);
+                    player.setExhaustion((float) newInv.fatigue);
+                }
+                f.delete();
+
+                ymlConfigMessages2.set("givebackstuff", "false");
+                try {
+                    ymlConfigMessages2.save(configMessages2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                player.setGameMode(GameMode.SURVIVAL);
             }
+
+
         }
+
     }
+
 
 }
 

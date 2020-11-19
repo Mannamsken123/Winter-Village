@@ -3,28 +3,32 @@
 
 package de.pluginbuddies.wintervillage.Listener;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathListener implements Listener {
 
     @EventHandler
-    public void onRespawnEVENT(PlayerRespawnEvent e) {
-        Player p = e.getPlayer();
+    public void deathmessage(PlayerDeathEvent e) {
+        Player p = e.getEntity();
 
         String w = p.getWorld().getName();
 
         if (!w.equals("world-clash")) {
-            World world = Bukkit.getWorld("world");
-            Location location = new Location(world, 114.528, 41, -71.520, -90, -3);
-            p.setGameMode(GameMode.SURVIVAL);
-            e.setRespawnLocation(location);
+            if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
+                e.setDeathMessage("§7[§c" + p.getName() + "§7]§r §rist gestorben!");
+            }
+            if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
+                e.setDeathMessage("§7[§9" + p.getName() + "§7]§r §rist gestorben!");
+            }
+            if (p.hasPermission("wintervillage.prisonred")) {
+                e.setDeathMessage("§7[§4" + p.getName() + "§7]§r §rist gestorben!");
+            }
+            if (p.hasPermission("wintervillage.prisonblue")) {
+                e.setDeathMessage("§7[§1" + p.getName() + "§7]§r §rist gestorben!");
+            }
         }
 
     }

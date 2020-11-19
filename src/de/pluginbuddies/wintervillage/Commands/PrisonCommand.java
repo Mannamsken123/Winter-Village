@@ -28,8 +28,12 @@ public class PrisonCommand implements CommandExecutor, Listener {
         String w = p.getWorld().getName();
         if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
             if (knastplayers.contains(p.getName())) {
-                p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
-                e.setCancelled(true);
+                if (e.getMessage().contains("/putsch") != true || e.getMessage().contains("/vote") != true || e.getMessage().contains("/clash") != true) {
+                    e.setCancelled(false);
+                } else {
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
+                    e.setCancelled(true);
+                }
             }
         }
     }

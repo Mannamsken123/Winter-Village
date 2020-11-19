@@ -26,18 +26,21 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Clash implements CommandExecutor, Listener {
 
@@ -45,6 +48,18 @@ public class Clash implements CommandExecutor, Listener {
     private File folderClash = new File("plugins//Clash");
     private File configClash = new File("plugins//Clash//config.yml");
     private YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
+
+    List<Player> currentdeath = new ArrayList<>();
+
+    public void addPlayer(Player player) {
+        bar.addPlayer(player);
+    }
+
+    public void createBar() {
+        bar = Bukkit.createBossBar("§b§lClash: Heute um 21:00 Uhr!", BarColor.WHITE, BarStyle.SOLID);
+        bar.setVisible(true);
+        cast();
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -78,7 +93,7 @@ public class Clash implements CommandExecutor, Listener {
                 if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
                     Inventory inv = Bukkit.createInventory(p, 36, "§6Clash Übersicht");
 
-                    ItemStack Clash1 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemStack Clash1 = new ItemStack(Material.NETHER_STAR);
                     ItemMeta imOpen1 = Clash1.getItemMeta();
                     String name1;
                     if (Main.getPlugin().getYmlConfigClash().getString("clash1").equals("2025/01/01")) {
@@ -91,7 +106,7 @@ public class Clash implements CommandExecutor, Listener {
                     Clash1.setAmount(1);
                     inv.setItem(9 + 1, Clash1);
 
-                    ItemStack Clash2 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemStack Clash2 = new ItemStack(Material.NETHER_STAR);
                     ItemMeta imOpen2 = Clash2.getItemMeta();
                     String name2;
                     if (Main.getPlugin().getYmlConfigClash().getString("clash2").equals("2025/01/01")) {
@@ -104,7 +119,7 @@ public class Clash implements CommandExecutor, Listener {
                     Clash2.setAmount(1);
                     inv.setItem(9 + 3, Clash2);
 
-                    ItemStack Clash3 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemStack Clash3 = new ItemStack(Material.NETHER_STAR);
                     ItemMeta imOpen3 = Clash3.getItemMeta();
                     String name3;
                     if (Main.getPlugin().getYmlConfigClash().getString("clash3").equals("2025/01/01")) {
@@ -117,7 +132,7 @@ public class Clash implements CommandExecutor, Listener {
                     Clash3.setAmount(1);
                     inv.setItem(9 + 5, Clash3);
 
-                    ItemStack Clash4 = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemStack Clash4 = new ItemStack(Material.NETHER_STAR);
                     ItemMeta imOpen4 = Clash4.getItemMeta();
                     String name4;
                     if (Main.getPlugin().getYmlConfigClash().getString("clash4").equals("2025/01/01")) {
@@ -155,7 +170,7 @@ public class Clash implements CommandExecutor, Listener {
                         Win1.setAmount(1);
                         inv.setItem(9 + 9 + 1, Win1);
                     } else {
-                        ItemStack Win1 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemStack Win1 = new ItemStack(Material.LIGHT_GRAY_CONCRETE);
                         ItemMeta imOpenWin1 = Win1.getItemMeta();
                         imOpenWin1.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
                         Win1.setItemMeta(imOpenWin1);
@@ -178,7 +193,7 @@ public class Clash implements CommandExecutor, Listener {
                         Win2.setAmount(1);
                         inv.setItem(9 + 9 + 3, Win2);
                     } else {
-                        ItemStack Win2 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemStack Win2 = new ItemStack(Material.LIGHT_GRAY_CONCRETE);
                         ItemMeta imOpenWin2 = Win2.getItemMeta();
                         imOpenWin2.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
                         Win2.setItemMeta(imOpenWin2);
@@ -201,7 +216,7 @@ public class Clash implements CommandExecutor, Listener {
                         Win3.setAmount(1);
                         inv.setItem(9 + 9 + 5, Win3);
                     } else {
-                        ItemStack Win3 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemStack Win3 = new ItemStack(Material.LIGHT_GRAY_CONCRETE);
                         ItemMeta imOpenWin3 = Win3.getItemMeta();
                         imOpenWin3.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
                         Win3.setItemMeta(imOpenWin3);
@@ -224,7 +239,7 @@ public class Clash implements CommandExecutor, Listener {
                         Win4.setAmount(1);
                         inv.setItem(9 + 9 + 7, Win4);
                     } else {
-                        ItemStack Win4 = new ItemStack(Material.GRAY_CONCRETE);
+                        ItemStack Win4 = new ItemStack(Material.LIGHT_GRAY_CONCRETE);
                         ItemMeta imOpenWin4 = Win4.getItemMeta();
                         imOpenWin4.setDisplayName("§6Der Gewinner dieses Clashes ist noch ausstehend");
                         Win4.setItemMeta(imOpenWin4);
@@ -239,16 +254,6 @@ public class Clash implements CommandExecutor, Listener {
             }
         }
         return false;
-    }
-
-    public void addPlayer(Player player) {
-        bar.addPlayer(player);
-    }
-
-    public void createBar() {
-        bar = Bukkit.createBossBar("§b§lClash: Heute um 21:00 Uhr!", BarColor.WHITE, BarStyle.SOLID);
-        bar.setVisible(true);
-        cast();
     }
 
     public void cast() {
@@ -293,6 +298,7 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.blueteam")) {
                                     st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Rot ist nicht angetreten!");
 
                                     File folderClash = new File("plugins//Clash//Wins");
                                     File configClash = new File("plugins//Clash//Wins//config.yml");
@@ -339,6 +345,7 @@ public class Clash implements CommandExecutor, Listener {
                                 if (all.hasPermission("wintervillage.redteam")) {
                                     st(all, "§cVillage Rot", "§7hat den Clash gewonnen!", 5, 100, 5);
                                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Blau ist nicht angetreten!");
 
                                     File folderClash = new File("plugins//Clash//Wins");
                                     File configClash = new File("plugins//Clash//Wins//config.yml");
@@ -389,24 +396,28 @@ public class Clash implements CommandExecutor, Listener {
 
                             //save inventories
                             checkDirectory();
-                            //ArrayList<ItemStack> list = new ArrayList<>();
 
                             for (Player all : Bukkit.getOnlinePlayers()) {
 
-                               /* try {
-                                    FileOutputStream fileOut = new FileOutputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
-                                    ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                                File inf = new File("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
+
+                                if (!inf.exists())
+                                    try {
+                                        inf.getParentFile().mkdir();
+                                        inf.createNewFile();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        return;
+                                    }
+
+                                // Save current inventory
+                                try (FileOutputStream fileOut = new FileOutputStream(inf);
+                                     BukkitObjectOutputStream out = new BukkitObjectOutputStream(fileOut)) {
                                     out.writeObject(new PlayerSerialize(all));
-                                    out.close();
-                                    fileOut.close();
                                 } catch (IOException e) {
+                                    e.printStackTrace();
                                     return;
                                 }
-
-                            */
-
-                                Bukkit.broadcastMessage("nach inv");
-
 
                                 File file = new File("plugins//Clash//Inventories2//" + all.getName() + ".yml");
 
@@ -415,48 +426,18 @@ public class Clash implements CommandExecutor, Listener {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                Bukkit.broadcastMessage("nach try/catch");
-
 
                                 YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
 
-                                /*ArrayList<Integer> slot = new ArrayList<>();
-
-                                for (int i = 0; i <= all.getInventory().getSize(); i++) {
-                                    if (all.getInventory().getItem(i) != null) {
-                                        slot.add(i);
-                                    }
-                                }
-
-                                ItemStack[] contents = all.getInventory().getContents();
-                                double health = all.getHealth();
-                                int level = all.getLevel();
-                                double exp = all.getExp();
-                                int hunger = all.getFoodLevel();
-
-                                for (int i = 0; i < contents.length; i++) {
-                                    ItemStack item = contents[i];
-
-                                    if (!(item == null)) {
-                                        list.add(item);
-                                    }
-                                }
-
-                                 */
-
+                                String welt = all.getWorld().getName();
                                 double X = all.getLocation().getX();
                                 double Y = all.getLocation().getY();
                                 double Z = all.getLocation().getZ();
 
-                                //inv.set("Slot", slot);
-                                //inv.set("Inventory", list);
-                                //inv.set("Health", health);
-                                //inv.set("Exp", exp);
-                                //inv.set("Level", level);
-                                // inv.set("Hunger", hunger);
-                                inv.set("X", X);    //PENIS sind nicht im Object
-                                inv.set("Y", Y);    //PENIS sind nicht im Object
-                                inv.set("Z", Z);    //PENIS sind nicht im Object
+                                inv.set("World", welt);
+                                inv.set("X", X);
+                                inv.set("Y", Y);
+                                inv.set("Z", Z);
 
                                 try {
                                     inv.save(file);
@@ -470,7 +451,6 @@ public class Clash implements CommandExecutor, Listener {
                                 all.setTotalExperience(0);
                                 all.setExp(0);
                                 all.setLevel(0);
-                                Bukkit.broadcastMessage("nach inv2");
                             }
 
                             new BukkitRunnable() {
@@ -497,6 +477,7 @@ public class Clash implements CommandExecutor, Listener {
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 55.5, 40, 106.5, -90, -3);
                                                 all.teleport(location);
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Sucht und tötet die gegnerischen Village-Bürger!");
                                             } else if (all.hasPermission("wintervillage.blueteam")) {
                                                 try {
                                                     ymlConfigClash.load("plugins//Clash//config.yml");
@@ -513,6 +494,7 @@ public class Clash implements CommandExecutor, Listener {
                                                 World w = Bukkit.getWorld("world-clash");
                                                 Location location = new Location(w, 149.5, 40, -229.5, 90, -3);
                                                 all.teleport(location);
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Sucht und tötet die gegnerischen Village-Bürger!");
                                             }
                                         }
 
@@ -571,7 +553,6 @@ public class Clash implements CommandExecutor, Listener {
                                         }
                                 }
                             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                            Bukkit.broadcastMessage("komme hin");
                             cancel();
                         }
                     } else {
@@ -602,6 +583,8 @@ public class Clash implements CommandExecutor, Listener {
         String w = p.getWorld().getName();
 
         if (w.equals("world-clash")) {
+
+            currentdeath.add(p);
 
             new BukkitRunnable() {
                 int time = 2;
@@ -756,24 +739,12 @@ public class Clash implements CommandExecutor, Listener {
                                     YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
 
                                     try {
-                                        inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                        inv.load("plugins//Clash//Inventories2//" + all.getName() + ".yml");
                                     } catch (IOException | InvalidConfigurationException e) {
                                         e.printStackTrace();
                                     }
 
-                                    /*
-                                    double health = inv.getDouble("Health");
-                                    all.setHealth(health);
-                                    double exp = inv.getDouble("Exp");
-                                    all.setExp((float) exp);
-                                    int level = inv.getInt("Level");
-                                    all.setLevel(level);
-                                    int hunger = inv.getInt("Hunger");
-                                    all.setFoodLevel(hunger);
-
-                                     */
-
-                                    World world = Bukkit.getWorld("world");
+                                    World world = Bukkit.getWorld(inv.getString("World"));
                                     Double X = inv.getDouble("X");
                                     Double Y = inv.getDouble("Y");
                                     Double Z = inv.getDouble("Z");
@@ -790,22 +761,28 @@ public class Clash implements CommandExecutor, Listener {
 
 
                                 PlayerSerialize newInv = null;
+
                                 File f = new File("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
 
-                                if (f.isFile() && f.canRead()) {
+                                if (!f.exists())
                                     try {
-                                        FileInputStream fileIn = new FileInputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
-                                        ObjectInputStream in = new ObjectInputStream(fileIn);
-                                        newInv = (PlayerSerialize) in.readObject();
-                                        in.close();
-                                        fileIn.close();
-                                    } catch (IOException | ClassNotFoundException ignored) {
+                                        f.getParentFile().mkdir();
+                                        f.createNewFile();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                         return;
                                     }
+
+                                try (FileInputStream fileIn = new FileInputStream(f);
+                                     BukkitObjectInputStream in = new BukkitObjectInputStream(fileIn)) {
+                                    newInv = (PlayerSerialize) in.readObject();
+                                } catch (IOException | ClassNotFoundException e) {
+                                    e.printStackTrace();
+                                    return;
                                 }
 
                                 if (newInv != null) {
-                                    all.getInventory().setContents(newInv.inventory.getContents());
+                                    all.getInventory().setContents(newInv.inventory);
                                     all.setHealth(newInv.health);
                                     all.setFoodLevel((int) newInv.hunger);
                                     all.setFlySpeed((float) newInv.flySpeed);
@@ -815,6 +792,7 @@ public class Clash implements CommandExecutor, Listener {
                                     all.setSaturation((float) newInv.saturation);
                                     all.setExhaustion((float) newInv.fatigue);
                                 }
+                                f.delete();
 
 
                             }
@@ -826,6 +804,7 @@ public class Clash implements CommandExecutor, Listener {
                             Main.getPlugin().setClashOpen(null);
                             Main.getPlugin().setClashOpen2("false");
                             configClash.delete();
+                            currentdeath.clear();
 
                             cancel();
                         } else {
@@ -867,8 +846,9 @@ public class Clash implements CommandExecutor, Listener {
 
     @EventHandler
     public void handlePlayerLeave(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
         if (e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
-            if (Main.getPlugin().getClashOpen() == "true") {
+            if (Main.getPlugin().getClashOpen2() == "true") {
                 File configMessages = new File("plugins//Messages//" + e.getPlayer().getUniqueId() + ".yml");
                 YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
                 ymlConfigMessages.set("givebackstuff", "true");
@@ -990,51 +970,25 @@ public class Clash implements CommandExecutor, Listener {
                         public void run() {
                             time--;
                             if (time == 0) {
-
                                 for (Player all : Bukkit.getOnlinePlayers()) {
                                     File inventory = new File("plugins//Clash//Inventories2//" + all.getName() + ".yml");
                                     if (inventory.exists()) {
                                         YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
 
                                         try {
-                                            inv.load("plugins//Clash//Inventories//" + all.getName() + ".yml");
+                                            inv.load("plugins//Clash//Inventories2//" + all.getName() + ".yml");
                                         } catch (IOException | InvalidConfigurationException e) {
                                             e.printStackTrace();
                                         }
 
-                                        /*
-                                        double health = inv.getDouble("Health");
-                                        all.setHealth(health);
-                                        double exp = inv.getDouble("Exp");
-                                        all.setExp((float) exp);
-                                        int level = inv.getInt("Level");
-                                        all.setLevel(level);
-                                        int hunger = inv.getInt("Hunger");
-                                        all.setFoodLevel(hunger);
-
-                                         */
-
-
-                                        World world = Bukkit.getWorld("world");
+                                        World world = Bukkit.getWorld(inv.getString("World"));
                                         Double X = inv.getDouble("X");
                                         Double Y = inv.getDouble("Y");
                                         Double Z = inv.getDouble("Z");
                                         Location loc = new Location(world, X, Y, Z);
                                         all.teleport(loc);
 
-                                        /*List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
-                                        List<Integer> slot1 = (List<Integer>) inv.getList("Slot");
                                         inventory.delete();
-
-                                        for (int j = 0; j <= slot1.size(); j++) {
-                                            all.getInventory().setItem(slot1.get(j), list1.get(j));
-                                            if (j == slot1.size()) {
-                                                list1.clear();
-                                                slot1.clear();
-                                            }
-                                        }
-
-                                         */
 
                                     } else {
                                         World world = Bukkit.getWorld("world");
@@ -1042,24 +996,30 @@ public class Clash implements CommandExecutor, Listener {
                                         all.teleport(location);
                                     }
 
+
                                     PlayerSerialize newInv = null;
 
                                     File f = new File("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
 
-                                    if (f.isFile() && f.canRead()) {
+                                    if (!f.exists())
                                         try {
-                                            FileInputStream fileIn = new FileInputStream("plugins//Clash//Inventories//" + all.getName() + ".playerinv");
-                                            ObjectInputStream in = new ObjectInputStream(fileIn);
-                                            newInv = (PlayerSerialize) in.readObject();
-                                            in.close();
-                                            fileIn.close();
-                                        } catch (IOException | ClassNotFoundException ignored) {
+                                            f.getParentFile().mkdir();
+                                            f.createNewFile();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
                                             return;
                                         }
+
+                                    try (FileInputStream fileIn = new FileInputStream(f);
+                                         BukkitObjectInputStream in = new BukkitObjectInputStream(fileIn)) {
+                                        newInv = (PlayerSerialize) in.readObject();
+                                    } catch (IOException | ClassNotFoundException e) {
+                                        e.printStackTrace();
+                                        return;
                                     }
 
                                     if (newInv != null) {
-                                        all.getInventory().setContents(newInv.inventory.getContents());
+                                        all.getInventory().setContents(newInv.inventory);
                                         all.setHealth(newInv.health);
                                         all.setFoodLevel((int) newInv.hunger);
                                         all.setFlySpeed((float) newInv.flySpeed);
@@ -1068,7 +1028,11 @@ public class Clash implements CommandExecutor, Listener {
                                         all.setExp((float) newInv.xp);
                                         all.setSaturation((float) newInv.saturation);
                                         all.setExhaustion((float) newInv.fatigue);
+                                    } else {
+                                        return;
                                     }
+                                    f.delete();
+
 
                                 }
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
@@ -1079,9 +1043,9 @@ public class Clash implements CommandExecutor, Listener {
                                 Main.getPlugin().setClashOpen(null);
                                 Main.getPlugin().setClashOpen2("false");
                                 configClash.delete();
+                                currentdeath.clear();
+
                                 cancel();
-
-
                             } else {
                                 if (time < 6) {
                                     for (Player all : Bukkit.getOnlinePlayers()) {
@@ -1094,6 +1058,21 @@ public class Clash implements CommandExecutor, Listener {
                 }
             }
         }
+
+        if (currentdeath.contains(p)) {
+            if (Main.getPlugin().getClashOpen2() == "true") {
+                File configMessages = new File("plugins//Messages//" + e.getPlayer().getUniqueId() + ".yml");
+                YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
+                ymlConfigMessages.set("givebackstuff", "true");
+                try {
+                    ymlConfigMessages.save(configMessages);
+                } catch (IOException v) {
+                    v.printStackTrace();
+                }
+            }
+        }
+
+
     }
 
     @EventHandler
@@ -1107,43 +1086,7 @@ public class Clash implements CommandExecutor, Listener {
     }
 
 
-    /*@EventHandler
-    public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
-        Player p = e.getPlayer();
-        if (e.getFrom().equals(Bukkit.getWorld("world-clash")) && Main.getPlugin().getClashOpen() == "true") {
-
-            File inventory = new File("plugins//Clash//Inventories//" + p.getName() + ".yml");
-            if (inventory.exists()) {
-                YamlConfiguration inv = YamlConfiguration.loadConfiguration(inventory);
-                p.getInventory().clear();
-
-                try {
-                    inv.load("plugins//Clash//Inventories//" + p.getName() + ".yml");
-                } catch (IOException | InvalidConfigurationException v) {
-                    v.printStackTrace();
-                }
-
-
-                List<ItemStack> list1 = (List<ItemStack>) inv.getList("Inventory");
-                List<Integer> slot1 = (List<Integer>) inv.getList("Slot");
-
-                for (int j = 0; j <= slot1.size(); j++) {
-                    p.getInventory().setItem(slot1.get(j), list1.get(j));
-                    if (j == slot1.size()) {
-                        list1.clear();
-                        slot1.clear();
-                    }
-                }
-            }
-        }
-    }
-    */
-
     public void checkDirectory() {
-        File file = new File("plugins//Clash//Inventories");
-        if (!file.exists()) {
-            file.mkdir();
-        }
         File file2 = new File("plugins//Clash//Inventories2");
         if (!file2.exists()) {
             file2.mkdir();
