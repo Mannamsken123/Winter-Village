@@ -28,7 +28,7 @@ public class BlockPortalListener implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
         if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
-            String date = "2020/11/27"; //NETHER ÖFFNET SICH AM 27.11.2020
+            String date = "2020/11/27";
             Date enteredDate = null;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -48,7 +48,7 @@ public class BlockPortalListener implements Listener {
 
         if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
 
-            String date = "2020/12/01"; //END ÖFFNET SICH AM 01.12.2020
+            String date = "2020/12/01";
             Date enteredDate = null;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");

@@ -86,6 +86,7 @@ public class WinterVillageStartCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 0) {
+                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "difficulty peaceful");
                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "time set night");
                 new BukkitRunnable() {
                     int time = 16;
@@ -125,18 +126,17 @@ public class WinterVillageStartCommand implements CommandExecutor {
                                 spawnRandomFirework(loc3);
                                 spawnRandomFirework(loc4);
                                 spawnRandomFirework(loc6);
+                            }
+                            //region flags
+                            File delete = new File("plugins//WorldGuard//worlds//world//regions.yml");
+                            delete.delete();
 
-                                //region flags
-                                File delete = new File("plugins//WorldGuard//worlds//world//regions.yml");
-                                delete.delete();
-
-                                Path source = Paths.get("plugins//WorldGuard//worlds//world//.regions.yml");
-                                Path target = Paths.get("plugins//WorldGuard//worlds//world//regions.yml");
-                                try {
-                                    Files.move(source, target);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                            Path source = Paths.get("plugins//WorldGuard//worlds//world//.regions.yml");
+                            Path target = Paths.get("plugins//WorldGuard//worlds//world//regions.yml");
+                            try {
+                                Files.move(source, target);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
 
                             new BukkitRunnable() {
@@ -153,6 +153,7 @@ public class WinterVillageStartCommand implements CommandExecutor {
                                             all.sendMessage(Main.getPlugin().PREFIX + "§3Begebt euch nun gerne in eure Villages!");
                                         }
                                         Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "time set day");
+                                        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "difficulty hard");
                                         cancel();
                                     } else if (time == 12) {
                                         spawnRandomFirework(loc1);

@@ -108,7 +108,7 @@ public class PositionSafeCommand implements CommandExecutor {
                         }
                     }
                 } else if (args.length != 2) {
-                    player.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §6/pos <NAME-POSITION> §coder §6/pos <Name> delete§c!");
+                    player.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/pos <NAME-POSITION> §coder §r/pos <Name> delete§c!");
                 }
                 if (args.length == 2) {
                     if (args[1].equalsIgnoreCase("delete")) {
@@ -141,7 +141,7 @@ public class PositionSafeCommand implements CommandExecutor {
                             }
                         }
                     } else {
-                        player.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §6/pos <Name> delete§c!");
+                        player.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/pos <Name> delete§c!");
                     }
                 }
             } else

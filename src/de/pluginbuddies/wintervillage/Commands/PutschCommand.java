@@ -39,7 +39,7 @@ public class PutschCommand implements CommandExecutor {
             Player p = (Player) sender;
             if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
                 if (args.length == 0) {
-                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschRot() == false) { //PENIS Gucken ob vote phase bevor steht
+                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschRot() == false) {
                         Main.getPlugin().setPutschRot(true);
                         p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen RotMeister ab!");
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -50,7 +50,7 @@ public class PutschCommand implements CommandExecutor {
                             }
                         }
                         new BukkitRunnable() {
-                            int time = 10;////PENIS 1200
+                            int time = 1200;
                             String t1;
                             String t2;
                             int sec = 60;
@@ -65,7 +65,7 @@ public class PutschCommand implements CommandExecutor {
                                     min--;
                                 }
                                 if (time == 0) {
-                                    if (votesRed == 1) {//PENIS
+                                    if (votesRed == 5) {
                                         for (final Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
                                                 t2 = String.format("§6§lPutsch vorbei!");
@@ -101,7 +101,7 @@ public class PutschCommand implements CommandExecutor {
                                         Team.maketeams();
 
                                         for (Player all : Bukkit.getOnlinePlayers()) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
                                         }
                                         votesRed = 0;
                                         Main.getPlugin().setPutschRot(false);
@@ -178,7 +178,7 @@ public class PutschCommand implements CommandExecutor {
             //////***************************************BLAU*******************
             if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
                 if (args.length == 0) {
-                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschBlau() == false) { //PENIS Gucken ob vote phase bevor steht
+                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschBlau() == false) {
                         Main.getPlugin().setPutschBlau(true);
                         p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen BlauMeister ab!");
                         for (Player all : Bukkit.getOnlinePlayers()) {
@@ -239,7 +239,7 @@ public class PutschCommand implements CommandExecutor {
                                         Team.maketeams();
 
                                         for (Player all : Bukkit.getOnlinePlayers()) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§bVillage-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
                                         }
                                         votesBlue = 0;
                                         Main.getPlugin().setPutschRot(false);

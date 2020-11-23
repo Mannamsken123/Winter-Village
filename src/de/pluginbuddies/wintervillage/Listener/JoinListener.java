@@ -132,6 +132,7 @@ public class JoinListener implements Listener {
             ymlConfigMessages.addDefault("Nikolaus", "false");
             ymlConfigMessages.addDefault("VoteOpen", "false");
             ymlConfigMessages.addDefault("VoteClose", "false");
+            ymlConfigMessages.addDefault("givebackstuff", "false");
 
             try {
                 ymlConfigMessages.save(configMessages);
@@ -227,17 +228,17 @@ public class JoinListener implements Listener {
             File configMessages = new File("plugins//Messages//" + player.getUniqueId() + ".yml");
             YamlConfiguration ymlConfigMessages = YamlConfiguration.loadConfiguration(configMessages);
 
-            String nether = ymlConfigMessages.getString("Nikolaus");
+            String xxx = ymlConfigMessages.getString("Nikolaus");
 
-            if (nether.equals("false")) {
+            if (xxx.equals("false")) {
                 ymlConfigMessages.set("Nikolaus", "true");
                 try {
                     ymlConfigMessages.save(configMessages);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //PENIS NIKOLAUS MESSAGE
-                //player.sendMessage(Main.getPlugin().PREFIX + "§bDu kannst ab jetzt mit §r/advent §bjeden Tag dein Adventskalender-Türchen öffnen!");
+
+                player.sendMessage(Main.getPlugin().PREFIX + "§3Schönen Nikolaus! Hast du schon in deine Schuhe geguckt?!");
             }
         }
         if (Main.getPlugin().getVoteOpen() == "true") {

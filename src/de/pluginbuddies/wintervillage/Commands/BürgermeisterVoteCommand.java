@@ -77,7 +77,7 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
                                 voted = true;
                             }
                         }
-                        if (voted == false) { //penis maybe error
+                        if (voted == false) {
                             voted = true;
                             if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
                                 try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//votesblue.yml", true))) {
@@ -187,7 +187,6 @@ public class BürgermeisterVoteCommand implements CommandExecutor {
         }
         while (workaround == true);
 
-        //PENIS in config bürgermeister von false auf true
         FileUtils.write(new File("plugins//Vote//votesred.yml"), "", Charset.defaultCharset());
         FileUtils.write(new File("plugins//Vote//votesblue.yml"), "", Charset.defaultCharset());
         FileUtils.write(new File("plugins//Vote//voted.yml"), "", Charset.defaultCharset());

@@ -67,7 +67,7 @@ public class Clash implements CommandExecutor, Listener {
         new BukkitRunnable() {
             int count = -1;
             double progress = 1.0;
-            double time = 1.0 / (5); //PENIS (1.0/(60 * 60)
+            double time = 1.0 / (60 * 60);
             int lastHour = 3600;
             int sec = 60;
             int min = 59;
@@ -75,7 +75,7 @@ public class Clash implements CommandExecutor, Listener {
             @Override
             public void run() {
                 bar.setProgress(progress);
-                if (count == 0) { //PENIS 20
+                if (count == 20) {
                     lastHour--;
                     sec--;
                     if (sec == 0) {
@@ -88,7 +88,7 @@ public class Clash implements CommandExecutor, Listener {
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         addPlayer(all);
                     }
-                } else if (count == 1) { //PENIS 21
+                } else if (count == 21) {
                     if (Bukkit.getOnlinePlayers().size() > 0) {
                         int onlyred = 0;
                         int onlyblue = 0;
@@ -364,7 +364,7 @@ public class Clash implements CommandExecutor, Listener {
                             cancel();
                         }
                     } else {
-                        count = 0; //PENIS 20
+                        count = 20;
                     }
 
                 } else {

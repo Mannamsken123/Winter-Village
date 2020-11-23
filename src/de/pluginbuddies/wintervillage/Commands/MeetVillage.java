@@ -73,7 +73,7 @@ public class MeetVillage implements CommandExecutor {
                                 return false;
                             } else if (target != null) {
                                 if (target.hasPermission("wintervillage.redteam")) {
-                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der RotMeister §4" + p.getName() + " §bmöchte mit dir sprechen!");
+                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der RotMeister §4" + p.getName() + " §3möchte mit dir sprechen!");
                                     new BukkitRunnable() {
                                         int time = 4;
 
@@ -106,7 +106,7 @@ public class MeetVillage implements CommandExecutor {
                         if (args[0].equalsIgnoreCase("all")) {
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §bmöchte mit euch sprechen!");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §3möchte mit euch sprechen!");
                                 }
                             }
                             new BukkitRunnable() {
@@ -145,7 +145,7 @@ public class MeetVillage implements CommandExecutor {
                                 return false;
                             } else if (target != null) {
                                 if (target.hasPermission("wintervillage.blueteam")) {
-                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §bmöchte mit dir sprechen!");
+                                    target.sendMessage(Main.getPlugin().PREFIX + "§3Der BlauMeister §1" + p.getName() + " §3möchte mit dir sprechen!");
                                     new BukkitRunnable() {
                                         int time = 4;
 
@@ -170,9 +170,9 @@ public class MeetVillage implements CommandExecutor {
                             }
                         }
                     } else
-                        p.sendMessage("§aServer " + "§8>> " + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
+                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/meet <SPIELER oder all>§c!");
                 } else
-                    p.sendMessage("§aServer " + "§8>> " + "§cNur der Bürgermeister darf dies!");
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cNur der Bürgermeister darf dies!");
             } else
                 p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");
         }

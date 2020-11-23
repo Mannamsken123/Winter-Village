@@ -417,10 +417,6 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            // all.kickPlayer(Main.getPlugin().PREFIX + "§cRestart!");
-        }
-
         TabList teams = new TabList();
 
         teams.create("redteam", 11, "§cRot: §r", null, "wintervillage.redteam");
@@ -448,7 +444,7 @@ public class Main extends JavaPlugin {
             e.printStackTrace();
         }
         ymlConfigteams.options().copyDefaults(true);
-        ymlConfigteams.addDefault("Rot.1", "");//Mulli
+        ymlConfigteams.addDefault("Rot.1", "a48f82c1-d0e3-4d59-bad1-92a4dc8dd02c");//Mulli
         ymlConfigteams.addDefault("Rot.2", "95ec2fa6-10cc-4311-be3b-c346153c6bd3");//Maxi
         ymlConfigteams.addDefault("Rot.3", "7543d7d1-1ccd-4b4f-89ef-e25c1f1f9341");//Tim
         ymlConfigteams.addDefault("Rot.4", "105b02c7-9004-45ed-a668-971359021f82");//Marc
@@ -456,8 +452,8 @@ public class Main extends JavaPlugin {
         ymlConfigteams.addDefault("Rot.6", "e466347d-6c55-4619-bdd9-7404f2bc874b");//Chris
         ymlConfigteams.addDefault("Rot.7", "598fc90a-ffe6-4500-a3c4-6a1207e09812");//Nils
         ymlConfigteams.addDefault("Rot.8", "558393f4-4a5b-4615-b780-1ebf2d8f2e9d");//Julius
-        ymlConfigteams.addDefault("Rot.9", "");
-        ymlConfigteams.addDefault("Rot.10", "");
+        ymlConfigteams.addDefault("Rot.9", "a93bfa25-c754-4ea2-90ef-4bac3115febe");//Max Marten
+        ymlConfigteams.addDefault("Rot.10", "0e36b1ea-d12d-47c7-974d-7ce39058fbe0");//Freddy
         ymlConfigteams.addDefault("Blau.1", "309f61d4-d7dd-4449-aa1d-13e212946920");//Fabio
         ymlConfigteams.addDefault("Blau.2", "914dc737-befe-46dd-8246-4a352c0ecb62");//Julian
         ymlConfigteams.addDefault("Blau.3", "2c13d227-9811-48e7-a15d-0450e624c1d4");//Cedric
@@ -731,7 +727,7 @@ public class Main extends JavaPlugin {
 
                                 if (xxx.equals("false")) {
                                     ymlConfigMessages.set("Nikolaus", "true");
-                                    //all.sendMessage(PREFIX + "§bNikolaus");
+                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Schönen Nikolaus! Hast du schon in deine Schuhe geguckt?!");
                                     try {
                                         ymlConfigMessages.save(configMessages);
                                     } catch (IOException e) {
@@ -739,7 +735,6 @@ public class Main extends JavaPlugin {
                                     }
                                 }
                             }
-                            //set boolean to true for double ore listener or other stuff
                         }
                     }
 
@@ -798,8 +793,6 @@ public class Main extends JavaPlugin {
                         if (getVoteOpen() == null) {
                             //vote open
                             setVoteOpen("true");
-
-                            //PENIS PUTSCH-VARIABLE IN VOTE UND MESSAGES
 
                             if (getVoteClose() != null) {
                                 setVoteClose(null);
@@ -862,7 +855,7 @@ public class Main extends JavaPlugin {
                         }
                     }
 
-                    //PENIS DELETE getTest true + command und alles
+
                     if (!vote1closeDate.after(currentDate) || !vote2closeDate.after(currentDate) || !vote3closeDate.after(currentDate) || !vote4closeDate.after(currentDate)) {
                         if (getVoteClose() == null) {
                             //vote close
@@ -1050,7 +1043,7 @@ public class Main extends JavaPlugin {
                                     ymlConfigMessages.set("VoteClose", "true");
                                     ymlConfigMessages.set("VoteOpen", "false");
 
-                                    all.sendMessage(PREFIX + "§bNeue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                    all.sendMessage(PREFIX + "§3Neue Bürgermeister wurden gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase() + "\n§1BlauMeister: §7" + winnerblau.toUpperCase());
 
                                     try {
                                         ymlConfigMessages.save(configMessages);
@@ -1074,7 +1067,6 @@ public class Main extends JavaPlugin {
         getCommand("prison").setExecutor(prisonCommand);
         getCommand("adventskalender").setExecutor(new AdventskalenderCommand());
         getCommand("vote").setExecutor(new BürgermeisterVoteCommand());
-        //getCommand("vote").setTabCompleter(new BürgermeisterVoteTabComplete());
         getCommand("meet").setExecutor(new MeetVillage());
         getCommand("meet").setTabCompleter(new MeetVillageTabComplete());
         getCommand("bp").setExecutor(new BackpackCommand());
