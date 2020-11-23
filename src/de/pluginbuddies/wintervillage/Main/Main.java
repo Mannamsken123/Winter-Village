@@ -1138,6 +1138,16 @@ public class Main extends JavaPlugin {
             folderPosBlau.mkdir();
         }
 
+        //clashreward
+        File fileReward = new File("plugins//Clash//rewarddata.yml");
+        if (!fileReward.exists()) {
+            try {
+                fileReward.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         //adventkalender
         File folderAdvent = new File("plugins//Adventskalender");
         if (!folderAdvent.exists()) {
