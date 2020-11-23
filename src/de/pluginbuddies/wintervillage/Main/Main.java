@@ -1081,6 +1081,7 @@ public class Main extends JavaPlugin {
         getCommand("confi").setExecutor(new ConfiBothVillageCommand());
         getCommand("putsch").setExecutor(new PutschCommand());
         getCommand("clash").setExecutor(new Clash());
+        getCommand("wintervillagestart").setExecutor(new WinterVillageStartCommand());
         getCommand("pos").setExecutor(new PositionSafeCommand());
         getCommand("pos").setTabCompleter(new PositionSafeTabComplete());
 

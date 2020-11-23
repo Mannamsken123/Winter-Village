@@ -198,6 +198,7 @@ public class Clash implements CommandExecutor, Listener {
                             bar.removeAll();
 
                             //create world-clash
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "weather clear");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv clone world world-clash");
                             Main.getPlugin().setClashOpen2("true");
 
@@ -605,6 +606,7 @@ public class Clash implements CommandExecutor, Listener {
                             }
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "weather rain");
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 all.setGameMode(GameMode.SURVIVAL);
                             }
@@ -844,6 +846,7 @@ public class Clash implements CommandExecutor, Listener {
                                 }
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
+                                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "weather rain");
                                 for (Player all : Bukkit.getOnlinePlayers()) {
                                     all.setGameMode(GameMode.SURVIVAL);
                                 }
@@ -1286,7 +1289,7 @@ public class Clash implements CommandExecutor, Listener {
                 }
                 if (e.getSlot() == 30) {
                     if (!hasUsed(p.getUniqueId().toString(), 2)) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:totem_of_undying 1");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:netherite_pickaxe{Enchantments:[{id:\"minecraft:fortune\",lvl:3}]}");
                         p.closeInventory();
                         p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung für den " + 2 + ". Clash");
                         p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
@@ -1300,7 +1303,7 @@ public class Clash implements CommandExecutor, Listener {
                 }
                 if (e.getSlot() == 32) {
                     if (!hasUsed(p.getUniqueId().toString(), 3)) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:totem_of_undying 1");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:trident{Enchantments:[{id:\"minecraft:riptide\",lvl:3}]}");
                         p.closeInventory();
                         p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung für den " + 3 + ". Clash");
                         p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
@@ -1314,7 +1317,8 @@ public class Clash implements CommandExecutor, Listener {
                 }
                 if (e.getSlot() == 34) {
                     if (!hasUsed(p.getUniqueId().toString(), 4)) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:totem_of_undying 1");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:enchanted_golden_apple 32");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "give " + p.getName() + " minecraft:firework_rocket 128");
                         p.closeInventory();
                         p.sendMessage(Main.getPlugin().getPlugin().PREFIX + "§6Du erhälst deine Belohnung für den " + 4 + ". Clash");
                         p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1, 1);
