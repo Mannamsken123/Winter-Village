@@ -88,9 +88,10 @@ public class MeetVillage implements CommandExecutor {
                                                 p.teleport(location);
                                                 p.setGameMode(GameMode.SURVIVAL);
                                                 cancel();
-                                            } else
+                                            } else {
                                                 p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                            target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                                target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            }
                                         }
                                     }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                                 } else
@@ -160,9 +161,10 @@ public class MeetVillage implements CommandExecutor {
                                                 target.teleport(location);
                                                 target.setGameMode(GameMode.SURVIVAL);
                                                 cancel();
-                                            } else
+                                            } else {
                                                 p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                                            target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                                target.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                                            }
                                         }
                                     }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                                 } else

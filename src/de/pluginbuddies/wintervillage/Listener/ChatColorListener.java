@@ -65,7 +65,7 @@ public class ChatColorListener implements Listener {
                     }
                 }
             } else {
-                Bukkit.broadcastMessage("§7[§7" + p.getName() + "§7]§r: §r" + msg);
+                Bukkit.broadcastMessage("§7[§1" + p.getName() + "§7]§r: §r" + msg);
             }
         }
 
