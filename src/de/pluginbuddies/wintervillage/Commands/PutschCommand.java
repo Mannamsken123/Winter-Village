@@ -32,281 +32,290 @@ public class PutschCommand implements CommandExecutor {
     private String rEb = ""; //FINAL Winner PUTSCH Blau
     private int votesRed = 0;
     private int votesBlue = 0;
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             if (p.hasPermission("wintervillage.redteam") && !p.hasPermission("wintervillage.prisonred")) {
-                if (args.length == 0) {
-                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschRot() == false) {
-                        Main.getPlugin().setPutschRot(true);
-                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen RotMeister ab!");
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                if (all != p) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen RotMeister zu wählen!");
+                if (!ymlConfigteams.getString("RotMeister.1").isEmpty()) {
+                    if (args.length == 0) {
+                        if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschRot() == false) {
+                            Main.getPlugin().setPutschRot(true);
+                            p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen RotMeister ab!");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                    if (all != p) {
+                                        all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen RotMeister zu wählen!");
+                                    }
                                 }
                             }
-                        }
-                        new BukkitRunnable() {
-                            int time = 1200;
-                            String t1;
-                            String t2;
-                            int sec = 60;
-                            int min = 19;
+                            new BukkitRunnable() {
+                                int time = 1200;
+                                String t1;
+                                String t2;
+                                int sec = 60;
+                                int min = 19;
 
-                            @Override
-                            public void run() {
-                                time--;
-                                sec--;
-                                if (sec == 0) {
-                                    sec = 60;
-                                    min--;
-                                }
-                                if (time == 0) {
-                                    if (votesRed == 5) {
-                                        for (final Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                                t2 = String.format("§6§lPutsch vorbei!");
-                                                String message2 = t2;
-                                                all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
+                                @Override
+                                public void run() {
+                                    time--;
+                                    sec--;
+                                    if (sec == 0) {
+                                        sec = 60;
+                                        min--;
+                                    }
+                                    if (time == 0) {
+                                        if (votesRed == 5) {
+                                            for (final Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                                    t2 = String.format("§6§lPutsch vorbei!");
+                                                    String message2 = t2;
+                                                    all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
+                                                }
                                             }
-                                        }
-                                        try {
-                                            getResult();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        String winnerrot = getrEr();
-                                        if (!getrEr().isEmpty()) {
-                                            ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
                                             try {
-                                                ymlConfigteams.save(configteams);
+                                                getResult();
                                             } catch (IOException e) {
                                                 e.printStackTrace();
                                             }
-                                        }
-
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.prisonred")) {
-                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                            String winnerrot = getrEr();
+                                            if (!getrEr().isEmpty()) {
+                                                ymlConfigteams.set("RotMeister.1", getUuid(winnerrot));
+                                                try {
+                                                    ymlConfigteams.save(configteams);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
                                             }
-                                        }
 
-                                        Main.BlauBuerger.clear();
-                                        Main.RotBuerger.clear();
-                                        Main.Buergermeisterred.clear();
-                                        Main.Buergermeisterblue.clear();
-                                        Team.maketeams();
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.prisonred")) {
+                                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                                }
+                                            }
 
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                            Main.BlauBuerger.clear();
+                                            Main.RotBuerger.clear();
+                                            Main.Buergermeisterred.clear();
+                                            Main.Buergermeisterblue.clear();
+                                            Team.maketeams();
+
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
+                                            }
+                                            votesRed = 0;
+                                            Main.getPlugin().setPutschRot(false);
+                                            cancel();
+                                        } else {
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
+                                                    all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut!");
+                                                }
+                                            }
+                                            votesRed = 0;
+                                            Main.getPlugin().setPutschRot(false);
+                                            cancel();
                                         }
-                                        votesRed = 0;
-                                        Main.getPlugin().setPutschRot(false);
-                                        cancel();
                                     } else {
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
+                                        for (final Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut!");
+                                                t1 = String.format("§6§lPutsch noch: " + min + "min:" + sec + "sec");
+                                                String message = t1;
+                                                all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                             }
                                         }
-                                        votesRed = 0;
-                                        Main.getPlugin().setPutschRot(false);
-                                        cancel();
-                                    }
-                                } else {
-                                    for (final Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
-                                            t1 = String.format("§6§lPutsch noch: " + min + "min:" + sec + "sec");
-                                            String message = t1;
-                                            all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                                        }
-                                    }
 
+                                    }
                                 }
-                            }
-                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                    } else
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cDies geht nicht während der Voting-Phase!");
-                } else {
-                    if (args.length != 1) {
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch <NAME>§c!");
-                    }
-                }
-                if (args.length == 1) {
-                    if (Main.getPlugin().getPutschRot() == true) {
-                        votesRed++;
-                        Scanner scanner = null;
-                        boolean voted = false;
-                        try {
-                            scanner = new Scanner(new File("plugins//Vote//putschvoted.yml"));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        while (scanner.hasNextLine()) {
-                            String line = scanner.nextLine();
-                            if (line.equals(p.getName())) {
-                                voted = true;
-                            }
-                        }
-                        if (voted == false) {
-                            voted = true;
-                            if (Main.getPlugin().namesred.contains(args[0].toLowerCase())) {
-                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvotesred.yml", true))) {
-                                    output.printf("%s\r\n", args[0].toLowerCase());
-                                } catch (Exception e) {
-                                }
-                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvoted.yml", true))) {
-                                    output.printf("%s\r\n", p.getName());
-                                } catch (Exception e) {
-                                }
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt und den Putsch somit unterstützt!");
-                            } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
+                            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                         } else
-                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
-                    } else
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch§c, um einen Putsch zu starten!");
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDies geht nicht während der Voting-Phase!");
+                    } else {
+                        if (args.length != 1) {
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch <NAME>§c!");
+                        }
+                    }
+                    if (args.length == 1) {
+                        if (Main.getPlugin().getPutschRot() == true) {
+                            votesRed++;
+                            Scanner scanner = null;
+                            boolean voted = false;
+                            try {
+                                scanner = new Scanner(new File("plugins//Vote//putschvoted.yml"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            while (scanner.hasNextLine()) {
+                                String line = scanner.nextLine();
+                                if (line.equals(p.getName())) {
+                                    voted = true;
+                                }
+                            }
+                            if (voted == false) {
+                                voted = true;
+                                if (Main.getPlugin().namesred.contains(args[0].toLowerCase())) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvotesred.yml", true))) {
+                                        output.printf("%s\r\n", args[0].toLowerCase());
+                                    } catch (Exception e) {
+                                    }
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvoted.yml", true))) {
+                                        output.printf("%s\r\n", p.getName());
+                                    } catch (Exception e) {
+                                    }
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §c" + args[0].toUpperCase() + " §3gestimmt und den Putsch somit unterstützt!");
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
+                            } else
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
+                        } else
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch§c, um einen Putsch zu starten!");
+                    }
+                } else {
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cEs gibt noch keinen Bürgermeister zum abwählen");
                 }
             } else {
                 if (p.hasPermission("wintervillage.prisonred")) {
                     p.sendMessage(Main.getPlugin().PREFIX + "§cBist du des WAHNSINNS?! Wenn du unzufrieden mit dir bist, dann mach deinen Job richtig...");
                 }
             }
+
             //////***************************************BLAU*******************
+
             if (p.hasPermission("wintervillage.blueteam") && !p.hasPermission("wintervillage.prisonblue")) {
-                if (args.length == 0) {
-                    if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschBlau() == false) {
-                        Main.getPlugin().setPutschBlau(true);
-                        p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen BlauMeister ab!");
-                        for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                if (all != p) {
-                                    all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen BlauMeister zu wählen!");
+                if (!ymlConfigteams.getString("BlauMeister.1").isEmpty()) {
+                    if (args.length == 0) {
+                        if (Main.getPlugin().getVoteOpen() != "true" && Main.getPlugin().getPutschBlau() == false) {
+                            Main.getPlugin().setPutschBlau(true);
+                            p.sendMessage(Main.getPlugin().PREFIX + "§3Die anderen Mitbürger werden benachrichtigt! Stimme mit §r/putsch <NAME> §3für einen neuen BlauMeister ab!");
+                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                    if (all != p) {
+                                        all.sendMessage(Main.getPlugin().PREFIX + "§3Achtung! " + p.getName() + " §3hat einen Putsch gestartet. Unterstütze ihn, indem du §r/putsch <Name> §3benutzt, um einen neuen BlauMeister zu wählen!");
+                                    }
                                 }
                             }
-                        }
-                        new BukkitRunnable() {
-                            int time = 1200;
-                            String t1;
-                            String t2;
-                            int sec = 60;
-                            int min = 20;
+                            new BukkitRunnable() {
+                                int time = 1200;
+                                String t1;
+                                String t2;
+                                int sec = 60;
+                                int min = 20;
 
-                            @Override
-                            public void run() {
-                                time--;
-                                sec--;
-                                if (sec == 0) {
-                                    sec = 60;
-                                    min--;
-                                }
-                                if (time == 0) {
-                                    if (votesBlue == 5) {
+                                @Override
+                                public void run() {
+                                    time--;
+                                    sec--;
+                                    if (sec == 0) {
+                                        sec = 60;
+                                        min--;
+                                    }
+                                    if (time == 0) {
+                                        if (votesBlue == 5) {
+                                            for (final Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                                    t2 = String.format("§6§lPutsch vorbei!");
+                                                    String message2 = t2;
+                                                    all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
+                                                }
+                                            }
+                                            try {
+                                                getResult();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String winnerblau = getrEb();
+                                            if (!getrEb().isEmpty()) {
+                                                ymlConfigteams.set("BlauMeister.1", getUuid(winnerblau));
+                                            }
+                                            try {
+                                                ymlConfigteams.save(configteams);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.prisonblue")) {
+                                                    all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                                }
+                                            }
+
+                                            Main.BlauBuerger.clear();
+                                            Main.RotBuerger.clear();
+                                            Main.Buergermeisterred.clear();
+                                            Main.Buergermeisterblue.clear();
+                                            Team.maketeams();
+
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                            }
+                                            votesBlue = 0;
+                                            Main.getPlugin().setPutschRot(false);
+                                            cancel();
+                                        } else {
+                                            for (Player all : Bukkit.getOnlinePlayers()) {
+                                                if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
+                                                    all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut (5 Bürger müssen)!");
+                                                }
+                                            }
+                                            votesBlue = 0;
+                                            Main.getPlugin().setPutschRot(false);
+                                            cancel();
+                                        }
+                                    } else {
                                         for (final Player all : Bukkit.getOnlinePlayers()) {
                                             if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                                t2 = String.format("§6§lPutsch vorbei!");
-                                                String message2 = t2;
-                                                all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
-                                            }
-                                        }
-                                        try {
-                                            getResult();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        String winnerblau = getrEb();
-                                        if (!getrEb().isEmpty()) {
-                                            ymlConfigteams.set("BlauMeister.1", getUuid(winnerblau));
-                                        }
-                                        try {
-                                            ymlConfigteams.save(configteams);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.prisonblue")) {
-                                                all.kickPlayer(Main.getPlugin().PREFIX + "§cDu wurdest deines Amtes enthoben! §6Bitte trete dem Server erneut bei. Du wurdest ersetzt durch: \n§1BlauMeister: §7" + winnerblau.toUpperCase());
+                                                t1 = String.format("§6§lPutsch noch: " + min + "min:" + sec + "sec");
+                                                String message = t1;
+                                                all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                             }
                                         }
 
-                                        Main.BlauBuerger.clear();
-                                        Main.RotBuerger.clear();
-                                        Main.Buergermeisterred.clear();
-                                        Main.Buergermeisterblue.clear();
-                                        Team.maketeams();
-
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
-                                        }
-                                        votesBlue = 0;
-                                        Main.getPlugin().setPutschRot(false);
-                                        cancel();
-                                    } else {
-                                        for (Player all : Bukkit.getOnlinePlayers()) {
-                                            if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                                all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut (5 Bürger müssen)!");
-                                            }
-                                        }
-                                        votesBlue = 0;
-                                        Main.getPlugin().setPutschRot(false);
-                                        cancel();
                                     }
-                                } else {
-                                    for (final Player all : Bukkit.getOnlinePlayers()) {
-                                        if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
-                                            t1 = String.format("§6§lPutsch noch: " + min + "min:" + sec + "sec");
-                                            String message = t1;
-                                            all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                                        }
-                                    }
-
                                 }
-                            }
-                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
-                    } else
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cDies geht nicht während der Voting-Phase!");
-                } else {
-                    if (args.length != 1) {
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch <NAME>§c!");
-                    }
-                }
-                if (args.length == 1) {
-                    if (Main.getPlugin().getPutschBlau() == true) {
-                        votesBlue++;
-                        Scanner scanner = null;
-                        boolean voted = false;
-                        try {
-                            scanner = new Scanner(new File("plugins//Vote//putschvoted.yml"));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        while (scanner.hasNextLine()) {
-                            String line = scanner.nextLine();
-                            if (line.equals(p.getName())) {
-                                voted = true;
-                            }
-                        }
-                        if (voted == false) {
-                            voted = true;
-                            if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
-                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvotesblue.yml", true))) {
-                                    output.printf("%s\r\n", args[0].toLowerCase());
-                                } catch (Exception e) {
-                                }
-                                try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvoted.yml", true))) {
-                                    output.printf("%s\r\n", p.getName());
-                                } catch (Exception e) {
-                                }
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0].toUpperCase() + " §3gestimmt und den Putsch somit unterstützt!");
-                            } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
+                            }.runTaskTimer(Main.getPlugin(), 0L, 20L);
                         } else
-                            p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
-                    } else
-                        p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch§c, um einen Putsch zu starten!");
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cDies geht nicht während der Voting-Phase!");
+                    } else {
+                        if (args.length != 1) {
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch <NAME>§c!");
+                        }
+                    }
+                    if (args.length == 1) {
+                        if (Main.getPlugin().getPutschBlau() == true) {
+                            votesBlue++;
+                            Scanner scanner = null;
+                            boolean voted = false;
+                            try {
+                                scanner = new Scanner(new File("plugins//Vote//putschvoted.yml"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            while (scanner.hasNextLine()) {
+                                String line = scanner.nextLine();
+                                if (line.equals(p.getName())) {
+                                    voted = true;
+                                }
+                            }
+                            if (voted == false) {
+                                voted = true;
+                                if (Main.getPlugin().namesblue.contains(args[0].toLowerCase())) {
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvotesblue.yml", true))) {
+                                        output.printf("%s\r\n", args[0].toLowerCase());
+                                    } catch (Exception e) {
+                                    }
+                                    try (PrintWriter output = new PrintWriter(new FileWriter("plugins//Vote//putschvoted.yml", true))) {
+                                        output.printf("%s\r\n", p.getName());
+                                    } catch (Exception e) {
+                                    }
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du hast für §9" + args[0].toUpperCase() + " §3gestimmt und den Putsch somit unterstützt!");
+                                } else
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§cDieser Spieler ist nicht in deinem Village!");
+                            } else
+                                p.sendMessage(Main.getPlugin().PREFIX + "§cDu hast bereits abgestimmt!");
+                        } else
+                            p.sendMessage(Main.getPlugin().PREFIX + "§cBitte benutze §r/putsch§c, um einen Putsch zu starten!");
+                    }
+                } else {
+                    p.sendMessage(Main.getPlugin().PREFIX + "§cEs gibt noch keinen Bürgermeister zum abwählen");
                 }
             } else {
                 if (p.hasPermission("wintervillage.prisonblue")) {

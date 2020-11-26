@@ -461,6 +461,7 @@ public class Clash implements CommandExecutor, Listener {
                     if (ymlConfigClash.getInt("Fighter.Red") == 0) {
                         st(all, "§9Village Blau", "§7hat den Clash gewonnen!", 5, 500, 5);
 
+
                         File folderClash = new File("plugins//Clash//Wins");
                         File configClash = new File("plugins//Clash//Wins//config.yml");
                         YamlConfiguration ymlConfigClash = YamlConfiguration.loadConfiguration(configClash);
@@ -531,9 +532,10 @@ public class Clash implements CommandExecutor, Listener {
                             v.printStackTrace();
                         }
                     }
+
                     all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                 }
-
+                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "effect give @a minecraft:resistance 16 250 true");
                 new BukkitRunnable() {
                     int time = 16;
 
@@ -607,6 +609,7 @@ public class Clash implements CommandExecutor, Listener {
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
                             Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "weather rain");
+                            Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "effect clear @a");
                             for (Player all : Bukkit.getOnlinePlayers()) {
                                 all.setGameMode(GameMode.SURVIVAL);
                             }
@@ -771,7 +774,7 @@ public class Clash implements CommandExecutor, Listener {
                         }
                         all.playSound(all.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
                     }
-
+                    Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "effect give @a minecraft:resistance 16 250 true");
                     new BukkitRunnable() {
                         int time = 16;
 
@@ -847,6 +850,7 @@ public class Clash implements CommandExecutor, Listener {
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mv delete world-clash");
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvconfirm");
                                 Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "weather rain");
+                                Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "effect clear @a");
                                 for (Player all : Bukkit.getOnlinePlayers()) {
                                     all.setGameMode(GameMode.SURVIVAL);
                                 }

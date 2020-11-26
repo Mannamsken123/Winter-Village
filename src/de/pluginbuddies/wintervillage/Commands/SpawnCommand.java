@@ -111,7 +111,7 @@ public class SpawnCommand implements CommandExecutor, Listener {
                         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message2));
 
                         new BukkitRunnable() {
-                            int time = 7;
+                            int time = 8;
 
                             @Override
                             public void run() {

@@ -4,7 +4,6 @@
 package de.pluginbuddies.wintervillage.Commands;
 
 import de.pluginbuddies.wintervillage.Main.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,18 +12,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BackpackCommand implements CommandExecutor, Listener {
 
-    private Inventory backpackRed = Bukkit.createInventory(null, 9 * 3, "§cVillage Backpack");
-    private Inventory backpackBlue = Bukkit.createInventory(null, 9 * 3, "§9Village Backpack");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,34 +29,10 @@ public class BackpackCommand implements CommandExecutor, Listener {
                 String w = p.getWorld().getName();
                 if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
                     if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
-                        backpackRed.clear();
-                        File file = new File("plugins//Backpacks//red.yml");
-
-                        if (file.exists()) {
-                            YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
-                            List<?> list = inv.getList("Backpack");
-                            List<?> slot = inv.getList("Slot");
-
-                            for (int i = 0; i < list.size(); i++) {
-                                backpackRed.setItem((Integer) slot.get(i), (ItemStack) list.get(i));
-                            }
-                        }
-                        p.openInventory(backpackRed);
+                        p.openInventory(Main.getPlugin().getBackpackRed());
                     }
                     if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
-                        backpackBlue.clear();
-                        File file = new File("plugins//Backpacks//blue.yml");
-
-                        if (file.exists()) {
-                            YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
-                            List<?> list = inv.getList("Backpack");
-                            List<?> slot = inv.getList("Slot");
-
-                            for (int i = 0; i < list.size(); i++) {
-                                backpackBlue.setItem((Integer) slot.get(i), (ItemStack) list.get(i));
-                            }
-                        }
-                        p.openInventory(backpackBlue);
+                        p.openInventory(Main.getPlugin().getBackpackBlue());
                     }
                 } else {
                     p.sendMessage(Main.getPlugin().PREFIX + "§cDies darfst du während des Clashes nicht tun!");

@@ -16,6 +16,8 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.IOUtils;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -411,11 +413,45 @@ public class Main extends JavaPlugin {
         return "error";
     }
 
+    private Inventory backpackRed = Bukkit.createInventory(null, 9 * 3, "§cVillage Backpack");
+    private Inventory backpackBlue = Bukkit.createInventory(null, 9 * 3, "§9Village Backpack");
 
+    public Inventory getBackpackRed() {
+        return backpackRed;
+    }
+
+    public Inventory getBackpackBlue() {
+        return backpackBlue;
+    }
 
     @Override
     public void onEnable() {
         plugin = this;
+
+        backpackRed.clear();
+        File file = new File("plugins//Backpacks//red.yml");
+
+        if (file.exists()) {
+            YamlConfiguration inv = YamlConfiguration.loadConfiguration(file);
+            List<?> list = inv.getList("Backpack");
+            List<?> slot = inv.getList("Slot");
+
+            for (int i = 0; i < list.size(); i++) {
+                Bukkit.broadcastMessage("Hallo");
+                backpackRed.setItem((Integer) slot.get(i), (ItemStack) list.get(i));
+            }
+        }
+        backpackBlue.clear();
+        File file2 = new File("plugins//Backpacks//blue.yml");
+        if (file2.exists()) {
+            YamlConfiguration inv = YamlConfiguration.loadConfiguration(file2);
+            List<?> list = inv.getList("Backpack");
+            List<?> slot = inv.getList("Slot");
+
+            for (int i = 0; i < list.size(); i++) {
+                backpackBlue.setItem((Integer) slot.get(i), (ItemStack) list.get(i));
+            }
+        }
 
         TabList teams = new TabList();
 
