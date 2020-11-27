@@ -43,7 +43,7 @@ public class ConfiBothVillageCommand implements CommandExecutor {
                         setConfistart(true);
                         p.sendMessage(Main.getPlugin().PREFIX + "§3Die Konferenzanfrage wurde abgeschickt. Warte auf eine Antwort!");
                         for (Player all : Bukkit.getOnlinePlayers()) {
-                            if (all.hasPermission("wintervillage.prisonblue")) {
+                            if (all.hasPermission("wintervillage.prisonblue") && getConfistart() == true) {
                                 all.sendMessage(Main.getPlugin().PREFIX + "§3Der andere Bürgermeister möchte eine Serverkonferenz starten!");
                                 TextComponent tc = new TextComponent();
                                 tc.setText("\n§7[§aKlicke hier um anzunehmen§7]");
@@ -51,6 +51,8 @@ public class ConfiBothVillageCommand implements CommandExecutor {
                                 tc.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/confi Loremetloremdoremichpoeplindernase"));
                                 tc.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§6Aktzeptiert die angefragte Serverkonferenz!").create()));
                                 all.spigot().sendMessage(tc);
+                            } else {
+                                all.sendMessage(Main.getPlugin().PREFIX + "§cDie Anfrage ist bereits abgelaufen!");
                             }
                         }
                     } else if (args.length == 1) {

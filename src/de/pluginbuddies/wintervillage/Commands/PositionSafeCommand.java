@@ -28,15 +28,15 @@ public class PositionSafeCommand implements CommandExecutor {
             Player player = (Player) sender;
             String w = player.getWorld().getName();
             if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
-                if (w.equals("FarmweltNr1")) {
+                if (!w.equals("world")) {
                     if (args.length == 1 && args.length != 2) {
                         if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
-                            File file = new File("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                            File file = new File("plugins//Positionen//TeamRot//" + w + "//" + args[0] + ".yml");
                             YamlConfiguration posi = YamlConfiguration.loadConfiguration(file);
                             DecimalFormat format = new DecimalFormat("0.00");
                             if (file.exists()) {
                                 try {
-                                    posi.load("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                                    posi.load("plugins//Positionen//TeamRot//" + w + "//" + args[0] + ".yml");
                                 } catch (IOException | InvalidConfigurationException e) {
                                     e.printStackTrace();
                                 }
@@ -45,6 +45,7 @@ public class PositionSafeCommand implements CommandExecutor {
                                 pY = posi.getDouble("Y");
                                 pZ = posi.getDouble("Z");
                                 player.sendMessage(Main.getPlugin().PREFIX + "§6" + pos + " §3ist bei §c<§6" + format.format(pX) + "§c, §6" + format.format(pY) + "§c, §6" + format.format(pZ) + "§c>§3!");
+
                             } else {
                                 try {
                                     file.createNewFile();
@@ -146,7 +147,7 @@ public class PositionSafeCommand implements CommandExecutor {
                         }
                     }
                 } else
-                    player.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst das nur in der Farmwelt!");
+                    player.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst das hier nicht tun!");
             } else
                 player.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst das während eines Clashes nicht tun!");
         }

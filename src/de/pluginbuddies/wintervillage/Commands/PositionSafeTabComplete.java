@@ -24,43 +24,32 @@ public class PositionSafeTabComplete implements TabCompleter {
 
                 if (args.length == 1) {
                     if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
-                        File checkdir = new File("plugins//Positionen//TeamRot/");
-                        File[] files = checkdir.listFiles();
                         List<String> positionsred = new ArrayList<String>();
-                        List<String> noPosred = new ArrayList<String>();
+                        File[] files = new File("plugins//Positionen//TeamRot//" + w + "/").listFiles();
+                        File checkdir = new File("plugins//Positionen//TeamRot//" + w + "/");
                         if (checkdir.exists()) {
-                            if (files.length == 0) {
-                                noPosred.add("Noch keine Positionen gespeichert -> /pos <NAME>");
-                                return noPosred;
-                            } else {
-                                for (File file : files) {
-                                    if (file.isFile()) {
-                                        positionsred.add(file.getName().replace(".yml", ""));
-                                        return positionsred;
-                                    }
+                            for (File file : files) {
+                                if (file.isFile()) {
+                                    positionsred.add(file.getName().replace(".yml", ""));
                                 }
                             }
+
+                            return positionsred;
 
                         }
                     }
                     if (player.hasPermission("wintervillage.blueteam") || player.hasPermission("wintervillage.prisonblue")) {
-                        File checkdir = new File("plugins//Positionen//TeamBlau/");
-                        File[] files = checkdir.listFiles();
                         List<String> positionsblue = new ArrayList<String>();
-                        List<String> noPosblue = new ArrayList<String>();
+                        File[] files = new File("plugins//Positionen//TeamBlau//" + w + "/").listFiles();
+                        File checkdir = new File("plugins//Positionen//TeamBlau//" + w + "/");
                         if (checkdir.exists()) {
-                            if (files.length == 0) {
-                                noPosblue.add("Noch keine Positionen gespeichert -> /pos <NAME>");
-                                return noPosblue;
-
-                            } else {
-                                for (File file : files) {
-                                    if (file.isFile()) {
-                                        positionsblue.add(file.getName().replace(".yml", ""));
-                                        return positionsblue;
-                                    }
+                            for (File file : files) {
+                                if (file.isFile()) {
+                                    positionsblue.add(file.getName().replace(".yml", ""));
                                 }
                             }
+
+                            return positionsblue;
 
                         }
                     }

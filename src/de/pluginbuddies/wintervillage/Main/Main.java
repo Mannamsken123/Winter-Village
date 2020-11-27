@@ -1162,9 +1162,34 @@ public class Main extends JavaPlugin {
         if (!folderPosRot.exists()) {
             folderPosRot.mkdir();
         }
+        File folderPosRot1 = new File("plugins//Positionen//TeamRot//FarmweltNr1");
+        if (!folderPosRot1.exists()) {
+            folderPosRot1.mkdir();
+        }
+        File folderPosRot2 = new File("plugins//Positionen//TeamRot//world_nether");
+        if (!folderPosRot2.exists()) {
+            folderPosRot2.mkdir();
+        }
+        File folderPosRot3 = new File("plugins//Positionen//TeamRot//world_the_end");
+        if (!folderPosRot3.exists()) {
+            folderPosRot3.mkdir();
+        }
+
         File folderPosBlau = new File("plugins//Positionen//TeamBlau");
         if (!folderPosBlau.exists()) {
             folderPosBlau.mkdir();
+        }
+        File folderPosBlau1 = new File("plugins//Positionen//TeamBlau//FarmweltNr1");
+        if (!folderPosBlau1.exists()) {
+            folderPosBlau1.mkdir();
+        }
+        File folderPosBlau2 = new File("plugins//Positionen//TeamBlau//world_nether");
+        if (!folderPosBlau2.exists()) {
+            folderPosBlau2.mkdir();
+        }
+        File folderPosBlau3 = new File("plugins//Positionen//TeamBlau//world_the_end");
+        if (!folderPosBlau3.exists()) {
+            folderPosBlau3.mkdir();
         }
 
         //clashreward
@@ -1356,6 +1381,9 @@ public class Main extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("[PluginBuddies] Plugin succesfully loaded!");
+
     }
 
     public String getUuid(String name) {
