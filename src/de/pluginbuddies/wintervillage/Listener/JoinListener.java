@@ -6,7 +6,6 @@ package de.pluginbuddies.wintervillage.Listener;
 import de.pluginbuddies.wintervillage.Main.Main;
 import de.pluginbuddies.wintervillage.Util.PlayerSerialize;
 import de.pluginbuddies.wintervillage.Util.TabList;
-import de.pluginbuddies.wintervillage.Util.Team;
 import net.minecraft.server.v1_16_R2.PacketPlayOutTitle;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -22,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.json.simple.JSONArray;
@@ -93,11 +93,38 @@ public class JoinListener implements Listener {
     public void handlePlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        Main.BlauBuerger.clear();
-        Main.RotBuerger.clear();
-        Main.Buergermeisterred.clear();
-        Main.Buergermeisterblue.clear();
-        Team.maketeams();
+        String uuid = player.getUniqueId().toString();
+        String uuidShort = uuid.replace("-", "");
+
+        if (!Main.ymlConfigteams.getString("RotMeister.1").contains(uuidShort) && !Main.ymlConfigteams.getString("BlauMeister.1").contains(uuidShort)) {
+            for (int i = 1; i <= 10; i++) {
+                if (Main.ymlConfigteams.getString("Rot." + i).contains(uuid)) {
+                    PermissionAttachment att = player.addAttachment(Main.getPlugin());
+                    att.setPermission("wintervillage.redteam", true);
+                    Main.RotBuerger.put(player, att);
+                }
+            }
+
+            for (int j = 1; j <= 10; j++) {
+                if (Main.ymlConfigteams.getString("Blau." + j).contains(uuid)) {
+                    PermissionAttachment att = player.addAttachment(Main.getPlugin());
+                    att.setPermission("wintervillage.blueteam", true);
+                    Main.BlauBuerger.put(player, att);
+                }
+            }
+        } else if (Main.ymlConfigteams.getString("RotMeister.1").contains(uuidShort)) {
+            PermissionAttachment att2 = player.addAttachment(Main.getPlugin());
+            att2.setPermission("wintervillage.prisonred", true);
+            Main.Buergermeisterred.put(player, att2);
+        } else if (Main.ymlConfigteams.getString("BlauMeister.1").contains(uuidShort)) {
+            PermissionAttachment att = player.addAttachment(Main.getPlugin());
+            att.setPermission("wintervillage.prisonblue", true);
+            Main.Buergermeisterblue.put(player, att);
+        }
+
+        TabList tl = new TabList();
+        tl.update();
+
 
         if (!player.hasPlayedBefore()) {
             player.setGameMode(GameMode.SURVIVAL);

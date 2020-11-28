@@ -81,7 +81,6 @@ public class Team {
                 att.setPermission("wintervillage.prisonblue", true);
                 Main.Buergermeisterblue.put(Bukkit.getPlayer(bmeister), att);
             }
-
         }
         tl.update();
     }
