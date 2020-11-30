@@ -103,6 +103,24 @@ public class PutschCommand implements CommandExecutor {
                                             for (Player all : Bukkit.getOnlinePlayers()) {
                                                 all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Rot hat einen neuen Bürgermeister gewählt! \n§4RotMeister: §7" + winnerrot.toUpperCase());
                                             }
+                                            File deleteVoted = new File("plugins//Vote//putschvoted.yml");
+                                            deleteVoted.delete();
+                                            File deleteVotedRed = new File("plugins//Vote//putschvotesred.yml");
+                                            deleteVotedRed.delete();
+                                            if (!deleteVotedRed.exists()) {
+                                                try {
+                                                    deleteVotedRed.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if (!deleteVoted.exists()) {
+                                                try {
+                                                    deleteVoted.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                             votesRed = 0;
                                             Main.getPlugin().setPutschRot(false);
                                             cancel();
@@ -110,6 +128,24 @@ public class PutschCommand implements CommandExecutor {
                                             for (Player all : Bukkit.getOnlinePlayers()) {
                                                 if (all.hasPermission("wintervillage.redteam") && !all.hasPermission("wintervillage.prisonred")) {
                                                     all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut!");
+                                                }
+                                            }
+                                            File deleteVoted = new File("plugins//Vote//putschvoted.yml");
+                                            deleteVoted.delete();
+                                            File deleteVotedRed = new File("plugins//Vote//putschvotesred.yml");
+                                            deleteVotedRed.delete();
+                                            if (!deleteVotedRed.exists()) {
+                                                try {
+                                                    deleteVotedRed.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if (!deleteVoted.exists()) {
+                                                try {
+                                                    deleteVoted.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
                                                 }
                                             }
                                             votesRed = 0;
@@ -247,6 +283,24 @@ public class PutschCommand implements CommandExecutor {
                                             for (Player all : Bukkit.getOnlinePlayers()) {
                                                 all.sendMessage(Main.getPlugin().PREFIX + "§3Village-Blau hat einen neuen Bürgermeister gewählt! \n§1BlauMeister: §7" + winnerblau.toUpperCase());
                                             }
+                                            File deleteVoted = new File("plugins//Vote//putschvoted.yml");
+                                            deleteVoted.delete();
+                                            File deleteVotedBlue = new File("plugins//Vote//putschvotesblue.yml");
+                                            deleteVotedBlue.delete();
+                                            if (!deleteVotedBlue.exists()) {
+                                                try {
+                                                    deleteVotedBlue.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if (!deleteVoted.exists()) {
+                                                try {
+                                                    deleteVoted.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                             votesBlue = 0;
                                             Main.getPlugin().setPutschRot(false);
                                             cancel();
@@ -254,6 +308,24 @@ public class PutschCommand implements CommandExecutor {
                                             for (Player all : Bukkit.getOnlinePlayers()) {
                                                 if (all.hasPermission("wintervillage.blueteam") && !all.hasPermission("wintervillage.prisonblue")) {
                                                     all.sendMessage(Main.getPlugin().PREFIX + "§cEs haben zu wenige Mitbürger abgestimmt. Probiert es später erneut (5 Bürger müssen)!");
+                                                }
+                                            }
+                                            File deleteVoted = new File("plugins//Vote//putschvoted.yml");
+                                            deleteVoted.delete();
+                                            File deleteVotedBlue = new File("plugins//Vote//putschvotesblue.yml");
+                                            deleteVotedBlue.delete();
+                                            if (!deleteVotedBlue.exists()) {
+                                                try {
+                                                    deleteVotedBlue.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                            if (!deleteVoted.exists()) {
+                                                try {
+                                                    deleteVoted.createNewFile();
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
                                                 }
                                             }
                                             votesBlue = 0;
