@@ -71,12 +71,12 @@ public class PositionSafeCommand implements CommandExecutor {
                             }
                         }
                         if (player.hasPermission("wintervillage.blueteam") || player.hasPermission("wintervillage.prisonblue")) {
-                            File file = new File("plugins//Positionen//TeamBlau//" + args[0] + ".yml");
+                            File file = new File("plugins//Positionen//TeamBlau///" + w + "//" + args[0] + ".yml");
                             YamlConfiguration posi = YamlConfiguration.loadConfiguration(file);
                             DecimalFormat format = new DecimalFormat("0.00");
                             if (file.exists()) {
                                 try {
-                                    posi.load("plugins//Positionen//TeamBlau//" + args[0] + ".yml");
+                                    posi.load("plugins//Positionen//TeamBlau//" + w + "//" + args[0] + ".yml");
                                 } catch (IOException | InvalidConfigurationException e) {
                                     e.printStackTrace();
                                 }
@@ -115,11 +115,11 @@ public class PositionSafeCommand implements CommandExecutor {
                     if (args.length == 2) {
                         if (args[1].equalsIgnoreCase("delete")) {
                             if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
-                                File file = new File("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                                File file = new File("plugins//Positionen//TeamRot///" + w + "//" + args[0] + ".yml");
                                 YamlConfiguration posi = YamlConfiguration.loadConfiguration(file);
                                 if (file.exists()) {
                                     try {
-                                        posi.load("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                                        posi.load("plugins//Positionen//TeamRot///" + w + "//" + args[0] + ".yml");
                                     } catch (IOException | InvalidConfigurationException e) {
                                         e.printStackTrace();
                                     }
@@ -128,12 +128,12 @@ public class PositionSafeCommand implements CommandExecutor {
                                     file.delete();
                                 }
                             }
-                            if (player.hasPermission("wintervillage.redteam") || player.hasPermission("wintervillage.prisonred")) {
-                                File file = new File("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                            if (player.hasPermission("wintervillage.blueteam") || player.hasPermission("wintervillage.prisonblue")) {
+                                File file = new File("plugins//Positionen//TeamBlau///" + w + "//" + args[0] + ".yml");
                                 YamlConfiguration posi = YamlConfiguration.loadConfiguration(file);
                                 if (file.exists()) {
                                     try {
-                                        posi.load("plugins//Positionen//TeamRot//" + args[0] + ".yml");
+                                        posi.load("plugins//Positionen//TeamBlau///" + w + "//" + args[0] + ".yml");
                                     } catch (IOException | InvalidConfigurationException e) {
                                         e.printStackTrace();
                                     }

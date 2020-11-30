@@ -123,8 +123,9 @@ public class PutschCommand implements CommandExecutor {
                                                 String message = t1;
                                                 all.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                             }
-                                        }
 
+                                        }
+                                        votesRed = 0;
                                     }
                                 }
                             }.runTaskTimer(Main.getPlugin(), 0L, 20L);

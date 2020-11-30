@@ -19,7 +19,7 @@ public class ChatColorListener implements Listener {
             e.setCancelled(true);
             if (e.getMessage().startsWith("@v")) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (all.hasPermission("wintervillage.redteam")) {
+                    if (all.hasPermission("wintervillage.redteam") || all.hasPermission("wintervillage.prisonred")) {
                         all.sendMessage("§7[§c" + p.getName() + "§7] @village§r: §r" + msg.substring(3));
                     }
                 }
@@ -32,7 +32,7 @@ public class ChatColorListener implements Listener {
             e.setCancelled(true);
             if (e.getMessage().startsWith("@v")) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (all.hasPermission("wintervillage.blueteam")) {
+                    if (all.hasPermission("wintervillage.blueteam") || all.hasPermission("wintervillage.prisonblue")) {
                         all.sendMessage("§7[§9" + p.getName() + "§7] @village§r: §r" + msg.substring(3));
                     }
                 }
@@ -46,7 +46,7 @@ public class ChatColorListener implements Listener {
             e.setCancelled(true);
             if (e.getMessage().startsWith("@v")) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (all.hasPermission("wintervillage.redteam")) {
+                    if (all.hasPermission("wintervillage.redteam") || all.hasPermission("wintervillage.prisonred")) {
                         all.sendMessage("§7[§4" + p.getName() + "§7] @village§r: §r" + msg.substring(3));
                     }
                 }
@@ -60,7 +60,7 @@ public class ChatColorListener implements Listener {
             e.setCancelled(true);
             if (e.getMessage().startsWith("@v")) {
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (all.hasPermission("wintervillage.blueteam")) {
+                    if (all.hasPermission("wintervillage.blueteam") || all.hasPermission("wintervillage.prisonblue")) {
                         all.sendMessage("§7[§1" + p.getName() + "§7] @village§r: §r" + msg.substring(3));
                     }
                 }
