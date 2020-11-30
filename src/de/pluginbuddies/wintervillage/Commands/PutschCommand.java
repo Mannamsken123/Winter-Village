@@ -125,7 +125,6 @@ public class PutschCommand implements CommandExecutor {
                                             }
 
                                         }
-                                        votesRed = 0;
                                     }
                                 }
                             }.runTaskTimer(Main.getPlugin(), 0L, 20L);
