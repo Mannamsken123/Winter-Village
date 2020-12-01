@@ -544,7 +544,7 @@ public class Main extends JavaPlugin {
 
                     //END ÖFFNEN
                     Date endDate = null;
-                    String end = "2020/12/01";
+                    String end = "2020/12/02";
                     try {
                         endDate = sdf.parse(end);
                     } catch (ParseException e) {

@@ -48,7 +48,7 @@ public class BlockPortalListener implements Listener {
 
         if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
 
-            String date = "2020/12/01";
+            String date = "2020/12/02";
             Date enteredDate = null;
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
