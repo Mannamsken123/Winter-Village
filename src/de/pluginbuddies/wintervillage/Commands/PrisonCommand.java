@@ -16,18 +16,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.util.ArrayList;
-
 public class PrisonCommand implements CommandExecutor, Listener {
-
-    private ArrayList<String> knastplayers = new ArrayList<>();
 
     @EventHandler
     public void handlecommandoutput(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
         String w = p.getWorld().getName();
         if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
-            if (knastplayers.contains(p.getName())) {
+            if (Main.getPlugin().getKnastplayers().contains(p.getName())) {
                 if (e.getMessage().contains("/putsch") != true || e.getMessage().contains("/vote") != true || e.getMessage().contains("/clash") != true) {
                     e.setCancelled(false);
                 } else {
@@ -54,8 +50,8 @@ public class PrisonCommand implements CommandExecutor, Listener {
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst nicht Bürger aus dem anderen Dorf einbuchten!");
                             return false;
                         } else if (target != null) {
-                            if (!knastplayers.contains(target.getName())) {
-                                knastplayers.add(target.getName());
+                            if (!Main.getPlugin().getKnastplayers().contains(target.getName())) {
+                                Main.getPlugin().getKnastplayers().add(target.getName());
                                 Bukkit.broadcastMessage("§aServer " + "§8>> " + "§aDer Mitbürger §c" + target.getName() + " §awurde eingebuchtet!");
                                 World world2 = Bukkit.getWorld("world");
                                 Location location = new Location(world2, 107.422, 46, -75.498, -90, -6);
@@ -63,7 +59,7 @@ public class PrisonCommand implements CommandExecutor, Listener {
                                 target.setGameMode(GameMode.SURVIVAL);
                                 target.sendMessage("§aServer " + "§8>> " + "§cDu wurdest von dem RotMeister §4" + p.getName() + " §cins Gefängnis gesteckt!");
                             } else {
-                                knastplayers.remove(target.getName());
+                                Main.getPlugin().getKnastplayers().remove(target.getName());
                                 Bukkit.broadcastMessage("§aServer " + "§8>> " + "§aDer Mitbürger §c" + target.getName() + " §awurde entlassen!");
                                 World world3 = Bukkit.getWorld("world");
                                 Location location1 = new Location(world3, 114.528, 42, -71.520, -90, -3);
@@ -85,8 +81,8 @@ public class PrisonCommand implements CommandExecutor, Listener {
                             p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst nicht Bürger aus dem anderen Team einbuchten!");
                             return false;
                         } else if (target != null) {
-                            if (!knastplayers.contains(target.getName())) {
-                                knastplayers.add(target.getName());
+                            if (!Main.getPlugin().getKnastplayers().contains(target.getName())) {
+                                Main.getPlugin().getKnastplayers().add(target.getName());
                                 Bukkit.broadcastMessage("§aServer " + "§8>> " + "§aDer Mitbürger §9" + target.getName() + " §awurde eingebuchtet!");
                                 World world2 = Bukkit.getWorld("world");
                                 Location location = new Location(world2, 107.422, 46, -75.498, -90, -6);
@@ -94,7 +90,7 @@ public class PrisonCommand implements CommandExecutor, Listener {
                                 target.setGameMode(GameMode.SURVIVAL);
                                 target.sendMessage("§aServer " + "§8>> " + "§cDu wurdest von dem BlauMeister §1" + p.getName() + " §cins Gefängnis gesteckt!");
                             } else {
-                                knastplayers.remove(target.getName());
+                                Main.getPlugin().getKnastplayers().remove(target.getName());
                                 Bukkit.broadcastMessage("§aServer " + "§8>> " + "§aDer Mitbürger §9" + target.getName() + " §awurde entlassen!");
                                 World world3 = Bukkit.getWorld("world");
                                 Location location1 = new Location(world3, 114.528, 42, -71.520, -90, -3);

@@ -176,7 +176,7 @@ public class JoinListener implements Listener {
             p.teleport(location);
 
             new BukkitRunnable() {
-                int time = 2;
+                int time = 4;
 
                 @Override
                 public void run() {
@@ -231,24 +231,24 @@ public class JoinListener implements Listener {
             String getFalse = Main.getPlugin().getYmlConfigBlockPortal().getString("EndSpawn");
 
             //end auf und enderdrache dead
-            if (getFalse.equals("true")) {
+            if (end.equals("false")) {
                 ymlConfigMessages.set("End", "true");
                 try {
                     ymlConfigMessages.save(configMessages);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                player.sendMessage(Main.getPlugin().PREFIX + "§3Das End kann ab jetzt über das Portal am Spawn betreten werden!");
+                if (getFalse.equals("true")) {
+                    ymlConfigMessages.set("End", "true");
+                    try {
+                        ymlConfigMessages.save(configMessages);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    player.sendMessage(Main.getPlugin().PREFIX + "§3Das End kann ab jetzt über das Portal am Spawn betreten werden!");
 
-                //end frei noch enderdrache alive
-            } else if (end.equals("false")) {
-                ymlConfigMessages.set("End", "true");
-                try {
-                    ymlConfigMessages.save(configMessages);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    //end frei noch enderdrache alive
                 }
-                player.sendMessage(Main.getPlugin().PREFIX + "§3Das End kann ab jetzt über die Farmwelt betreten werden!");
             }
         }
         if (Main.getPlugin().getNikolausOpen() == "true") {
@@ -417,35 +417,29 @@ public class JoinListener implements Listener {
 
                 File f = new File("plugins//Clash//Inventories//" + player.getName() + ".playerinv");
 
-                if (!f.exists())
-                    try {
-                        f.getParentFile().mkdir();
-                        f.createNewFile();
-                    } catch (IOException v) {
+                if (f.exists()) {
+                    try (FileInputStream fileIn = new FileInputStream(f);
+                         BukkitObjectInputStream in = new BukkitObjectInputStream(fileIn)) {
+                        newInv = (PlayerSerialize) in.readObject();
+                    } catch (IOException | ClassNotFoundException v) {
                         v.printStackTrace();
                         return;
                     }
 
-                try (FileInputStream fileIn = new FileInputStream(f);
-                     BukkitObjectInputStream in = new BukkitObjectInputStream(fileIn)) {
-                    newInv = (PlayerSerialize) in.readObject();
-                } catch (IOException | ClassNotFoundException v) {
-                    v.printStackTrace();
-                    return;
+                    if (newInv != null) {
+                        player.getInventory().setContents(newInv.inventory);
+                        player.setHealth(newInv.health);
+                        player.setFoodLevel((int) newInv.hunger);
+                        player.setFlySpeed((float) newInv.flySpeed);
+                        player.setWalkSpeed((float) newInv.walkSpeed);
+                        player.setLevel(newInv.levels);
+                        player.setExp((float) newInv.xp);
+                        player.setSaturation((float) newInv.saturation);
+                        player.setExhaustion((float) newInv.fatigue);
+                    }
+                    f.delete();
                 }
 
-                if (newInv != null) {
-                    player.getInventory().setContents(newInv.inventory);
-                    player.setHealth(newInv.health);
-                    player.setFoodLevel((int) newInv.hunger);
-                    player.setFlySpeed((float) newInv.flySpeed);
-                    player.setWalkSpeed((float) newInv.walkSpeed);
-                    player.setLevel(newInv.levels);
-                    player.setExp((float) newInv.xp);
-                    player.setSaturation((float) newInv.saturation);
-                    player.setExhaustion((float) newInv.fatigue);
-                }
-                f.delete();
 
                 ymlConfigMessages2.set("givebackstuff", "false");
                 try {

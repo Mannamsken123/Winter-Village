@@ -46,6 +46,13 @@ public class Main extends JavaPlugin {
     private boolean putschRot = false;
     private boolean putschBlau = false;
 
+    //Prison
+    private ArrayList<String> knastplayers = new ArrayList<>();
+
+    public ArrayList<String> getKnastplayers() {
+        return knastplayers;
+    }
+
     //TravelWithEntity
     private boolean travelWithEntity = false;
 
@@ -1383,6 +1390,7 @@ public class Main extends JavaPlugin {
         }
 
         System.out.println("[PluginBuddies] Plugin succesfully loaded!");
+        Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvm set diff peaceful world");
 
     }
 

@@ -28,32 +28,37 @@ public class VillageCommand implements CommandExecutor, Listener {
 
             if (args.length == 0) {
                 if (!w.equals("world-clash") && Main.getPlugin().getClashOpen2() != "true") {
-                    new BukkitRunnable() {
-                        int time = 4;
+                    if (!Main.getPlugin().getKnastplayers().contains(p.getName())) {
+                        new BukkitRunnable() {
+                            int time = 4;
 
-                        @Override
-                        public void run() {
-                            time--;
-                            if (time == 0) {
-                                if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
-                                    World world2 = Bukkit.getWorld("world");
-                                    Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
-                                    p.teleport(location);
-                                    p.setGameMode(GameMode.SURVIVAL);
-                                    st(p.getPlayer(), "", "§cDu befindest dich in deinem Village!", 5, 80, 20);
-                                } else if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
-                                    World world2 = Bukkit.getWorld("world");
-                                    Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
-                                    p.teleport(location);
-                                    p.setGameMode(GameMode.SURVIVAL);
-                                    st(p.getPlayer(), "", "§9Du befindest dich in deinem Village!", 5, 80, 20);
+                            @Override
+                            public void run() {
+                                time--;
+                                if (time == 0) {
+                                    if (p.hasPermission("wintervillage.redteam") || p.hasPermission("wintervillage.prisonred")) {
+                                        World world2 = Bukkit.getWorld("world");
+                                        Location location = new Location(world2, 55.5, 40, 106.5, -90, -3);
+                                        p.teleport(location);
+                                        p.setGameMode(GameMode.SURVIVAL);
+                                        st(p.getPlayer(), "", "§cDu befindest dich in deinem Village!", 5, 80, 20);
+                                    } else if (p.hasPermission("wintervillage.blueteam") || p.hasPermission("wintervillage.prisonblue")) {
+                                        World world2 = Bukkit.getWorld("world");
+                                        Location location = new Location(world2, 149.5, 40, -229.5, 90, -3);
+                                        p.teleport(location);
+                                        p.setGameMode(GameMode.SURVIVAL);
+                                        st(p.getPlayer(), "", "§9Du befindest dich in deinem Village!", 5, 80, 20);
+                                    } else
+                                        p.sendMessage(Main.getPlugin().PREFIX + "§cDazu hast du keine Rechte!");
+                                    cancel();
                                 } else
-                                    p.sendMessage(Main.getPlugin().PREFIX + "§cDazu hast du keine Rechte!");
-                                cancel();
-                            } else
-                                p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
-                        }
-                    }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+                                    p.sendMessage(Main.getPlugin().PREFIX + "§3Du wirst in §c" + time + "§cs §3teleportiert!");
+                            }
+                        }.runTaskTimer(Main.getPlugin(), 0L, 20L);
+
+
+                    } else
+                        p.sendMessage(Main.getPlugin().PREFIX + "§cDu bist aktuell im Gefängnis und kannst dies nicht tun!");
                 } else
                     p.sendMessage(Main.getPlugin().PREFIX + "§cDu kannst dich während eines Clashes nicht teleportieren!");
             } else

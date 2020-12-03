@@ -18,18 +18,21 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
 public class AdventskalenderCommand implements CommandExecutor, Listener {
 
-    DateTimeFormatter monat = DateTimeFormatter.ofPattern("MM");
-    DateTimeFormatter tag = DateTimeFormatter.ofPattern("dd");
-    LocalDateTime now = LocalDateTime.now();
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+        DateTimeFormatter monat = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter tag = DateTimeFormatter.ofPattern("dd");
+        Clock cl = Clock.systemDefaultZone();
+        LocalDateTime now = LocalDateTime.now(cl);
+
+        Bukkit.broadcastMessage(String.valueOf(now));
         Player p = (Player) sender;
         if (args.length == 0) {
             String w = p.getWorld().getName();
@@ -72,6 +75,11 @@ public class AdventskalenderCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
+        DateTimeFormatter monat = DateTimeFormatter.ofPattern("MM");
+        DateTimeFormatter tag = DateTimeFormatter.ofPattern("dd");
+        Clock cl = Clock.systemDefaultZone();
+        LocalDateTime now = LocalDateTime.now(cl);
+
         if (!(e.getWhoClicked() instanceof Player)) return;
         Player p = (Player) e.getWhoClicked();
 
